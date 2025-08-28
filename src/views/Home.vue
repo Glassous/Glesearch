@@ -5,10 +5,15 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const titleLetters = ref([])
 const fullTitle = 'Glesearch'
+const animationComplete = ref(false)
 
-// 页面加载时直接显示所有字母，通过CSS动画实现从左到右入场
+// 页面加载时直接显示所有字母，通过CSS动画实现异想天开的入场效果
 onMounted(() => {
   titleLetters.value = fullTitle.split('')
+  // 动画完成后设置静态状态
+  setTimeout(() => {
+    animationComplete.value = true
+  }, 2500)
 })
 
 // 汇率换算按钮点击事件
@@ -67,9 +72,12 @@ const handleVehiclePrice = () => {
   <div class="page-container">
     <!-- 动态标题动画 -->
     <header class="header">
-      <div class="animated-title">
-        <span class="letter" v-for="(letter, index) in titleLetters" :key="index" :style="{animationDelay: index * 0.15 + 's'}">
+      <div class="animated-title" :class="{ 'animation-complete': animationComplete }">
+        <span class="letter" v-for="(letter, index) in titleLetters" :key="index" :style="{animationDelay: index * 0.2 + 's'}">
           {{ letter }}
+          <span class="sparkle sparkle-1" :style="{animationDelay: (index * 0.2 + 1) + 's'}"></span>
+          <span class="sparkle sparkle-2" :style="{animationDelay: (index * 0.2 + 1.5) + 's'}"></span>
+          <span class="sparkle sparkle-3" :style="{animationDelay: (index * 0.2 + 2) + 's'}"></span>
         </span>
       </div>
     </header>
@@ -196,13 +204,14 @@ const handleVehiclePrice = () => {
   font-family: 'Arial Black', Arial, sans-serif;
   letter-spacing: 0.1em;
   perspective: 1000px;
+  position: relative;
 }
 
 .letter {
   display: inline-block;
   opacity: 0;
-  transform: translateX(-50px) scale(0.8);
-  animation: letterReveal 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  transform: translateY(-200px) rotateZ(360deg) scale(0.3);
+  animation: magicalEntrance 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
@@ -210,70 +219,180 @@ const handleVehiclePrice = () => {
   background-clip: text;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.3));
 }
 
 .letter:first-child {
   font-size: 5rem;
-  animation: firstLetterReveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: firstLetterMagicalEntrance 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-.letter::before {
-  content: '';
+/* 动画完成后的静态状态 */
+.animation-complete .letter {
+  animation: none;
+  opacity: 1;
+  transform: translateY(0) rotateZ(0deg) scale(1);
+}
+
+/* Hover效果 - 放大字母 */
+.animation-complete .letter:hover {
+  transform: scale(1.2) translateY(-5px);
+  filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.6));
+  text-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* 星点装饰 */
+.sparkle {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease-in-out infinite;
-  z-index: -1;
-  border-radius: 8px;
-  opacity: 0.1;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #fff 0%, #667eea 70%, transparent 100%);
+  border-radius: 50%;
+  opacity: 0;
+  animation: sparkleAnimation 2s ease-in-out infinite;
+  pointer-events: none;
 }
 
-@keyframes firstLetterReveal {
+.sparkle-1 {
+  top: -10px;
+  right: -5px;
+  animation-delay: 0s;
+}
+
+.sparkle-2 {
+  top: 50%;
+  left: -8px;
+  animation-delay: 0.7s;
+}
+
+.sparkle-3 {
+  bottom: -8px;
+  right: 20%;
+  animation-delay: 1.4s;
+}
+
+/* 动画完成后显示星点 */
+.animation-complete .sparkle {
+  animation: sparkleGlow 3s ease-in-out infinite;
+}
+
+.animation-complete .letter:hover .sparkle {
+  animation: sparkleHover 0.6s ease-in-out infinite;
+}
+
+@keyframes firstLetterMagicalEntrance {
   0% {
     opacity: 0;
-    transform: translateX(-80px) scale(0.6);
+    transform: translateY(-300px) rotateZ(720deg) scale(0.1);
     background-position: 0% 50%;
+    filter: drop-shadow(0 0 30px rgba(102, 126, 234, 0.8)) blur(5px);
+  }
+  25% {
+    opacity: 0.2;
+    transform: translateY(-100px) rotateZ(540deg) scale(0.5);
+    background-position: 25% 50%;
+    filter: drop-shadow(0 0 25px rgba(102, 126, 234, 0.7)) blur(3px);
   }
   50% {
-    opacity: 0.7;
-    transform: translateX(10px) scale(1.1);
+    opacity: 0.6;
+    transform: translateY(-20px) rotateZ(270deg) scale(0.9);
     background-position: 50% 50%;
+    filter: drop-shadow(0 0 18px rgba(102, 126, 234, 0.5)) blur(2px);
+  }
+  75% {
+    opacity: 0.85;
+    transform: translateY(8px) rotateZ(90deg) scale(1.05);
+    background-position: 75% 50%;
+    filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.4)) blur(1px);
+  }
+  90% {
+    opacity: 0.95;
+    transform: translateY(2px) rotateZ(20deg) scale(1.02);
+    background-position: 90% 50%;
+    filter: drop-shadow(0 0 12px rgba(102, 126, 234, 0.35)) blur(0.5px);
   }
   100% {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateY(0) rotateZ(0deg) scale(1);
     background-position: 100% 50%;
+    filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.3));
   }
 }
 
-@keyframes letterReveal {
+@keyframes magicalEntrance {
   0% {
     opacity: 0;
-    transform: translateX(-50px) scale(0.8);
+    transform: translateY(-200px) rotateZ(360deg) scale(0.3);
     background-position: 0% 50%;
+    filter: drop-shadow(0 0 20px rgba(118, 75, 162, 0.6)) blur(3px);
+  }
+  30% {
+    opacity: 0.4;
+    transform: translateY(-60px) rotateZ(270deg) scale(0.7);
+    background-position: 30% 50%;
+    filter: drop-shadow(0 0 18px rgba(118, 75, 162, 0.5)) blur(2px);
   }
   60% {
-    opacity: 0.8;
-    transform: translateX(5px) scale(1.05);
-    background-position: 50% 50%;
+    opacity: 0.75;
+    transform: translateY(-10px) rotateZ(135deg) scale(0.95);
+    background-position: 60% 50%;
+    filter: drop-shadow(0 0 15px rgba(118, 75, 162, 0.4)) blur(1px);
+  }
+  80% {
+    opacity: 0.9;
+    transform: translateY(5px) rotateZ(45deg) scale(1.03);
+    background-position: 80% 50%;
+    filter: drop-shadow(0 0 12px rgba(118, 75, 162, 0.35)) blur(0.5px);
+  }
+  95% {
+    opacity: 0.98;
+    transform: translateY(1px) rotateZ(10deg) scale(1.01);
+    background-position: 95% 50%;
+    filter: drop-shadow(0 0 11px rgba(118, 75, 162, 0.32)) blur(0.2px);
   }
   100% {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateY(0) rotateZ(0deg) scale(1);
     background-position: 100% 50%;
+    filter: drop-shadow(0 0 10px rgba(118, 75, 162, 0.3));
   }
 }
 
-@keyframes gradientShift {
+@keyframes sparkleAnimation {
   0%, 100% {
-    background-position: 0% 50%;
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
   }
   50% {
-    background-position: 100% 50%;
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+}
+
+@keyframes sparkleGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(102, 126, 234, 0.8);
+  }
+}
+
+@keyframes sparkleHover {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5) rotate(180deg);
+    box-shadow: 0 0 20px rgba(240, 147, 251, 0.9);
   }
 }
 
@@ -294,19 +413,15 @@ const handleVehiclePrice = () => {
 
 /* 毛玻璃效果和曲面屏效果按钮样式 */
 .feature-button {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--glass-border);
   border-radius: 24px;
   padding: 2rem;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    0 2px 16px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px var(--glass-shadow);
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -335,14 +450,10 @@ const handleVehiclePrice = () => {
 
 .feature-button:hover {
   transform: translateY(-8px) rotateX(5deg) rotateY(-2deg);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.15),
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 60px var(--shadow-heavy);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: var(--text-accent);
 }
 
 .feature-button:hover::before {
@@ -415,12 +526,12 @@ const handleVehiclePrice = () => {
 .button-text h3 {
   margin: 0 0 0.5rem 0;
   font-size: 1.5rem;
-  color: #2d3436;
+  color: var(--text-primary);
 }
 
 .button-text p {
   margin: 0;
-  color: #636e72;
+  color: var(--text-secondary);
   font-size: 1rem;
 }
 
@@ -431,6 +542,11 @@ const handleVehiclePrice = () => {
   
   .letter:first-child {
     font-size: 3rem;
+  }
+  
+  .sparkle {
+    width: 3px;
+    height: 3px;
   }
   
   .button-grid {
@@ -449,6 +565,15 @@ const handleVehiclePrice = () => {
   
   .letter:first-child {
     font-size: 2.5rem;
+  }
+  
+  .sparkle {
+    width: 2px;
+    height: 2px;
+  }
+  
+  .animation-complete .letter:hover {
+    transform: scale(1.1) translateY(-3px);
   }
   
   .header {

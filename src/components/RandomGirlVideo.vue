@@ -260,7 +260,7 @@ export default {
 .random-video-container {
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #f8f9fa;
+  background: var(--bg-primary);
 }
 
 .header {
@@ -268,8 +268,10 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: white;
-  border-bottom: 1px solid #e5e5e5;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -281,19 +283,21 @@ export default {
   cursor: pointer;
   padding: 8px;
   border-radius: 8px;
-  transition: background-color 0.2s;
-  color: #3b82f6;
+  transition: all 0.3s ease;
+  color: var(--text-accent);
 }
 
 .back-btn:hover {
-  background-color: #f5f5f5;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  transform: scale(1.05);
 }
 
 .title {
   font-size: 18px;
   font-weight: 600;
   margin: 0;
-  color: #3b82f6;
+  color: var(--text-accent);
 }
 
 .api-info {
@@ -302,12 +306,12 @@ export default {
 }
 
 .api-source {
-  color: #10b981;
+  color: var(--text-accent);
   font-weight: 500;
 }
 
 .update-time {
-  color: #666;
+  color: var(--text-secondary);
   margin-top: 2px;
 }
 
@@ -323,18 +327,18 @@ export default {
 }
 
 .loading {
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .error {
-  color: #dc3545;
+  color: var(--text-accent);
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3b82f6;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--text-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 16px;
@@ -346,17 +350,20 @@ export default {
 }
 
 .retry-btn {
-  background: #3b82f6;
+  background: var(--text-accent);
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 16px;
+  transition: all 0.3s ease;
 }
 
 .retry-btn:hover {
-  background: #2563eb;
+  background: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
 }
 
 .video-section {
@@ -364,11 +371,13 @@ export default {
 }
 
 .video-container {
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--glass-shadow);
   overflow: hidden;
   position: relative;
 }
@@ -381,7 +390,7 @@ export default {
   border-radius: 8px;
   display: block;
   margin: 0 auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-medium);
   transition: transform 0.2s;
 }
 
@@ -417,39 +426,43 @@ export default {
 }
 
 .action-btn.primary {
-  background: #3b82f6;
+  background: var(--text-accent);
   color: white;
 }
 
 .action-btn.primary:hover:not(:disabled) {
-  background: #2563eb;
+  background: var(--text-primary);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
 }
 
 .action-btn.secondary {
-  background: white;
-  color: #3b82f6;
-  border: 2px solid #3b82f6;
+  background: var(--bg-secondary);
+  color: var(--text-accent);
+  border: 2px solid var(--text-accent);
 }
 
 .action-btn.secondary:hover:not(:disabled) {
-  background: #3b82f6;
-  color: white;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-light);
 }
 
 .action-btn.fullscreen {
-  background: #6366f1;
+  background: var(--text-accent);
   color: white;
 }
 
 .action-btn.fullscreen:hover:not(:disabled) {
-  background: #4f46e5;
+  background: var(--text-primary);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
 }
 
 .no-video {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 16px;
   padding: 40px 20px;
 }
@@ -476,7 +489,7 @@ export default {
   position: relative;
   width: 50px;
   height: 24px;
-  background-color: #ccc;
+  background-color: var(--border-color);
   border-radius: 24px;
   transition: background-color 0.3s;
 }
@@ -494,7 +507,7 @@ export default {
 }
 
 .autoplay-switch input:checked + .slider {
-  background-color: #3b82f6;
+  background-color: var(--text-accent);
 }
 
 .autoplay-switch input:checked + .slider:before {
@@ -504,7 +517,7 @@ export default {
 .switch-text {
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
 }
 
 /* 响应式设计 */

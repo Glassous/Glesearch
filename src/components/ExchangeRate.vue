@@ -776,10 +776,13 @@ onMounted(() => {
   top: 0;
   left: 0;
   right: 0;
-  background: white;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
   width: 100%;
   z-index: 1000;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 /* 顶部导航栏 */
@@ -798,17 +801,19 @@ onMounted(() => {
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: #1e584b;
+  color: var(--text-accent);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   width: 40px;
   height: 40px;
 }
 
 .back-button:hover {
-  background-color: #f5f5f5;
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .back-icon {
@@ -821,7 +826,7 @@ onMounted(() => {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  color: #1e584b;
+  color: var(--text-accent);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -831,7 +836,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: flex-end;
   font-size: 0.75rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.2;
 }
 
@@ -840,23 +845,28 @@ onMounted(() => {
 }
 
 .update-time {
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .update-time.error-status {
-  color: #d32f2f;
+  color: var(--text-accent);
   font-weight: bold;
 }
 
 /* 输入区域 */
 .input-section {
   padding: 1rem 1.5rem;
-  background: #f8f9fa;
-  width: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  margin: 1rem;
+  width: calc(100% - 2rem);
 }
 
 .input-section h3 {
-  color: #1e584b;
+  color: var(--text-accent);
   margin: 0 0 1rem 0;
   font-size: 1.1rem;
   font-weight: 600;
@@ -871,38 +881,43 @@ onMounted(() => {
 
 .currency-select {
   padding: 0.75rem;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
-  background: white;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   min-width: 180px;
   flex: 1;
 }
 
 .currency-select:focus {
   outline: none;
-  border-color: #1e584b;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(30, 88, 75, 0.1);
 }
 
 .amount-input {
   padding: 0.75rem;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   min-width: 150px;
   flex: 1;
 }
 
 .amount-input:focus {
   outline: none;
-  border-color: #1e584b;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(30, 88, 75, 0.1);
 }
 
 /* 主要内容区域 */
 .main-content {
-  margin-top: 180px;
+  margin-top: 220px;
   padding: 0;
-  min-height: calc(100vh - 180px);
+  min-height: calc(100vh - 220px);
   width: 100%;
 }
 
@@ -910,17 +925,20 @@ onMounted(() => {
 .loading-message {
   text-align: center;
   padding: 2rem 1.5rem;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
 .error-message {
   text-align: center;
   padding: 2rem;
-  color: #d32f2f;
-  background: #ffebee;
+  color: var(--text-accent);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
   border-radius: 8px;
   margin: 0 1.5rem 2rem 1.5rem;
+  box-shadow: var(--glass-shadow);
 }
 
 /* 结果区域 */
@@ -929,7 +947,7 @@ onMounted(() => {
 }
 
 .results-section h3 {
-  color: #1e584b;
+  color: var(--text-accent);
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
   font-weight: 600;
@@ -943,25 +961,28 @@ onMounted(() => {
 }
 
 .currency-item {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
   padding: 1.5rem;
   text-align: center;
   transition: all 0.3s ease;
   cursor: pointer;
+  box-shadow: 0 8px 32px var(--glass-shadow);
 }
 
 .currency-item:hover {
-  border-color: #1e584b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(30, 88, 75, 0.1);
+  border-color: var(--text-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--shadow-medium);
 }
 
 .currency-item.current-input {
-  border-color: #1e584b;
-  background: #f8fffe;
-  box-shadow: 0 2px 8px rgba(30, 88, 75, 0.15);
+  border-color: var(--text-accent);
+  background: var(--glass-bg);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .currency-header {
@@ -1008,13 +1029,13 @@ onMounted(() => {
 .currency-code {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #1e584b;
+  color: var(--text-accent);
   margin-bottom: 0.2rem;
 }
 
 .currency-name {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1024,7 +1045,7 @@ onMounted(() => {
 .currency-amount {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1033,15 +1054,20 @@ onMounted(() => {
 
 .currency-symbol {
   font-size: 1.2rem;
-  color: #1e584b;
+  color: var(--text-accent);
   font-weight: normal;
 }
 
 /* 常用货币区域样式 */
 .favorite-section {
   padding: 1rem 1.5rem;
-  background: #f0f8f7;
-  width: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  margin: 1rem;
+  width: calc(100% - 2rem);
 }
 
 .favorite-header {
@@ -1052,25 +1078,29 @@ onMounted(() => {
 }
 
 .favorite-header h3 {
-  color: #1e584b;
+  color: var(--text-accent);
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
 }
 
 .manage-button {
-  background: #1e584b;
-  color: white;
+  background: var(--text-accent);
+  color: var(--bg-secondary);
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .manage-button:hover {
-  background: #2d6b5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-light);
+  opacity: 0.9;
 }
 
 .favorite-grid {
@@ -1081,26 +1111,29 @@ onMounted(() => {
 }
 
 .favorite-item {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 12px;
   padding: 1rem;
   text-align: center;
   transition: all 0.3s ease;
   cursor: pointer;
   position: relative;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 .favorite-item:hover {
-  border-color: #1e584b;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(30, 88, 75, 0.1);
+  border-color: var(--text-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .favorite-item.current-input {
-  border-color: #1e584b;
-  background: #f8fffe;
-  box-shadow: 0 2px 8px rgba(30, 88, 75, 0.15);
+  border-color: var(--text-accent);
+  background: var(--glass-bg);
+  box-shadow: 0 6px 20px var(--shadow-medium);
 }
 
 .favorite-item.managing {
@@ -1142,13 +1175,13 @@ onMounted(() => {
 .favorite-item .currency-code {
   font-size: 1rem;
   font-weight: bold;
-  color: #1e584b;
+  color: var(--text-accent);
   margin-bottom: 0.2rem;
 }
 
 .favorite-item .currency-name {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1158,7 +1191,7 @@ onMounted(() => {
 .favorite-item .currency-amount {
   font-size: 1.1rem;
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 0.2rem;
@@ -1166,7 +1199,7 @@ onMounted(() => {
 
 .currency-symbol {
   font-size: 0.9rem;
-  color: #1e584b;
+  color: var(--text-accent);
   font-weight: normal;
 }
 
@@ -1174,7 +1207,7 @@ onMounted(() => {
   position: absolute;
   top: -8px;
   right: -8px;
-  background: #d32f2f;
+  background: var(--text-accent);
   color: white;
   border: none;
   border-radius: 50%;
@@ -1185,21 +1218,23 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
 }
 
 .remove-button:hover {
-  background: #b71c1c;
+  background: var(--text-primary);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-medium);
 }
 
 .add-currency-section {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #d0d0d0;
+  border-top: 1px solid var(--border-color);
 }
 
 .add-currency-section h4 {
-  color: #1e584b;
+  color: var(--text-accent);
   margin: 0 0 1rem 0;
   font-size: 1rem;
   font-weight: 600;
@@ -1214,9 +1249,11 @@ onMounted(() => {
 }
 
 .add-currency-item {
-  background: white;
-  border: 2px dashed #ccc;
-  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px dashed var(--border-color);
+  border-radius: 10px;
   padding: 0.8rem;
   text-align: center;
   cursor: pointer;
@@ -1225,8 +1262,10 @@ onMounted(() => {
 }
 
 .add-currency-item:hover {
-  border-color: #1e584b;
-  background: #f8fffe;
+  border-color: var(--text-accent);
+  background: var(--glass-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--glass-shadow);
 }
 
 .add-currency-header {
@@ -1244,13 +1283,13 @@ onMounted(() => {
 .add-currency-item .currency-code {
   font-size: 0.9rem;
   font-weight: bold;
-  color: #1e584b;
+  color: var(--text-accent);
   margin-bottom: 0.1rem;
 }
 
 .add-currency-item .currency-name {
   font-size: 0.7rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1259,7 +1298,7 @@ onMounted(() => {
 
 .add-currency-item .add-icon {
   font-size: 1.2rem;
-  color: #1e584b;
+  color: var(--text-accent);
   font-weight: bold;
 }
 
@@ -1309,9 +1348,9 @@ onMounted(() => {
   }
   
   .main-content {
-    margin-top: 220px;
+    margin-top: 260px;
     padding: 1rem;
-    min-height: calc(100vh - 220px);
+    min-height: calc(100vh - 260px);
   }
   
   .input-group {

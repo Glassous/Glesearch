@@ -221,10 +221,13 @@ const searchOnDongchedi = (carName) => {
   top: 0;
   left: 0;
   right: 0;
-  background: white;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
   width: 100%;
   z-index: 1000;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 /* 顶部导航栏 */
@@ -243,17 +246,19 @@ const searchOnDongchedi = (carName) => {
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: #2196f3;
+  color: var(--text-accent);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   width: 40px;
   height: 40px;
 }
 
 .back-button:hover {
-  background-color: #f5f5f5;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .back-icon {
@@ -266,7 +271,7 @@ const searchOnDongchedi = (carName) => {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  color: #2196f3;
+  color: var(--text-accent);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -276,7 +281,7 @@ const searchOnDongchedi = (carName) => {
   flex-direction: column;
   align-items: flex-end;
   font-size: 0.75rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.2;
 }
 
@@ -285,7 +290,7 @@ const searchOnDongchedi = (carName) => {
 }
 
 .update-time {
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .update-time.error-status {
@@ -296,8 +301,10 @@ const searchOnDongchedi = (carName) => {
 /* 搜索区域 */
 .search-section {
   padding: 1rem 1.5rem;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .search-inputs {
@@ -315,25 +322,28 @@ const searchOnDongchedi = (carName) => {
 
 .input-group label {
   font-size: 0.9rem;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .search-input {
   padding: 0.75rem;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   transition: border-color 0.2s;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #2196f3;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(30, 88, 75, 0.1);
 }
 
 .search-button {
-  background: #2196f3;
+  background: var(--text-accent);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -341,17 +351,20 @@ const searchOnDongchedi = (carName) => {
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   align-self: flex-end;
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
 .search-button:hover:not(:disabled) {
-  background: #1976d2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
 }
 
 .search-button:disabled {
-  background: #ccc;
+  background: var(--border-color);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* 主要内容区域 */
@@ -366,7 +379,7 @@ const searchOnDongchedi = (carName) => {
 .loading-message {
   text-align: center;
   padding: 2rem;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
@@ -374,18 +387,26 @@ const searchOnDongchedi = (carName) => {
   text-align: center;
   padding: 2rem;
   color: #d32f2f;
-  background: #ffebee;
-  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(211, 47, 47, 0.2);
+  border-radius: 12px;
   margin-bottom: 2rem;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 .no-data-message, .initial-message {
   text-align: center;
   padding: 3rem 2rem;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1.1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 /* 车辆价格数据区域 */
@@ -396,11 +417,11 @@ const searchOnDongchedi = (carName) => {
 }
 
 .price-section h3 {
-  color: #2196f3;
+  color: var(--text-accent);
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
   font-weight: 600;
-  border-bottom: 2px solid #2196f3;
+  border-bottom: 2px solid var(--text-accent);
   padding-bottom: 0.5rem;
 }
 
@@ -414,10 +435,13 @@ const searchOnDongchedi = (carName) => {
 /* 车辆图片容器 */
 .car-image-container {
   flex: 0 0 400px;
-  background: #f5f5f5;
-  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px var(--glass-shadow);
 }
 
 .main-car-image {
@@ -444,45 +468,47 @@ const searchOnDongchedi = (carName) => {
 }
 
 .car-cards-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--bg-secondary);
   border-radius: 3px;
 }
 
 .car-cards-container::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: var(--border-color);
   border-radius: 3px;
 }
 
 .car-cards-container::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: var(--text-secondary);
 }
 
 /* 车型卡片 */
 .car-card {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 1.2rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px var(--glass-shadow);
   position: relative;
 }
 
 .car-card:hover {
-  border-color: #2196f3;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.15);
+  border-color: var(--text-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--shadow-medium);
 }
 
 .card-header {
   margin-bottom: 1rem;
   padding-bottom: 0.8rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .car-name {
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
@@ -504,31 +530,31 @@ const searchOnDongchedi = (carName) => {
 
 .price-label {
   font-weight: 500;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .guide-price {
   font-size: 1rem;
   font-weight: 600;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .dealer-price {
   font-size: 1.1rem;
   font-weight: bold;
-  color: #f44336;
+  color: var(--text-accent);
 }
 
 .card-footer {
   text-align: center;
   padding-top: 0.5rem;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--border-color);
 }
 
 .click-hint {
   font-size: 0.85rem;
-  color: #2196f3;
+  color: var(--text-accent);
   font-weight: 500;
 }
 

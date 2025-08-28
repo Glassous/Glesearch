@@ -221,7 +221,7 @@ export default {
 .random-wallpaper-container {
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #f8f9fa;
+  background: var(--bg-primary);
 }
 
 .header {
@@ -229,11 +229,14 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: white;
-  border-bottom: 1px solid #e5e5e5;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 .back-btn {
@@ -247,14 +250,16 @@ export default {
 }
 
 .back-btn:hover {
-  background-color: #f5f5f5;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .title {
   font-size: 18px;
   font-weight: 600;
   margin: 0;
-  color: #3b82f6;
+  color: var(--text-accent);
 }
 
 .api-info {
@@ -263,12 +268,12 @@ export default {
 }
 
 .api-source {
-  color: #10b981;
+  color: var(--text-accent);
   font-weight: 500;
 }
 
 .update-time {
-  color: #666;
+  color: var(--text-secondary);
   margin-top: 2px;
 }
 
@@ -284,7 +289,7 @@ export default {
 }
 
 .loading {
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .error {
@@ -294,8 +299,8 @@ export default {
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3b82f6;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--text-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 16px;
@@ -307,17 +312,20 @@ export default {
 }
 
 .retry-btn {
-  background: #3b82f6;
+  background: var(--text-accent);
   color: white;
   border: none;
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   margin-top: 16px;
+  box-shadow: 0 4px 16px var(--shadow-light);
+  transition: all 0.3s ease;
 }
 
 .retry-btn:hover {
-  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .image-section {
@@ -325,11 +333,14 @@ export default {
 }
 
 .image-container {
-  background: white;
-  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px var(--glass-shadow);
   overflow: hidden;
   position: relative;
 }
@@ -339,11 +350,11 @@ export default {
   max-height: 70vh;
   width: auto;
   height: auto;
-  border-radius: 8px;
+  border-radius: 12px;
   display: block;
   margin: 0 auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s;
+  box-shadow: 0 8px 24px var(--shadow-medium);
+  transition: all 0.3s ease;
 }
 
 .wallpaper-image:hover {
@@ -378,39 +389,45 @@ export default {
 }
 
 .action-btn.primary {
-  background: #3b82f6;
+  background: var(--text-accent);
   color: white;
+  box-shadow: 0 4px 16px var(--shadow-light);
 }
 
 .action-btn.primary:hover:not(:disabled) {
-  background: #2563eb;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .action-btn.secondary {
-  background: white;
-  color: #3b82f6;
-  border: 2px solid #3b82f6;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-accent);
+  border: 2px solid var(--text-accent);
+  box-shadow: 0 4px 16px var(--shadow-light);
 }
 
 .action-btn.secondary:hover:not(:disabled) {
-  background: #3b82f6;
+  background: var(--text-accent);
   color: white;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .action-btn.fullscreen {
-  background: #6366f1;
+  background: var(--text-accent);
   color: white;
+  box-shadow: 0 4px 16px var(--shadow-light);
 }
 
 .action-btn.fullscreen:hover:not(:disabled) {
-  background: #4f46e5;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .no-image {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 16px;
   padding: 40px 20px;
 }

@@ -274,7 +274,7 @@ export default {
 .translate-container {
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #f8f9fa;
+  background: var(--bg-primary);
 }
 
 .header {
@@ -282,8 +282,10 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: white;
-  border-bottom: 1px solid #e5e5e5;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -295,19 +297,21 @@ export default {
   cursor: pointer;
   padding: 8px;
   border-radius: 8px;
-  transition: background-color 0.2s;
-  color: #1e584b;
+  transition: all 0.3s ease;
+  color: var(--text-accent);
 }
 
 .back-btn:hover {
-  background-color: #f5f5f5;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  transform: scale(1.05);
 }
 
 .title {
   font-size: 18px;
   font-weight: 600;
   margin: 0;
-  color: #1e584b;
+  color: var(--text-accent);
 }
 
 .api-info {
@@ -316,12 +320,12 @@ export default {
 }
 
 .api-source {
-  color: #10b981;
+  color: var(--text-accent);
   font-weight: 500;
 }
 
 .update-time {
-  color: #666;
+  color: var(--text-secondary);
   margin-top: 2px;
 }
 
@@ -340,10 +344,12 @@ export default {
 }
 
 .input-section, .output-section {
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--glass-shadow);
 }
 
 .language-selector {
@@ -355,34 +361,38 @@ export default {
 
 .language-selector label {
   font-weight: 500;
-  color: #1e584b;
+  color: var(--text-accent);
   min-width: 70px;
 }
 
 .language-select {
   flex: 1;
   padding: 8px 12px;
-  border: 2px solid #e5e5e5;
+  border: 2px solid var(--border-color);
   border-radius: 6px;
   font-size: 14px;
-  background: white;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   cursor: pointer;
   transition: border-color 0.2s;
 }
 
 .language-select:focus {
   outline: none;
-  border-color: #1e584b;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(30, 88, 75, 0.1);
 }
 
 .input-textarea {
   width: 100%;
   min-height: 150px;
   padding: 15px;
-  border: 2px solid #e5e5e5;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 14px;
   line-height: 1.5;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   resize: vertical;
   font-family: inherit;
   transition: border-color 0.2s;
@@ -390,13 +400,14 @@ export default {
 
 .input-textarea:focus {
   outline: none;
-  border-color: #1e584b;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(30, 88, 75, 0.1);
 }
 
 .char-count {
   text-align: right;
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   margin-top: 5px;
 }
 
@@ -404,24 +415,25 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1e584b;
+  color: var(--text-accent);
   margin-top: 60px;
 }
 
 .result-textarea {
   min-height: 150px;
   padding: 15px;
-  border: 2px solid #e5e5e5;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 14px;
   line-height: 1.5;
-  background: #f8f9fa;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
 .result-textarea.empty {
-  color: #999;
+  color: var(--text-secondary);
   font-style: italic;
 }
 
@@ -436,18 +448,18 @@ export default {
 }
 
 .loading {
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .error {
-  color: #dc3545;
+  color: var(--text-accent);
 }
 
 .loading-spinner {
   width: 30px;
   height: 30px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #1e584b;
+  border: 3px solid var(--border-color);
+  border-top: 3px solid var(--text-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
@@ -459,17 +471,20 @@ export default {
 }
 
 .retry-btn {
-  background: #dc3545;
+  background: var(--text-accent);
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 16px;
+  transition: all 0.3s ease;
 }
 
 .retry-btn:hover {
-  background: #c82333;
+  background: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
 }
 
 .controls {
@@ -500,25 +515,27 @@ export default {
 }
 
 .action-btn.primary {
-  background: #1e584b;
+  background: var(--text-accent);
   color: white;
 }
 
 .action-btn.primary:hover:not(:disabled) {
-  background: #155a4a;
+  background: var(--text-primary);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
 }
 
 .action-btn.secondary {
-  background: white;
-  color: #1e584b;
-  border: 2px solid #1e584b;
+  background: var(--bg-secondary);
+  color: var(--text-accent);
+  border: 2px solid var(--text-accent);
 }
 
 .action-btn.secondary:hover:not(:disabled) {
-  background: #1e584b;
+  background: var(--text-accent);
   color: white;
   transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
 }
 
 /* 响应式设计 */

@@ -306,10 +306,14 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 .back-button {
@@ -318,7 +322,7 @@ onMounted(() => {
   gap: 0.5rem;
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-secondary);
   cursor: pointer;
   font-size: 1rem;
   padding: 0.5rem;
@@ -327,14 +331,16 @@ onMounted(() => {
 }
 
 .back-button:hover {
-  background-color: #f5f5f5;
-  color: #333;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-primary);
 }
 
 .page-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -352,24 +358,31 @@ onMounted(() => {
 
 .subject-btn {
   padding: 0.75rem 2rem;
-  border: 2px solid #e0e0e0;
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
   border-radius: 25px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 500;
+  color: var(--text-primary);
   transition: all 0.3s ease;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 .subject-btn:hover {
-  border-color: #4CAF50;
-  color: #4CAF50;
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .subject-btn.active {
-  background: #4CAF50;
-  border-color: #4CAF50;
+  background: var(--text-accent);
+  border-color: var(--text-accent);
   color: white;
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 /* 题目容器 */
@@ -381,7 +394,7 @@ onMounted(() => {
 
 .question-type-badge {
   display: inline-block;
-  background: #ff9800;
+  background: var(--text-accent);
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
@@ -399,7 +412,7 @@ onMounted(() => {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-light);
 }
 
 .question-text {
@@ -408,7 +421,7 @@ onMounted(() => {
 
 .question-text h2 {
   font-size: 1.25rem;
-  color: #333;
+  color: var(--text-primary);
   line-height: 1.6;
   margin: 0;
 }
@@ -423,36 +436,40 @@ onMounted(() => {
   align-items: flex-start;
   padding: 1rem;
   margin-bottom: 0.75rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  background: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 .option-item:hover {
-  border-color: #4CAF50;
-  background-color: #f8fff8;
+  border-color: var(--text-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .option-item.selected {
-  border-color: #4CAF50;
-  background-color: #e8f5e8;
+  border-color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
 }
 
 .option-item.correct {
-  border-color: #4CAF50;
-  background-color: #e8f5e8;
+  border-color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
 }
 
 .option-item.wrong {
-  border-color: #f44336;
-  background-color: #ffebee;
+  border-color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
 }
 
 .option-item.wrong-multiple {
-  border-color: #f44336;
-  background-color: #ffebee;
+  border-color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
 }
 
 .option-checkbox {
@@ -461,15 +478,15 @@ onMounted(() => {
   justify-content: center;
   width: 20px;
   height: 20px;
-  border: 2px solid #ccc;
+  border: 2px solid var(--border-color);
   border-radius: 4px;
   margin-right: 0.5rem;
   transition: all 0.2s ease;
 }
 
 .option-item.selected .option-checkbox {
-  border-color: #4CAF50;
-  background-color: #4CAF50;
+  border-color: var(--text-accent);
+  background-color: var(--text-accent);
 }
 
 .checkbox-checked {
@@ -480,13 +497,13 @@ onMounted(() => {
 
 .option-label {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin-right: 0.5rem;
 }
 
 .option-text {
   flex: 1;
-  color: #333;
+  color: var(--text-primary);
   line-height: 1.5;
 }
 
@@ -500,52 +517,62 @@ onMounted(() => {
 
 .judge-btn {
   padding: 1rem 2rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
   cursor: pointer;
   font-size: 1.1rem;
   font-weight: 500;
-  transition: all 0.2s ease;
-  background: white;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
   min-width: 120px;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 .correct-btn:hover {
-  border-color: #4CAF50;
-  background-color: #f8fff8;
-  color: #4CAF50;
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .wrong-btn:hover {
-  border-color: #f44336;
-  background-color: #ffebee;
-  color: #f44336;
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .judge-btn.selected {
-  border-color: #4CAF50;
-  background-color: #e8f5e8;
-  color: #4CAF50;
+  border-color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
+  color: var(--text-accent);
 }
 
 .judge-btn.correct {
-  border-color: #4CAF50;
-  background-color: #e8f5e8;
-  color: #4CAF50;
+  border-color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
+  color: var(--text-accent);
 }
 
 .judge-btn.wrong {
-  border-color: #f44336;
-  background-color: #ffebee;
-  color: #f44336;
+  border-color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
+  color: var(--text-accent);
 }
 
 /* 结果显示 */
 .result-container {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 .result-message {
@@ -557,23 +584,23 @@ onMounted(() => {
 }
 
 .result-message.correct {
-  color: #4CAF50;
-  background-color: #e8f5e8;
+  color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
 }
 
 .result-message.wrong {
-  color: #f44336;
-  background-color: #ffebee;
+  color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
 }
 
 .explanation h4 {
-  color: #333;
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
   font-size: 1rem;
 }
 
 .explanation p {
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
 }
@@ -594,26 +621,31 @@ onMounted(() => {
 }
 
 .submit-btn {
-  background: #4CAF50;
+  background: var(--text-accent);
   color: white;
+  box-shadow: 0 4px 16px var(--shadow-light);
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 .submit-btn:disabled {
-  background: #ccc;
+  background: var(--border-color);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .next-btn {
-  background: #2196F3;
+  background: var(--text-accent);
   color: white;
+  box-shadow: 0 4px 16px var(--shadow-light);
 }
 
 .next-btn:hover {
-  background: #1976D2;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 /* 加载和错误状态 */
@@ -625,8 +657,8 @@ onMounted(() => {
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #4CAF50;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--text-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
@@ -639,17 +671,20 @@ onMounted(() => {
 
 .retry-btn {
   padding: 0.75rem 1.5rem;
-  background: #4CAF50;
+  background: var(--text-accent);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   margin-top: 1rem;
+  box-shadow: 0 4px 16px var(--shadow-light);
+  transition: all 0.3s ease;
 }
 
 .retry-btn:hover {
-  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
 /* 响应式设计 */

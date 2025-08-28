@@ -255,10 +255,13 @@ onMounted(() => {
   top: 0;
   left: 0;
   right: 0;
-  background: white;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
   width: 100%;
   z-index: 1000;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 /* 顶部导航栏 */
@@ -277,17 +280,20 @@ onMounted(() => {
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: #1e584b;
+  color: var(--text-accent);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   width: 40px;
   height: 40px;
 }
 
 .back-button:hover {
-  background-color: #f5f5f5;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transform: translateY(-1px);
 }
 
 .back-icon {
@@ -300,7 +306,7 @@ onMounted(() => {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  color: #1e584b;
+  color: var(--text-accent);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -310,7 +316,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: flex-end;
   font-size: 0.75rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.2;
 }
 
@@ -319,7 +325,7 @@ onMounted(() => {
 }
 
 .update-time {
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .update-time.error-status {
@@ -339,7 +345,7 @@ onMounted(() => {
 .loading-message {
   text-align: center;
   padding: 2rem;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
@@ -354,7 +360,7 @@ onMounted(() => {
 
 /* 油价数据区域 */
 .oil-price-section h3 {
-  color: #1e584b;
+  color: var(--text-accent);
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
   font-weight: 600;
@@ -367,18 +373,20 @@ onMounted(() => {
 }
 
 .region-card {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
   padding: 1.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px var(--glass-shadow);
 }
 
 .region-card:hover {
-  border-color: #1e584b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(30, 88, 75, 0.15);
+  border-color: var(--text-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--shadow-medium);
 }
 
 .region-header {
@@ -387,18 +395,18 @@ onMounted(() => {
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .region-name {
-  color: #1e584b;
+  color: var(--text-accent);
   font-size: 1.2rem;
   font-weight: bold;
   margin: 0;
 }
 
 .region-date {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -417,7 +425,7 @@ onMounted(() => {
 
 .oil-type {
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1rem;
 }
 
@@ -430,7 +438,7 @@ onMounted(() => {
 .current-price {
   font-size: 1.1rem;
   font-weight: bold;
-  color: #1e584b;
+  color: var(--text-accent);
 }
 
 .price-change {
@@ -453,8 +461,8 @@ onMounted(() => {
 }
 
 .price-change.price-stable {
-  color: #666;
-  background: #f5f5f5;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
 }
 
 /* 响应式设计 */

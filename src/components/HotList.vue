@@ -155,10 +155,13 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  background: white;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
   width: 100%;
   z-index: 1000;
+  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 /* 顶部导航栏 */
@@ -177,7 +180,7 @@ export default {
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: #1e584b;
+  color: var(--text-accent);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
@@ -187,7 +190,9 @@ export default {
 }
 
 .back-button:hover {
-  background-color: #f5f5f5;
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .back-icon {
@@ -200,7 +205,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  color: #1e584b;
+  color: var(--text-accent);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -210,7 +215,7 @@ export default {
   flex-direction: column;
   align-items: flex-end;
   font-size: 0.75rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.2;
 }
 
@@ -219,7 +224,7 @@ export default {
 }
 
 .update-time {
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .update-time.error-status {
@@ -231,9 +236,11 @@ export default {
 .tab-bar {
   display: flex;
   padding: 0 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--glass-border);
   overflow-x: auto;
-  background: #f8f9fa;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .tab-btn {
@@ -242,19 +249,19 @@ export default {
   padding: 1rem 1.5rem;
   cursor: pointer;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
   border-bottom: 2px solid transparent;
   transition: all 0.2s;
   white-space: nowrap;
 }
 
 .tab-btn.active {
-  color: #1e584b;
-  border-bottom-color: #1e584b;
+  color: var(--text-accent);
+  border-bottom-color: var(--text-accent);
 }
 
 .tab-btn:hover {
-  color: #1e584b;
+  color: var(--text-accent);
 }
 
 /* 主要内容区域 */
@@ -269,7 +276,7 @@ export default {
 .loading-message {
   text-align: center;
   padding: 2rem 1.5rem;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
@@ -293,27 +300,30 @@ export default {
 }
 
 .hot-item {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  box-shadow: 0 8px 32px var(--glass-shadow);
 }
 
 .hot-item:hover {
-  border-color: #1e584b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(30, 88, 75, 0.1);
+  border-color: var(--text-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--shadow-medium);
 }
 
 .rank {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #1e584b;
+  color: var(--text-accent);
   min-width: 50px;
   text-align: center;
   margin-right: 1rem;
@@ -325,7 +335,7 @@ export default {
 
 .hot-item .title {
   font-size: 1.1rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
   line-height: 1.4;
   font-weight: 500;
@@ -333,7 +343,7 @@ export default {
 
 .hot-value {
   font-size: 0.9rem;
-  color: #1e584b;
+  color: var(--text-accent);
   font-weight: 600;
 }
 

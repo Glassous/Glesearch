@@ -113,8 +113,10 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  background: white;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   width: 100%;
   z-index: 1000;
 }
@@ -135,17 +137,19 @@ export default {
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: #1e584b;
+  color: var(--text-accent);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   width: 40px;
   height: 40px;
 }
 
 .back-button:hover {
-  background-color: #f5f5f5;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  transform: scale(1.05);
 }
 
 .back-icon {
@@ -158,7 +162,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  color: #1e584b;
+  color: var(--text-accent);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -168,7 +172,7 @@ export default {
   flex-direction: column;
   align-items: flex-end;
   font-size: 0.75rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.2;
 }
 
@@ -177,11 +181,11 @@ export default {
 }
 
 .update-time {
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .update-time.error-status {
-  color: #d32f2f;
+  color: var(--text-accent);
   font-weight: bold;
 }
 
@@ -197,17 +201,20 @@ export default {
 .loading-message {
   text-align: center;
   padding: 2rem 1.5rem;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
 .error-message {
   text-align: center;
   padding: 2rem;
-  color: #d32f2f;
-  background: #ffebee;
+  color: var(--text-accent);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
   border-radius: 8px;
   margin: 0 1.5rem 2rem 1.5rem;
+  box-shadow: var(--glass-shadow);
 }
 
 /* 内容区域 */
@@ -219,21 +226,23 @@ export default {
   text-align: center;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: #f8fffe;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
   border-radius: 12px;
-  border: 2px solid #e0f2f1;
+  border: 2px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .date-header h3 {
   margin: 0 0 0.5rem 0;
-  color: #1e584b;
+  color: var(--text-accent);
   font-size: 1.8rem;
   font-weight: 600;
 }
 
 .date-header p {
   margin: 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -243,8 +252,9 @@ export default {
 }
 
 .history-item {
-  background: white;
-  border: 2px solid #e0e0e0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1rem;
@@ -252,24 +262,27 @@ export default {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
+  box-shadow: var(--glass-shadow);
 }
 
 .history-item:hover {
-  border-color: #1e584b;
+  border-color: var(--text-accent);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(30, 88, 75, 0.1);
+  box-shadow: var(--shadow-medium);
 }
 
 .year {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #1e584b;
+  color: var(--text-accent);
   min-width: 60px;
   text-align: center;
-  background: #f0f8f7;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
   padding: 0.5rem;
   border-radius: 8px;
   flex-shrink: 0;
+  border: 1px solid var(--glass-border);
 }
 
 .event-info {
@@ -278,7 +291,7 @@ export default {
 
 .event-text {
   font-size: 1rem;
-  color: #333;
+  color: var(--text-primary);
   line-height: 1.6;
   font-weight: 400;
 }
