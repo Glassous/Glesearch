@@ -1,0 +1,17 @@
+{
+  "appId": "com.glassous.glesearch",
+  "appName": "Glesearch",
+  "webDir": "dist",
+  "plugins": {
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#00000000",
+      "overlaysWebView": true
+    }
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  }
+}

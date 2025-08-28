@@ -900,9 +900,9 @@ onMounted(() => {
 
 /* 主要内容区域 */
 .main-content {
-  margin-top: 160px;
+  margin-top: 180px;
   padding: 0;
-  min-height: calc(100vh - 160px);
+  min-height: calc(100vh - 180px);
   width: 100%;
 }
 
@@ -1309,7 +1309,9 @@ onMounted(() => {
   }
   
   .main-content {
+    margin-top: 220px;
     padding: 1rem;
+    min-height: calc(100vh - 220px);
   }
   
   .input-group {

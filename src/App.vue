@@ -1,5 +1,33 @@
 <script setup>
-// App.vue 现在只作为路由容器
+import { onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { App } from '@capacitor/app'
+
+const router = useRouter()
+let backButtonListener = null
+
+// Android返回键处理
+const handleBackButton = () => {
+  // 如果当前不在首页，则返回上一页
+  if (router.currentRoute.value.path !== '/') {
+    router.back()
+  } else {
+    // 如果在首页，则退出应用
+    App.exitApp()
+  }
+}
+
+onMounted(async () => {
+  // 监听Android返回键事件
+  backButtonListener = await App.addListener('backButton', handleBackButton)
+})
+
+onUnmounted(() => {
+  // 清理监听器
+  if (backButtonListener) {
+    backButtonListener.remove()
+  }
+})
 </script>
 
 <template>
