@@ -10,6 +10,8 @@ import RandomWallpaper from '../components/RandomWallpaper.vue'
 import RandomGirlVideo from '../components/RandomGirlVideo.vue'
 import DrivingTest from '../components/DrivingTest.vue'
 import Translate from '../components/Translate.vue'
+import GoldPrice from '../components/GoldPrice.vue'
+import CarPrice from '../components/CarPrice.vue'
 
 const routes = [
   {
@@ -66,6 +68,16 @@ const routes = [
     path: '/translate',
     name: 'Translate',
     component: Translate
+  },
+  {
+    path: '/gold-price',
+    name: 'GoldPrice',
+    component: GoldPrice
+  },
+  {
+    path: '/car-price',
+    name: 'CarPrice',
+    component: CarPrice
   }
 ]
 

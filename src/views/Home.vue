@@ -55,11 +55,11 @@ const handleTranslate = () => {
 }
 
 const handleGoldPrice = () => {
-  alert('敬请期待')
+  router.push('/gold-price')
 }
 
 const handleVehiclePrice = () => {
-  alert('敬请期待')
+  router.push('/car-price')
 }
 </script>
 
@@ -168,7 +168,7 @@ const handleVehiclePrice = () => {
       <button class="feature-button vehicle-price" @click="handleVehiclePrice">
         <div class="button-icon">🚙</div>
         <div class="button-text">
-          <h3>车辆价格</h3>
+          <h3>车辆信息查询</h3>
           <p>汽车价格信息查询</p>
         </div>
       </button>
