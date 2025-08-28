@@ -385,6 +385,7 @@ export default {
 
 .input-textarea {
   width: 100%;
+  max-width: 100%;
   min-height: 150px;
   padding: 15px;
   border: 2px solid var(--border-color);
@@ -396,6 +397,7 @@ export default {
   resize: vertical;
   font-family: inherit;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .input-textarea:focus {
