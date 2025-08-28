@@ -30,24 +30,41 @@
 - **AI翻译** - 支持多语言在线翻译，覆盖50+种语言
 - **驾考题目** - 科目一和科目四随机练习题
 
-### 🔮 即将推出
-- **今日金价** - 实时黄金价格查询
-- **车辆价格** - 汽车价格信息查询
+### 💎 金融查询
+- **今日金价** - 实时黄金价格查询，包含银行投资金条、黄金回收、贵金属品牌价格
+- **车辆价格** - 汽车价格信息查询，支持品牌型号搜索，提供指导价和经销商价格
 
 ## 🛠️ 技术栈
 
 - **前端框架**: Vue 3 (Composition API)
-- **构建工具**: Vite
-- **路由管理**: Vue Router 4
+- **构建工具**: Vite 7.1.2
+- **路由管理**: Vue Router 4.5.1
 - **UI交互**: 原生CSS + 现代化动画效果
-- **拖拽功能**: Vue Draggable Next
-- **排序功能**: SortableJS
+- **拖拽功能**: Vue Draggable Next 2.3.0
+- **排序功能**: SortableJS 1.15.6
+- **移动端支持**: Capacitor 7.4.3 (支持Android应用打包)
 
 ## 📦 安装与运行
 
 ### 环境要求
 - Node.js >= 16.0.0
 - npm >= 7.0.0
+
+### 移动端应用
+本项目支持使用Capacitor打包为Android应用：
+```bash
+# 构建Web应用
+npm run build
+
+# 添加Android平台
+npx cap add android
+
+# 同步代码到Android项目
+npx cap sync
+
+# 在Android Studio中打开项目
+npx cap open android
+```
 
 ### 安装依赖
 ```bash
@@ -78,6 +95,8 @@ glesearch/
 │   ├── components/         # 功能组件
 │   │   ├── ExchangeRate.vue      # 汇率换算
 │   │   ├── OilPrice.vue          # 油价查询
+│   │   ├── GoldPrice.vue         # 今日金价
+│   │   ├── CarPrice.vue          # 车辆价格查询
 │   │   ├── HotList.vue           # 热榜汇总
 │   │   ├── HistoryToday.vue      # 历史上的今天
 │   │   ├── GenshinImages.vue     # 原神图片
@@ -123,6 +142,8 @@ glesearch/
 
 - **汇率数据**: 实时汇率API
 - **油价数据**: 全国油价查询API
+- **金价数据**: 银行投资金条、黄金回收、贵金属品牌价格API
+- **车辆数据**: 汽车价格信息查询API
 - **热榜数据**: 各大平台热门内容API
 - **历史数据**: 历史事件查询API
 - **图片资源**: 随机图片API
