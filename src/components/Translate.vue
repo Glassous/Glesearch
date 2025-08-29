@@ -8,7 +8,7 @@
       </button>
       <h2 class="page-title">AI翻译</h2>
       <div class="api-info">
-        <div class="api-source">数据来源: xxapi.cn</div>
+        <div class="api-source">数据来源: jkyai.top</div>
         <div class="update-time" :class="{ 'error-status': error }">
           {{ error ? 'Error' : (lastUpdateTime || '输入文本开始翻译') }}
         </div>
@@ -18,11 +18,6 @@
 
   <!-- 主要内容区域 -->
   <main class="main-content">
-    <!-- 加载状态 -->
-    <div v-if="loading" class="loading-message">
-      正在翻译中...
-    </div>
-    
     <!-- 错误信息 -->
     <div v-if="error" class="error-message">
       {{ error }}
@@ -30,33 +25,40 @@
     </div>
 
     <!-- 翻译功能展示 -->
-    <div v-if="!loading" class="translate-section">
+    <div class="translate-section">
       <h3>AI智能翻译</h3>
       
       <!-- 语言选择器 -->
       <div class="language-selector">
         <div class="language-card">
           <div class="language-header">
-            <h4 class="language-title">语言设置</h4>
+            <h4 class="language-title">目标语言设置</h4>
           </div>
           <div class="language-content">
             <div class="language-options">
-              <div class="language-option">
-                <label class="language-label">源语言:</label>
-                <select v-model="fromLanguage" class="language-select">
-                  <option value="auto">自动检测</option>
-                  <option v-for="(name, code) in languages" :key="code" :value="code">
-                    {{ name }}
-                  </option>
-                </select>
-              </div>
-              <div class="language-option">
+              <div class="language-option full-width">
                 <label class="language-label">目标语言:</label>
-                <select v-model="toLanguage" class="language-select">
-                  <option v-for="(name, code) in languages" :key="code" :value="code">
-                    {{ name }}
-                  </option>
-                </select>
+                <div class="target-language-input">
+                  <input 
+                    v-model="customTargetLang" 
+                    type="text" 
+                    class="custom-lang-input"
+                    placeholder="输入目标语言（如：英语、日语、法语等）"
+                  />
+                  <span class="or-divider">或选择预设</span>
+                  <select v-model="selectedPresetLang" @change="onPresetSelect" class="language-select">
+                    <option value="">选择预设语言</option>
+                    <option value="英语">英语</option>
+                    <option value="日语">日语</option>
+                    <option value="韩语">韩语</option>
+                    <option value="法语">法语</option>
+                    <option value="德语">德语</option>
+                    <option value="西班牙语">西班牙语</option>
+                    <option value="俄语">俄语</option>
+                    <option value="中文">中文</option>
+                    <option value="繁体中文">繁体中文</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -83,9 +85,13 @@
               ></textarea>
             </div>
             
-            <!-- 翻译箭头 -->
+            <!-- 翻译箭头/加载状态 -->
             <div class="translate-arrow">
-              <span class="arrow-icon">→</span>
+              <div v-if="loading" class="loading-animation">
+                <div class="loading-spinner"></div>
+                <span class="loading-text">正在翻译中...</span>
+              </div>
+              <span v-else class="arrow-icon">→</span>
             </div>
             
             <!-- 输出区域 -->
@@ -103,7 +109,7 @@
                   <button 
                     class="action-button primary" 
                     @click="translate"
-                    :disabled="!inputText.trim() || loading"
+                    :disabled="!inputText.trim() || !getTargetLanguage() || loading"
                   >
                     {{ loading ? '翻译中...' : '开始翻译' }}
                   </button>
@@ -140,59 +146,9 @@ export default {
       error: null,
       inputText: '',
       translatedText: '',
-      fromLanguage: 'auto',
-      toLanguage: 'en',
-      lastUpdateTime: null,
-      apiKey: '798844718608371c',
-      languages: {
-        'ar': '阿拉伯语',
-        'az': '阿塞拜疆语',
-        'bg': '保加利亚语',
-        'bn': '孟加拉语',
-        'ca': '加泰罗尼亚语',
-        'cs': '捷克语',
-        'da': '丹麦语',
-        'de': '德语',
-        'el': '希腊语',
-        'en': '英语',
-        'eo': '世界语',
-        'es': '西班牙语',
-        'et': '爱沙尼亚语',
-        'eu': '巴斯克语',
-        'fa': '波斯语',
-        'fi': '芬兰语',
-        'fr': '法语',
-        'ga': '爱尔兰语',
-        'gl': '加利西亚语',
-        'he': '希伯来语',
-        'hi': '印地语',
-        'hu': '匈牙利语',
-        'id': '印度尼西亚语',
-        'it': '意大利语',
-        'ja': '日语',
-        'ko': '韩语',
-        'lt': '立陶宛语',
-        'lv': '拉脱维亚语',
-        'ms': '马来语',
-        'nb': '挪威博克马尔语',
-        'nl': '荷兰语',
-        'pb': '巴西葡萄牙语',
-        'pl': '波兰语',
-        'pt': '葡萄牙语',
-        'ro': '罗马尼亚语',
-        'ru': '俄语',
-        'sk': '斯洛伐克语',
-        'sl': '斯洛文尼亚语',
-        'sq': '阿尔巴尼亚语',
-        'sv': '瑞典语',
-        'th': '泰语',
-        'tl': '塔加洛语（菲律宾语）',
-        'tr': '土耳其语',
-        'uk': '乌克兰语',
-        'ur': '乌尔都语',
-        'zh': '简体中文',
-        'zt': '繁体中文'
-      }
+      customTargetLang: '',
+      selectedPresetLang: '',
+      lastUpdateTime: null
     }
   },
   methods: {
@@ -206,23 +162,23 @@ export default {
         return
       }
       
+      const targetLang = this.getTargetLanguage()
+      if (!targetLang) {
+        this.error = '请选择或输入目标语言'
+        return
+      }
+      
       this.loading = true
       this.error = null
       
       try {
-        const requestOptions = {
-          method: 'GET',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          redirect: 'follow'
-        }
-        
-        const url = `/api/AIAutoTranslate?text=${encodeURIComponent(this.inputText)}&to=${this.toLanguage}&key=${this.apiKey}`
+        const url = `https://api.jkyai.top/API/wnyyfy.php?msg=${encodeURIComponent(this.inputText)}&target=${encodeURIComponent(targetLang)}&type=json`
         console.log('翻译请求URL:', url)
         
-        const response = await fetch(url, requestOptions)
+        const response = await fetch(url, {
+          method: 'GET',
+          mode: 'cors'
+        })
         console.log('响应状态:', response.status)
         
         if (!response.ok) {
@@ -232,11 +188,11 @@ export default {
         const data = await response.json()
         console.log('API返回数据:', data)
         
-        if (data.code === 200 && data.data) {
-          this.translatedText = data.data
+        if (data.status === 'success' && data.data && data.data.translated_text) {
+          this.translatedText = data.data.translated_text
           this.lastUpdateTime = new Date().toLocaleTimeString()
         } else {
-          this.error = data.msg || '翻译失败'
+          this.error = data.message || '翻译失败'
           console.error('API返回错误:', data)
         }
       } catch (err) {
@@ -247,9 +203,21 @@ export default {
       }
     },
     
+    getTargetLanguage() {
+      return this.customTargetLang.trim() || this.selectedPresetLang
+    },
+    
+    onPresetSelect() {
+      if (this.selectedPresetLang) {
+        this.customTargetLang = ''
+      }
+    },
+    
     clearAll() {
       this.inputText = ''
       this.translatedText = ''
+      this.customTargetLang = ''
+      this.selectedPresetLang = ''
       this.error = null
       this.lastUpdateTime = null
     },
@@ -462,8 +430,8 @@ export default {
 }
 
 .language-options {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 
@@ -471,6 +439,58 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.language-option.full-width {
+  width: 100%;
+}
+
+.target-language-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.custom-lang-input {
+  padding: 0.75rem;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.custom-lang-input:focus {
+  outline: none;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(30, 88, 75, 0.1);
+}
+
+.or-divider {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  position: relative;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.or-divider::before {
+  left: 0;
+}
+
+.or-divider::after {
+  right: 0;
 }
 
 .language-label {
@@ -583,12 +603,43 @@ export default {
 .translate-arrow {
   text-align: center;
   padding: 0.5rem 0;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .arrow-icon {
   font-size: 1.5rem;
   color: var(--text-accent);
   font-weight: bold;
+}
+
+.loading-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border-color);
+  border-top: 3px solid var(--text-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  color: var(--text-accent);
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .result-textarea {
@@ -721,12 +772,16 @@ export default {
     justify-content: center;
   }
   
-  .language-options {
-    grid-template-columns: 1fr;
+  .target-language-input {
+    gap: 0.6rem;
   }
   
   .translate-arrow {
     transform: rotate(90deg);
+  }
+  
+  .loading-animation {
+    transform: rotate(-90deg);
   }
 }
 
