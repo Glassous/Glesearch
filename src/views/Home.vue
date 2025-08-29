@@ -41,6 +41,11 @@ const handleAPI = () => {
   window.open('https://xxapi.cn/', '_blank')
 }
 
+// 云智API网站跳转函数
+const handleCloudAPI = () => {
+  window.open('https://api.jkyai.top/', '_blank')
+}
+
 // 汇率换算按钮点击事件
 const handleExchangeRate = () => {
   router.push('/exchange-rate')
@@ -155,7 +160,7 @@ const handleVehiclePrice = () => {
       </button>
 
       <button class="feature-button random-girl-video" @click="handleRandomGirlVideo">
-        <div class="button-icon">🎬</div>
+        <div class="button-icon">📹</div>
         <div class="button-text">
           <h3>随机小姐姐视频</h3>
           <p>随机推荐精彩视频</p>
@@ -224,7 +229,13 @@ const handleVehiclePrice = () => {
         
         <button class="btn api-btn" @click="handleAPI">
           <span class="api-text">
-            <img src="/src/assets/images/favicon.ico" alt="favicon" class="favicon-icon" />
+            <img src="/src/assets/images/小小api.ico" alt="小小api" class="favicon-icon" />
+          </span>
+        </button>
+        
+        <button class="btn api-btn" @click="handleCloudAPI">
+          <span class="api-text">
+            <img src="/src/assets/images/云智api.ico" alt="云智api" class="favicon-icon" />
           </span>
         </button>
       </div>
@@ -794,9 +805,11 @@ const handleVehiclePrice = () => {
   }
   
   .footer-buttons {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
     gap: 1rem;
+    flex-wrap: wrap;
   }
   
   .btn {
