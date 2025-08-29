@@ -30,8 +30,10 @@ onUnmounted(() => {
 })
 </script>
 
-<template>
-  <router-view />
+<template> 
+  <div class="safe-area">
+    <router-view />
+  </div>
 </template>
 
 <style>
