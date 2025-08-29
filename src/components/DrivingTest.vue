@@ -1,139 +1,179 @@
 <template>
-  <div class="driving-test-container">
-    <!-- 顶部栏 - 复用原神图片页面的结构 -->
-    <div class="top-bar">
+  <!-- 顶部固定区域 -->
+  <div class="fixed-header">
+    <!-- 顶部导航栏 -->
+    <header class="top-bar">
       <button class="back-button" @click="goBack">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <span class="back-icon">←</span>
       </button>
-      <h1 class="page-title">随机驾考题目</h1>
-      <div class="placeholder"></div>
-    </div>
-
-    <!-- 科目选择 -->
-    <div class="subject-selector">
-      <button 
-        class="subject-btn" 
-        :class="{ active: selectedSubject === 1 }" 
-        @click="selectSubject(1)"
-      >
-        科目一
-      </button>
-      <button 
-        class="subject-btn" 
-        :class="{ active: selectedSubject === 4 }" 
-        @click="selectSubject(4)"
-      >
-        科目四
-      </button>
-    </div>
-
-    <!-- 题目内容 -->
-    <div class="question-container" v-if="currentQuestion">
-      <!-- 题目图片 -->
-      <div class="question-image" v-if="currentQuestion.pic">
-        <img :src="currentQuestion.pic" :alt="currentQuestion.question" />
-      </div>
-
-      <!-- 题目文本 -->
-      <div class="question-text">
-        <div class="question-type-badge" v-if="questionType === 'multiple'">多选题</div>
-        <h2>{{ currentQuestion.question }}</h2>
-      </div>
-
-      <!-- 选择题选项 -->
-      <div class="options-container" v-if="questionType === 'single' || questionType === 'multiple'">
-        <div 
-          v-for="(option, index) in options" 
-          :key="index"
-          class="option-item"
-          :class="{ 
-            selected: questionType === 'multiple' ? selectedAnswers.includes(option.key) : selectedAnswer === option.key,
-            correct: showResult && isCorrectOption(option.key),
-            wrong: showResult && questionType === 'single' && selectedAnswer === option.key && option.key !== currentQuestion.answer,
-            'wrong-multiple': showResult && questionType === 'multiple' && selectedAnswers.includes(option.key) && !isCorrectOption(option.key)
-          }"
-          @click="selectAnswer(option.key)"
-        >
-          <span class="option-checkbox" v-if="questionType === 'multiple'">
-            <span v-if="selectedAnswers.includes(option.key)" class="checkbox-checked">✓</span>
-          </span>
-          <span class="option-label">{{ option.key }}、</span>
-          <span class="option-text">{{ option.text }}</span>
+      <h2 class="page-title">随机驾考题目</h2>
+      <div class="api-info">
+        <div class="api-source">数据来源: xxapi.cn</div>
+        <div class="update-time" :class="{ 'error-status': error }">
+          {{ error ? 'Error' : '科目' + selectedSubject }}
         </div>
       </div>
-
-      <!-- 判断题选项 -->
-      <div class="judge-container" v-if="questionType === 'judge'">
-        <button 
-          class="judge-btn correct-btn"
-          :class="{ 
-            selected: selectedAnswer === '对',
-            correct: showResult && currentQuestion.answer === '对',
-            wrong: showResult && selectedAnswer === '对' && currentQuestion.answer !== '对'
-          }"
-          @click="selectAnswer('对')"
-        >
-          ✓ 正确
-        </button>
-        <button 
-          class="judge-btn wrong-btn"
-          :class="{ 
-            selected: selectedAnswer === '错',
-            correct: showResult && currentQuestion.answer === '错',
-            wrong: showResult && selectedAnswer === '错' && currentQuestion.answer !== '错'
-          }"
-          @click="selectAnswer('错')"
-        >
-          ✗ 错误
-        </button>
-      </div>
-
-      <!-- 结果显示 -->
-      <div class="result-container" v-if="showResult">
-        <div class="result-message" :class="{ correct: isCorrect, wrong: !isCorrect }">
-          <span v-if="isCorrect">✓ 回答正确！</span>
-          <span v-else>✗ 回答错误！正确答案是：{{ currentQuestion.answer }}</span>
-        </div>
-        <div class="explanation">
-          <h4>解析：</h4>
-          <p>{{ currentQuestion.explain }}</p>
-        </div>
-      </div>
-
-      <!-- 操作按钮 -->
-      <div class="action-buttons">
-        <button 
-          class="submit-btn" 
-          @click="submitAnswer" 
-          :disabled="(questionType === 'multiple' ? selectedAnswers.length === 0 : !selectedAnswer) || showResult"
-          v-if="!showResult"
-        >
-          提交答案
-        </button>
-        <button 
-          class="next-btn" 
-          @click="loadNextQuestion" 
-          v-if="showResult"
-        >
-          下一题
-        </button>
-      </div>
-    </div>
-
-    <!-- 加载状态 -->
-    <div class="loading-container" v-if="loading">
-      <div class="loading-spinner"></div>
-      <p>正在加载题目...</p>
-    </div>
-
-    <!-- 错误状态 -->
-    <div class="error-container" v-if="error">
-      <p>{{ error }}</p>
-      <button class="retry-btn" @click="loadQuestion">重新加载</button>
-    </div>
+    </header>
   </div>
+
+  <!-- 主要内容区域 -->
+  <main class="main-content">
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-message">
+      正在获取题目数据...
+    </div>
+    
+    <!-- 错误信息 -->
+    <div v-if="error" class="error-message">
+      {{ error }}
+      <button class="retry-button" @click="loadQuestion">重新加载</button>
+    </div>
+
+    <!-- 驾考题目展示 -->
+    <div v-if="!loading && !error" class="question-section">
+      <h3>驾考练习题目</h3>
+      
+      <!-- 科目选择器 -->
+      <div class="subject-selector">
+        <div class="subject-card">
+          <div class="subject-header">
+            <h4 class="subject-title">选择科目</h4>
+          </div>
+          <div class="subject-content">
+            <div class="subject-buttons">
+              <button 
+                class="subject-btn" 
+                :class="{ active: selectedSubject === 1 }" 
+                @click="selectSubject(1)"
+              >
+                科目一
+              </button>
+              <button 
+                class="subject-btn" 
+                :class="{ active: selectedSubject === 4 }" 
+                @click="selectSubject(4)"
+              >
+                科目四
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 题目内容 -->
+      <div v-if="currentQuestion" class="question-grid">
+        <div class="question-card">
+          <div class="question-header">
+            <h4 class="question-title">
+              {{ questionType === 'multiple' ? '多选题' : questionType === 'judge' ? '判断题' : '单选题' }}
+            </h4>
+            <div class="question-type-badge" v-if="questionType === 'multiple'">多选</div>
+          </div>
+          
+          <div class="question-content">
+            <!-- 题目图片 -->
+            <div v-if="currentQuestion.pic" class="question-image">
+              <img :src="currentQuestion.pic" :alt="currentQuestion.question" />
+            </div>
+            
+            <!-- 题目文本 -->
+            <div class="question-text">
+              <h5>{{ currentQuestion.question }}</h5>
+            </div>
+            
+            <!-- 选择题选项 -->
+            <div v-if="questionType === 'single' || questionType === 'multiple'" class="options-container">
+              <div 
+                v-for="(option, index) in options" 
+                :key="index"
+                class="option-item"
+                :class="{ 
+                  selected: questionType === 'multiple' ? selectedAnswers.includes(option.key) : selectedAnswer === option.key,
+                  correct: showResult && isCorrectOption(option.key),
+                  wrong: showResult && questionType === 'single' && selectedAnswer === option.key && option.key !== currentQuestion.answer,
+                  'wrong-multiple': showResult && questionType === 'multiple' && selectedAnswers.includes(option.key) && !isCorrectOption(option.key)
+                }"
+                @click="selectAnswer(option.key)"
+              >
+                <span class="option-checkbox" v-if="questionType === 'multiple'">
+                  <span v-if="selectedAnswers.includes(option.key)" class="checkbox-checked">✓</span>
+                </span>
+                <span class="option-label">{{ option.key }}、</span>
+                <span class="option-text">{{ option.text }}</span>
+              </div>
+            </div>
+
+            <!-- 判断题选项 -->
+            <div v-if="questionType === 'judge'" class="judge-container">
+              <button 
+                class="judge-btn correct-btn"
+                :class="{ 
+                  selected: selectedAnswer === '对',
+                  correct: showResult && currentQuestion.answer === '对',
+                  wrong: showResult && selectedAnswer === '对' && currentQuestion.answer !== '对'
+                }"
+                @click="selectAnswer('对')"
+              >
+                ✓ 正确
+              </button>
+              <button 
+                class="judge-btn wrong-btn"
+                :class="{ 
+                  selected: selectedAnswer === '错',
+                  correct: showResult && currentQuestion.answer === '错',
+                  wrong: showResult && selectedAnswer === '错' && currentQuestion.answer !== '错'
+                }"
+                @click="selectAnswer('错')"
+              >
+                ✗ 错误
+              </button>
+            </div>
+
+            <!-- 结果显示 -->
+            <div v-if="showResult" class="result-container">
+              <div class="result-message" :class="{ correct: isCorrect, wrong: !isCorrect }">
+                <span v-if="isCorrect">✓ 回答正确！</span>
+                <span v-else>✗ 回答错误！正确答案是：{{ currentQuestion.answer }}</span>
+              </div>
+              <div class="explanation">
+                <h6>解析：</h6>
+                <p>{{ currentQuestion.explain }}</p>
+              </div>
+            </div>
+            
+            <div class="question-actions">
+              <div class="action-item">
+                <span class="action-label">操作</span>
+                <div class="action-buttons">
+                  <button 
+                    v-if="!showResult"
+                    class="action-button primary" 
+                    @click="submitAnswer"
+                    :disabled="(questionType === 'multiple' ? selectedAnswers.length === 0 : !selectedAnswer)"
+                  >
+                    提交答案
+                  </button>
+                  <button 
+                    v-if="showResult"
+                    class="action-button primary" 
+                    @click="loadNextQuestion"
+                  >
+                    下一题
+                  </button>
+                  <button 
+                    class="action-button secondary" 
+                    @click="loadQuestion"
+                  >
+                    换一题
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </template>
 
 <script setup>
@@ -295,64 +335,186 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.driving-test-container {
-  min-height: 100vh;
-  padding: 0;
+/* 全局样式 */
+* {
+  box-sizing: border-box;
 }
 
-/* 顶部栏样式 - 复用原神图片页面 */
+/* 顶部区域 */
+.fixed-header {
+  padding-top: env(safe-area-inset-top);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 4px 16px var(--glass-shadow);
+}
+
+/* 顶部导航栏 */
 .top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--glass-border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 16px var(--glass-shadow);
+  height: 60px;
 }
 
 .back-button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   background: none;
   border: none;
-  color: var(--text-secondary);
+  font-size: 1.2rem;
+  color: var(--text-accent);
   cursor: pointer;
-  font-size: 1rem;
   padding: 0.5rem;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
 }
 
 .back-button:hover {
   background: var(--glass-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.back-icon {
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .page-title {
-  font-size: 1.25rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: var(--text-accent);
+  font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text-primary);
+}
+
+.api-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.2;
+}
+
+.api-source {
+  margin-bottom: 2px;
+}
+
+.update-time {
+  color: var(--text-secondary);
+}
+
+.update-time.error-status {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+/* 主要内容区域 */
+.main-content {
+  margin-top: 60px;
+  padding: 2rem 1.5rem;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+}
+
+/* 加载和错误状态 */
+.loading-message {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #d32f2f;
+  background: #ffebee;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.retry-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--text-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
+}
+
+/* 题目数据区域 */
+.question-section h3 {
+  color: var(--text-accent);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+/* 科目选择器 */
+.subject-selector {
+  margin-bottom: 1.5rem;
+}
+
+.subject-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.subject-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.subject-title {
+  color: var(--text-accent);
+  font-size: 1.2rem;
+  font-weight: bold;
   margin: 0;
 }
 
-.placeholder {
-  width: 80px;
+.subject-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* 科目选择 */
-.subject-selector {
+.subject-buttons {
   display: flex;
   gap: 1rem;
-  padding: 1.5rem;
   justify-content: center;
 }
 
@@ -385,71 +547,100 @@ onMounted(() => {
   box-shadow: 0 8px 24px var(--shadow-medium);
 }
 
-/* 题目容器 */
-.question-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 1.5rem 2rem;
+.question-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.question-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.question-title {
+  color: var(--text-accent);
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
 }
 
 .question-type-badge {
-  display: inline-block;
   background: var(--text-accent);
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+}
+
+.question-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .question-image {
   text-align: center;
-  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
 }
 
 .question-image img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-  box-shadow: var(--shadow-light);
+  box-shadow: 0 4px 16px var(--shadow-light);
 }
 
-.question-text {
-  margin-bottom: 2rem;
-}
-
-.question-text h2 {
-  font-size: 1.25rem;
+.question-text h5 {
   color: var(--text-primary);
+  font-size: 1.1rem;
   line-height: 1.6;
   margin: 0;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
 }
 
 /* 选择题选项 */
 .options-container {
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .option-item {
   display: flex;
   align-items: flex-start;
   padding: 1rem;
-  margin-bottom: 0.75rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
 .option-item:hover {
   border-color: var(--text-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
 .option-item.selected {
@@ -458,18 +649,13 @@ onMounted(() => {
 }
 
 .option-item.correct {
-  border-color: var(--text-accent);
-  background: rgba(30, 88, 75, 0.1);
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
 }
 
-.option-item.wrong {
-  border-color: var(--text-accent);
-  background: rgba(30, 88, 75, 0.1);
-}
-
-.option-item.wrong-multiple {
-  border-color: var(--text-accent);
-  background: rgba(30, 88, 75, 0.1);
+.option-item.wrong, .option-item.wrong-multiple {
+  border-color: #f44336;
+  background: rgba(244, 67, 54, 0.1);
 }
 
 .option-checkbox {
@@ -511,38 +697,27 @@ onMounted(() => {
 .judge-container {
   display: flex;
   gap: 1rem;
-  margin-bottom: 2rem;
   justify-content: center;
 }
 
 .judge-btn {
   padding: 1rem 2rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1.1rem;
   font-weight: 500;
   color: var(--text-primary);
   transition: all 0.3s ease;
   min-width: 120px;
-  box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
-.correct-btn:hover {
+.judge-btn:hover {
   border-color: var(--text-accent);
   color: var(--text-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
-}
-
-.wrong-btn:hover {
-  border-color: var(--text-accent);
-  color: var(--text-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
 .judge-btn.selected {
@@ -552,27 +727,22 @@ onMounted(() => {
 }
 
 .judge-btn.correct {
-  border-color: var(--text-accent);
-  background: rgba(30, 88, 75, 0.1);
-  color: var(--text-accent);
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
 }
 
 .judge-btn.wrong {
-  border-color: var(--text-accent);
-  background: rgba(30, 88, 75, 0.1);
-  color: var(--text-accent);
+  border-color: #f44336;
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
 }
 
 /* 结果显示 */
 .result-container {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px var(--glass-shadow);
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
 }
 
 .result-message {
@@ -584,16 +754,16 @@ onMounted(() => {
 }
 
 .result-message.correct {
-  color: var(--text-accent);
-  background: rgba(30, 88, 75, 0.1);
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
 }
 
 .result-message.wrong {
-  color: var(--text-accent);
-  background: rgba(30, 88, 75, 0.1);
+  color: #f44336;
+  background: rgba(244, 67, 54, 0.1);
 }
 
-.explanation h4 {
+.explanation h6 {
   color: var(--text-primary);
   margin: 0 0 0.5rem 0;
   font-size: 1rem;
@@ -605,86 +775,77 @@ onMounted(() => {
   margin: 0;
 }
 
-/* 操作按钮 */
-.action-buttons {
-  text-align: center;
+.question-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
 }
 
-.submit-btn, .next-btn {
-  padding: 0.75rem 2rem;
-  border: none;
-  border-radius: 25px;
-  font-size: 1rem;
+.action-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.action-label {
   font-weight: 500;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 80px;
+  justify-content: center;
 }
 
-.submit-btn {
-  background: var(--text-accent);
-  color: white;
-  box-shadow: 0 4px 16px var(--shadow-light);
-}
-
-.submit-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
-}
-
-.submit-btn:disabled {
-  background: var(--border-color);
+.action-button:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
-.next-btn {
+.action-button.primary {
   background: var(--text-accent);
   color: white;
-  box-shadow: 0 4px 16px var(--shadow-light);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
-.next-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
+.action-button.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
 }
 
-/* 加载和错误状态 */
-.loading-container, .error-container {
-  text-align: center;
-  padding: 3rem 1.5rem;
+.action-button.secondary {
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-accent);
+  border: 1px solid var(--text-accent);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--text-accent);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.retry-btn {
-  padding: 0.75rem 1.5rem;
+.action-button.secondary:hover:not(:disabled) {
   background: var(--text-accent);
   color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 1rem;
-  box-shadow: 0 4px 16px var(--shadow-light);
-  transition: all 0.3s ease;
-}
-
-.retry-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
 }
 
 /* 响应式设计 */
@@ -693,25 +854,41 @@ onMounted(() => {
     padding: 1rem;
   }
   
-  .page-title {
-    font-size: 1.1rem;
-  }
-  
-  .subject-selector {
+  .main-content {
     padding: 1rem;
   }
   
-  .subject-btn {
-    padding: 0.6rem 1.5rem;
-    font-size: 0.9rem;
+  .question-card, .subject-card {
+    padding: 1rem;
   }
   
-  .question-container {
-    padding: 0 1rem 2rem;
+  .page-title {
+    font-size: 1.3rem;
   }
   
-  .question-text h2 {
-    font-size: 1.1rem;
+  .api-info {
+    font-size: 0.7rem;
+  }
+  
+  .question-header, .subject-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  
+  .action-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .action-buttons {
+    align-self: stretch;
+    justify-content: center;
+  }
+  
+  .subject-buttons {
+    gap: 0.5rem;
   }
   
   .judge-container {
@@ -722,6 +899,37 @@ onMounted(() => {
   .judge-btn {
     width: 100%;
     max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.2rem;
+  }
+  
+  .api-info {
+    font-size: 0.65rem;
+  }
+  
+  .top-bar {
+    padding: 0.8rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .action-button {
+    width: 100%;
+  }
+  
+  .subject-buttons {
+    flex-direction: column;
+  }
+  
+  .subject-btn {
+    width: 100%;
   }
 }
 </style>

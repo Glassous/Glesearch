@@ -1,94 +1,92 @@
 <template>
-  <div class="random-wallpaper-container">
-    <!-- 顶部栏 -->
-    <div class="header">
-      <button class="back-btn" @click="goBack">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+  <!-- 顶部固定区域 -->
+  <div class="fixed-header">
+    <!-- 顶部导航栏 -->
+    <header class="top-bar">
+      <button class="back-button" @click="goBack">
+        <span class="back-icon">←</span>
       </button>
-      <h1 class="title">随机壁纸图片</h1>
+      <h2 class="page-title">随机壁纸</h2>
       <div class="api-info">
-        <div class="api-source">xxapi.cn</div>
-        <div class="update-time">{{ lastUpdateTime || '点击获取' }}</div>
-      </div>
-    </div>
-
-    <!-- 内容区域 -->
-    <div class="content">
-      <!-- 加载状态 -->
-      <div v-if="loading" class="loading">
-        <div class="loading-spinner"></div>
-        <p>正在获取壁纸...</p>
-      </div>
-
-      <!-- 错误状态 -->
-      <div v-else-if="error" class="error">
-        <p>{{ error }}</p>
-        <button @click="fetchNewImage" class="retry-btn">重试</button>
-      </div>
-
-      <!-- 图片显示 -->
-      <div v-else class="image-section">
-        <div class="image-container" v-if="currentImage">
-          <img 
-            ref="wallpaperImage"
-            :src="currentImage" 
-            alt="随机壁纸"
-            class="wallpaper-image"
-            @load="handleImageLoad"
-            @error="handleImageError"
-          />
-        </div>
-
-        <!-- 控制按钮 -->
-        <div class="controls">
-          <button 
-            class="action-btn primary" 
-            @click="fetchNewImage"
-            :disabled="loading"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M1 4V10H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M23 20V14H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14L18.36 18.36A9 9 0 0 1 3.51 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            {{ loading ? '获取中...' : '换一张' }}
-          </button>
-
-          <button 
-            class="action-btn fullscreen" 
-            @click="openFullscreen"
-            :disabled="!currentImage"
-            title="全屏查看"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M8 3H5A2 2 0 0 0 3 5V8M21 8V5A2 2 0 0 0 19 3H16M16 21H19A2 2 0 0 0 21 19V16M8 21H5A2 2 0 0 0 3 19V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            全屏查看
-          </button>
-          
-          <button 
-            class="action-btn secondary" 
-            @click="downloadImage"
-            :disabled="!currentImage || loading"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M21 15V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            下载壁纸
-          </button>
-        </div>
-
-        <!-- 提示信息 -->
-        <div v-if="!currentImage" class="no-image">
-          <p>点击"换一张"获取随机壁纸</p>
+        <div class="api-source">数据来源: xxapi.cn</div>
+        <div class="update-time" :class="{ 'error-status': error }">
+          {{ error ? 'Error' : '更新时间: ' + (lastUpdateTime || '点击获取') }}
         </div>
       </div>
-    </div>
+    </header>
   </div>
+
+  <!-- 主要内容区域 -->
+  <main class="main-content">
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-message">
+      正在获取壁纸数据...
+    </div>
+    
+    <!-- 错误信息 -->
+    <div v-if="error" class="error-message">
+      {{ error }}
+    </div>
+
+    <!-- 壁纸数据展示 -->
+    <div v-if="!loading && !error" class="wallpaper-section">
+      <h3>随机精美壁纸</h3>
+      <div class="wallpaper-grid">
+        <div class="wallpaper-card">
+          <div class="wallpaper-header">
+            <h4 class="wallpaper-title">当前壁纸</h4>
+            <div class="wallpaper-date">{{ lastUpdateTime || '未获取' }}</div>
+          </div>
+          
+          <div class="wallpaper-content">
+            <div v-if="currentImage" class="image-container">
+              <img 
+                ref="wallpaperImage"
+                :src="currentImage" 
+                alt="随机壁纸"
+                class="wallpaper-image"
+                @load="handleImageLoad"
+                @error="handleImageError"
+              />
+            </div>
+            
+            <div v-else class="no-image">
+              <p>点击"换一张"获取随机壁纸</p>
+            </div>
+            
+            <div class="wallpaper-actions">
+              <div class="action-item">
+                <span class="action-label">操作</span>
+                <div class="action-buttons">
+                  <button 
+                    class="action-button primary" 
+                    @click="fetchNewImage"
+                    :disabled="loading"
+                  >
+                    {{ loading ? '获取中...' : '换一张' }}
+                  </button>
+                  <button 
+                    class="action-button secondary" 
+                    @click="openFullscreen"
+                    :disabled="!currentImage"
+                  >
+                    全屏查看
+                  </button>
+                  <button 
+                    class="action-button secondary" 
+                    @click="downloadImage"
+                    :disabled="!currentImage || loading"
+                  >
+                    下载壁纸
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </template>
 
 <script>
@@ -218,142 +216,194 @@ export default {
 </script>
 
 <style scoped>
-.random-wallpaper-container {
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg-primary);
+/* 全局样式 */
+* {
+  box-sizing: border-box;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
+/* 顶部区域 */
+.fixed-header {
+  padding-top: env(safe-area-inset-top);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   background: var(--glass-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--glass-border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  width: 100%;
+  z-index: 1000;
   box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
-.back-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: background-color 0.2s;
-  color: #3b82f6;
+/* 顶部导航栏 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  height: 60px;
 }
 
-.back-btn:hover {
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-accent);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+}
+
+.back-button:hover {
   background: var(--glass-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  transform: translateY(-1px);
 }
 
-.title {
-  font-size: 18px;
-  font-weight: 600;
+.back-icon {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
   color: var(--text-accent);
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .api-info {
-  text-align: right;
-  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.2;
 }
 
 .api-source {
-  color: var(--text-accent);
-  font-weight: 500;
+  margin-bottom: 2px;
 }
 
 .update-time {
   color: var(--text-secondary);
-  margin-top: 2px;
 }
 
-.content {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+.update-time.error-status {
+  color: #d32f2f;
+  font-weight: bold;
 }
 
-.loading, .error {
+/* 主要内容区域 */
+.main-content {
+  margin-top: 60px;
+  padding: 2rem 1.5rem;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+}
+
+/* 加载和错误状态 */
+.loading-message {
   text-align: center;
-  padding: 40px 20px;
-}
-
-.loading {
+  padding: 2rem;
   color: var(--text-secondary);
+  font-size: 1.1rem;
 }
 
-.error {
-  color: #dc3545;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--text-accent);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 16px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.retry-btn {
-  background: var(--text-accent);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 16px;
-  box-shadow: 0 4px 16px var(--shadow-light);
-  transition: all 0.3s ease;
-}
-
-.retry-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
-}
-
-.image-section {
+.error-message {
   text-align: center;
+  padding: 2rem;
+  color: #d32f2f;
+  background: #ffebee;
+  border-radius: 8px;
+  margin-bottom: 2rem;
 }
 
-.image-container {
+/* 壁纸数据区域 */
+.wallpaper-section h3 {
+  color: var(--text-accent);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.wallpaper-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.wallpaper-card {
   background: var(--glass-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
+  border: 2px solid var(--glass-border);
   border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
   box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.wallpaper-card:hover {
+  border-color: var(--text-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--shadow-medium);
+}
+
+.wallpaper-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.wallpaper-title {
+  color: var(--text-accent);
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.wallpaper-date {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.wallpaper-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.image-container {
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
   overflow: hidden;
-  position: relative;
 }
 
 .wallpaper-image {
   max-width: 100%;
-  max-height: 70vh;
+  max-height: 60vh;
   width: auto;
   height: auto;
-  border-radius: 12px;
-  display: block;
-  margin: 0 auto;
-  box-shadow: 0 8px 24px var(--shadow-medium);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px var(--shadow-light);
   transition: all 0.3s ease;
 }
 
@@ -361,107 +411,152 @@ export default {
   transform: scale(1.02);
 }
 
-.controls {
+.no-image {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  font-size: 1.1rem;
+}
+
+.wallpaper-actions {
   display: flex;
-  gap: 12px;
-  justify-content: center;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.action-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.action-label {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
-.action-btn {
+.action-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  gap: 0.3rem;
+  font-size: 0.9rem;
   font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s;
-  min-width: 120px;
+  transition: all 0.2s ease;
+  min-width: 80px;
   justify-content: center;
 }
 
-.action-btn:disabled {
+.action-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.action-btn.primary {
+.action-button.primary {
   background: var(--text-accent);
   color: white;
-  box-shadow: 0 4px 16px var(--shadow-light);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
-.action-btn.primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
+.action-button.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
 }
 
-.action-btn.secondary {
+.action-button.secondary {
   background: var(--glass-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: var(--text-accent);
-  border: 2px solid var(--text-accent);
-  box-shadow: 0 4px 16px var(--shadow-light);
+  border: 1px solid var(--text-accent);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
-.action-btn.secondary:hover:not(:disabled) {
+.action-button.secondary:hover:not(:disabled) {
   background: var(--text-accent);
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
 }
 
-.action-btn.fullscreen {
-  background: var(--text-accent);
-  color: white;
-  box-shadow: 0 4px 16px var(--shadow-light);
-}
-
-.action-btn.fullscreen:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
-}
-
-.no-image {
-  color: var(--text-secondary);
-  font-size: 16px;
-  padding: 40px 20px;
+.button-icon {
+  font-size: 0.8rem;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .header {
-    padding: 12px 16px;
+  .top-bar {
+    padding: 1rem;
   }
   
-  .title {
-    font-size: 16px;
+  .main-content {
+    padding: 1rem;
   }
   
-  .content {
-    padding: 16px;
+  .wallpaper-card {
+    padding: 1rem;
   }
   
-  .image-container {
-    padding: 16px;
+  .page-title {
+    font-size: 1.3rem;
   }
   
-  .wallpaper-image {
-    max-height: 60vh;
+  .api-info {
+    font-size: 0.7rem;
   }
   
-  .controls {
+  .wallpaper-header {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    gap: 0.3rem;
   }
   
-  .action-btn {
+  .action-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .action-buttons {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.2rem;
+  }
+  
+  .api-info {
+    font-size: 0.65rem;
+  }
+  
+  .top-bar {
+    padding: 0.8rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
     width: 100%;
-    max-width: 280px;
+  }
+  
+  .action-button {
+    width: 100%;
   }
 }
 </style>

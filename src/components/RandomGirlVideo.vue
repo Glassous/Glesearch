@@ -1,111 +1,111 @@
 <template>
-  <div class="random-video-container">
-    <!-- 顶部栏 -->
-    <div class="header">
-      <button class="back-btn" @click="goBack">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+  <!-- 顶部固定区域 -->
+  <div class="fixed-header">
+    <!-- 顶部导航栏 -->
+    <header class="top-bar">
+      <button class="back-button" @click="goBack">
+        <span class="back-icon">←</span>
       </button>
-      <h1 class="title">随机小姐姐视频</h1>
+      <h2 class="page-title">随机小姐姐视频</h2>
       <div class="api-info">
-        <div class="api-source">xxapi.cn</div>
-        <div class="update-time">{{ lastUpdateTime || '点击获取' }}</div>
-      </div>
-    </div>
-
-    <!-- 内容区域 -->
-    <div class="content">
-      <!-- 加载状态 -->
-      <div v-if="loading" class="loading">
-        <div class="loading-spinner"></div>
-        <p>正在获取视频...</p>
-      </div>
-
-      <!-- 错误状态 -->
-      <div v-else-if="error" class="error">
-        <p>{{ error }}</p>
-        <button @click="fetchNewVideo" class="retry-btn">重试</button>
-      </div>
-
-      <!-- 视频显示 -->
-      <div v-else class="video-section">
-        <div class="video-container" v-if="currentVideo">
-          <video 
-            ref="videoPlayer"
-            :src="currentVideo" 
-            class="video-player"
-            controls
-            preload="metadata"
-            :autoplay="autoPlay"
-            @loadeddata="handleVideoLoad"
-            @error="handleVideoError"
-          >
-            您的浏览器不支持视频播放
-          </video>
-        </div>
-
-        <!-- 自动播放开关 -->
-        <div class="autoplay-control">
-          <label class="autoplay-switch">
-            <input 
-              type="checkbox" 
-              v-model="autoPlay"
-              @change="handleAutoPlayChange"
-            >
-            <span class="slider"></span>
-            <span class="switch-text">自动播放</span>
-          </label>
-        </div>
-
-        <!-- 控制按钮 -->
-        <div class="controls">
-          <button 
-            class="action-btn primary" 
-            @click="fetchNewVideo"
-            :disabled="loading"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M1 4V10H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M23 20V14H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14L18.36 18.36A9 9 0 0 1 3.51 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            {{ loading ? '获取中...' : '换一个' }}
-          </button>
-
-          <button 
-            class="action-btn fullscreen" 
-            @click="openFullscreen"
-            :disabled="!currentVideo"
-            title="全屏播放"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M8 3H5A2 2 0 0 0 3 5V8M21 8V5A2 2 0 0 0 19 3H16M16 21H19A2 2 0 0 0 21 19V16M8 21H5A2 2 0 0 0 3 19V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            全屏播放
-          </button>
-          
-          <button 
-            class="action-btn secondary" 
-            @click="downloadVideo"
-            :disabled="!currentVideo || loading"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M21 15V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            下载视频
-          </button>
-        </div>
-
-        <!-- 提示信息 -->
-        <div v-if="!currentVideo" class="no-video">
-          <p>点击"换一个"获取随机视频</p>
+        <div class="api-source">数据来源: xxapi.cn</div>
+        <div class="update-time" :class="{ 'error-status': error }">
+          {{ error ? 'Error' : '更新时间: ' + (lastUpdateTime || '点击获取') }}
         </div>
       </div>
-    </div>
+    </header>
   </div>
+
+  <!-- 主要内容区域 -->
+  <main class="main-content">
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-message">
+      正在获取视频数据...
+    </div>
+    
+    <!-- 错误信息 -->
+    <div v-if="error" class="error-message">
+      {{ error }}
+    </div>
+
+    <!-- 视频数据展示 -->
+    <div v-if="!loading && !error" class="video-section">
+      <h3>随机精美视频</h3>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-header">
+            <h4 class="video-title">当前视频</h4>
+            <div class="video-date">{{ lastUpdateTime || '未获取' }}</div>
+          </div>
+          
+          <div class="video-content">
+            <div v-if="currentVideo" class="video-container">
+              <video 
+                ref="videoPlayer"
+                :src="currentVideo" 
+                class="video-player"
+                controls
+                preload="metadata"
+                :autoplay="autoPlay"
+                @loadeddata="handleVideoLoad"
+                @error="handleVideoError"
+              >
+                您的浏览器不支持视频播放
+              </video>
+            </div>
+            
+            <div v-else class="no-video">
+              <p>点击"换一个"获取随机视频</p>
+            </div>
+            
+            <!-- 自动播放开关 -->
+            <div class="video-settings">
+              <div class="setting-item">
+                <span class="setting-label">自动播放</span>
+                <label class="autoplay-switch">
+                  <input 
+                    type="checkbox" 
+                    v-model="autoPlay"
+                    @change="handleAutoPlayChange"
+                  >
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="video-actions">
+              <div class="action-item">
+                <span class="action-label">操作</span>
+                <div class="action-buttons">
+                  <button 
+                    class="action-button primary" 
+                    @click="fetchNewVideo"
+                    :disabled="loading"
+                  >
+                    {{ loading ? '获取中...' : '换一个' }}
+                  </button>
+                  <button 
+                    class="action-button secondary" 
+                    @click="openFullscreen"
+                    :disabled="!currentVideo"
+                  >
+                    全屏播放
+                  </button>
+                  <button 
+                    class="action-button secondary" 
+                    @click="downloadVideo"
+                    :disabled="!currentVideo || loading"
+                  >
+                    下载视频
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </template>
 
 <script>
@@ -257,226 +257,232 @@ export default {
 </script>
 
 <style scoped>
-.random-video-container {
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg-primary);
+/* 全局样式 */
+* {
+  box-sizing: border-box;
 }
 
-.header {
+/* 顶部区域 */
+.fixed-header {
+  padding-top: env(safe-area-inset-top);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 4px 16px var(--glass-shadow);
+}
+
+/* 顶部导航栏 */
+.top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  padding: 1rem 1.5rem;
+  height: 60px;
 }
 
-.back-btn {
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  font-size: 1.2rem;
   color: var(--text-accent);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
 }
 
-.back-btn:hover {
+.back-button:hover {
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  transform: scale(1.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transform: translateY(-1px);
 }
 
-.title {
-  font-size: 18px;
-  font-weight: 600;
+.back-icon {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
   color: var(--text-accent);
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .api-info {
-  text-align: right;
-  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.2;
 }
 
 .api-source {
-  color: var(--text-accent);
-  font-weight: 500;
+  margin-bottom: 2px;
 }
 
 .update-time {
   color: var(--text-secondary);
-  margin-top: 2px;
 }
 
-.content {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+.update-time.error-status {
+  color: #d32f2f;
+  font-weight: bold;
 }
 
-.loading, .error {
+/* 主要内容区域 */
+.main-content {
+  margin-top: 60px;
+  padding: 2rem 1.5rem;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+}
+
+/* 加载和错误状态 */
+.loading-message {
   text-align: center;
-  padding: 40px 20px;
-}
-
-.loading {
+  padding: 2rem;
   color: var(--text-secondary);
+  font-size: 1.1rem;
 }
 
-.error {
-  color: var(--text-accent);
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--text-accent);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 16px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.retry-btn {
-  background: var(--text-accent);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 16px;
-  transition: all 0.3s ease;
-}
-
-.retry-btn:hover {
-  background: var(--text-primary);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
-}
-
-.video-section {
+.error-message {
   text-align: center;
+  padding: 2rem;
+  color: #d32f2f;
+  background: #ffebee;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+/* 视频数据区域 */
+.video-section h3 {
+  color: var(--text-accent);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.video-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.video-card:hover {
+  border-color: var(--text-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--shadow-medium);
+}
+
+.video-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.video-title {
+  color: var(--text-accent);
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.video-date {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.video-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .video-container {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: var(--glass-shadow);
   overflow: hidden;
-  position: relative;
 }
 
 .video-player {
   max-width: 100%;
-  max-height: 70vh;
+  max-height: 60vh;
   width: auto;
   height: auto;
   border-radius: 8px;
-  display: block;
-  margin: 0 auto;
-  box-shadow: var(--shadow-medium);
-  transition: transform 0.2s;
+  box-shadow: 0 4px 16px var(--shadow-light);
+  transition: all 0.3s ease;
 }
 
 .video-player:hover {
   transform: scale(1.02);
 }
 
-.controls {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  min-width: 120px;
-  justify-content: center;
-}
-
-.action-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.action-btn.primary {
-  background: var(--text-accent);
-  color: white;
-}
-
-.action-btn.primary:hover:not(:disabled) {
-  background: var(--text-primary);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
-}
-
-.action-btn.secondary {
-  background: var(--bg-secondary);
-  color: var(--text-accent);
-  border: 2px solid var(--text-accent);
-}
-
-.action-btn.secondary:hover:not(:disabled) {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  color: var(--text-primary);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-light);
-}
-
-.action-btn.fullscreen {
-  background: var(--text-accent);
-  color: white;
-}
-
-.action-btn.fullscreen:hover:not(:disabled) {
-  background: var(--text-primary);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
-}
-
 .no-video {
+  text-align: center;
+  padding: 3rem 1rem;
   color: var(--text-secondary);
-  font-size: 16px;
-  padding: 40px 20px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  font-size: 1.1rem;
 }
 
-.autoplay-control {
+.video-settings {
   display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.setting-label {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 1rem;
 }
 
 .autoplay-switch {
   display: flex;
   align-items: center;
-  gap: 12px;
   cursor: pointer;
   user-select: none;
 }
@@ -487,7 +493,7 @@ export default {
 
 .slider {
   position: relative;
-  width: 50px;
+  width: 44px;
   height: 24px;
   background-color: var(--border-color);
   border-radius: 24px;
@@ -511,45 +517,153 @@ export default {
 }
 
 .autoplay-switch input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(20px);
 }
 
-.switch-text {
-  font-size: 16px;
+.video-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.action-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.action-label {
   font-weight: 500;
   color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  justify-content: center;
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-button.primary {
+  background: var(--text-accent);
+  color: white;
+  box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+.action-button.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
+}
+
+.action-button.secondary {
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-accent);
+  border: 1px solid var(--text-accent);
+  box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+.action-button.secondary:hover:not(:disabled) {
+  background: var(--text-accent);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .header {
-    padding: 12px 16px;
+  .top-bar {
+    padding: 1rem;
   }
   
-  .title {
-    font-size: 16px;
+  .main-content {
+    padding: 1rem;
   }
   
-  .content {
-    padding: 16px;
+  .video-card {
+    padding: 1rem;
   }
   
-  .video-container {
-    padding: 16px;
+  .page-title {
+    font-size: 1.3rem;
   }
   
-  .video-player {
-    max-height: 60vh;
+  .api-info {
+    font-size: 0.7rem;
   }
   
-  .controls {
+  .video-header {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    gap: 0.3rem;
   }
   
-  .action-btn {
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .autoplay-switch {
+    align-self: stretch;
+    justify-content: center;
+  }
+  
+  .action-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .action-buttons {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.2rem;
+  }
+  
+  .api-info {
+    font-size: 0.65rem;
+  }
+  
+  .top-bar {
+    padding: 0.8rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
     width: 100%;
-    max-width: 280px;
+  }
+  
+  .action-button {
+    width: 100%;
   }
 }
 </style>
