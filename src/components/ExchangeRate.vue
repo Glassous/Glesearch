@@ -1,7 +1,6 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { VueDraggableNext } from 'vue-draggable-next'
 
 // 使用路由导航
 const router = useRouter()
@@ -421,14 +420,19 @@ const inputCurrency = ref('CNY')
 const inputAmount = ref(100)
 
 // 常用货币管理
-const defaultFavoriteCurrencies = ['USD', 'CNY', 'EUR', 'GBP', 'JPY', 'KRW', 'HKD', 'AUD']
-const favoriteCurrencies = ref([])
-const showFavoriteManager = ref(false)
-const availableCurrencies = computed(() => {
-  return Object.keys(currencyNames).filter(currency => 
-    sovereignCurrencies.has(currency) && !favoriteCurrencies.value.includes(currency)
-  )
-})
+const isManagingFavorites = ref(false)
+const favoriteCurrencies = ref([
+  'CNY', 'USD', 'EUR', 'GBP', 'HKD', 'MOP', 'JPY', 'KRW', 'AUD', 'CAD', 'SGD'
+])
+
+// 拖拽相关
+const draggedIndex = ref(-1)
+const dragOverIndex = ref(-1)
+
+// 搜索功能
+const searchQuery = ref('')
+
+
 
 // 获取汇率数据
 const fetchExchangeRates = async () => {
@@ -497,6 +501,43 @@ const convertedAmounts = computed(() => {
   return results
 })
 
+// 计算常用货币的换算结果
+const favoriteConvertedAmounts = computed(() => {
+  if (!exchangeRates.value[inputCurrency.value]) return {}
+  
+  const baseAmount = inputAmount.value / exchangeRates.value[inputCurrency.value]
+  const results = {}
+  
+  for (const currency of favoriteCurrencies.value) {
+    if (exchangeRates.value[currency] && sovereignCurrencies.has(currency)) {
+      results[currency] = (baseAmount * exchangeRates.value[currency]).toFixed(2)
+    }
+  }
+  
+  return results
+})
+
+// 过滤后的货币列表
+const filteredConvertedAmounts = computed(() => {
+  if (!searchQuery.value.trim()) {
+    return convertedAmounts.value
+  }
+  
+  const query = searchQuery.value.toLowerCase().trim()
+  const filtered = {}
+  
+  for (const [currency, amount] of Object.entries(convertedAmounts.value)) {
+    const currencyName = currencyNames[currency] || ''
+    const currencyCode = currency.toLowerCase()
+    
+    if (currencyCode.includes(query) || currencyName.includes(query)) {
+      filtered[currency] = amount
+    }
+  }
+  
+  return filtered
+})
+
 // 返回主页
 const goBack = () => {
   router.push('/')
@@ -513,50 +554,125 @@ const switchInputCurrency = (currency) => {
   inputCurrency.value = currency
 }
 
-// 常用货币管理函数
-const loadFavoriteCurrencies = () => {
-  const saved = localStorage.getItem('favoriteCurrencies')
-  if (saved) {
-    try {
-      favoriteCurrencies.value = JSON.parse(saved)
-    } catch (e) {
-      favoriteCurrencies.value = [...defaultFavoriteCurrencies]
-    }
-  } else {
-    favoriteCurrencies.value = [...defaultFavoriteCurrencies]
-  }
+// 常用货币管理方法
+const toggleManageMode = () => {
+  isManagingFavorites.value = !isManagingFavorites.value
 }
 
-const saveFavoriteCurrencies = () => {
-  localStorage.setItem('favoriteCurrencies', JSON.stringify(favoriteCurrencies.value))
-}
-
+// 添加到常用货币
 const addToFavorites = (currency) => {
   if (!favoriteCurrencies.value.includes(currency)) {
     favoriteCurrencies.value.push(currency)
-    saveFavoriteCurrencies()
   }
 }
 
+// 从常用货币中移除
 const removeFromFavorites = (currency) => {
   const index = favoriteCurrencies.value.indexOf(currency)
   if (index > -1) {
     favoriteCurrencies.value.splice(index, 1)
-    saveFavoriteCurrencies()
   }
 }
 
-const onFavoriteDragEnd = () => {
-  saveFavoriteCurrencies()
+// 拖拽开始
+const onDragStart = (event, index) => {
+  draggedIndex.value = index
+  event.dataTransfer.effectAllowed = 'move'
 }
 
-const toggleFavoriteManager = () => {
-  showFavoriteManager.value = !showFavoriteManager.value
+// 拖拽结束
+const onDragEnd = () => {
+  draggedIndex.value = -1
+  dragOverIndex.value = -1
 }
 
-// 组件挂载时获取汇率数据
+// 拖拽经过
+const onDragOver = (event, index) => {
+  event.preventDefault()
+  dragOverIndex.value = index
+}
+
+// 拖拽离开
+const onDragLeave = () => {
+  dragOverIndex.value = -1
+}
+
+// 放置
+const onDrop = (event, dropIndex) => {
+  event.preventDefault()
+  
+  if (draggedIndex.value !== -1 && draggedIndex.value !== dropIndex) {
+    const draggedCurrency = favoriteCurrencies.value[draggedIndex.value]
+    favoriteCurrencies.value.splice(draggedIndex.value, 1)
+    favoriteCurrencies.value.splice(dropIndex, 0, draggedCurrency)
+  }
+  
+  draggedIndex.value = -1
+  dragOverIndex.value = -1
+}
+
+// 长按检测
+const longPressTimer = ref(null)
+const isLongPress = ref(false)
+
+const onTouchStart = (event, index) => {
+  if (!isManagingFavorites.value) return
+  
+  isLongPress.value = false
+  longPressTimer.value = setTimeout(() => {
+    isLongPress.value = true
+    // 触发拖拽开始
+    onDragStart(event, index)
+  }, 500)
+}
+
+const onTouchEnd = () => {
+  if (longPressTimer.value) {
+    clearTimeout(longPressTimer.value)
+    longPressTimer.value = null
+  }
+  
+  if (isLongPress.value) {
+    onDragEnd()
+  }
+  
+  isLongPress.value = false
+}
+
+// 搜索相关方法
+const clearSearch = () => {
+  searchQuery.value = ''
+}
+
+// 从本地存储加载常用货币
+const loadFavoritesFromStorage = () => {
+  try {
+    const stored = localStorage.getItem('favoriteCurrencies')
+    if (stored) {
+      favoriteCurrencies.value = JSON.parse(stored)
+    }
+  } catch (error) {
+    console.error('加载常用货币失败:', error)
+  }
+}
+
+// 保存常用货币到本地存储
+const saveFavoritesToStorage = () => {
+  try {
+    localStorage.setItem('favoriteCurrencies', JSON.stringify(favoriteCurrencies.value))
+  } catch (error) {
+    console.error('保存常用货币失败:', error)
+  }
+}
+
+// 监听常用货币变化并保存
+watch(favoriteCurrencies, () => {
+  saveFavoritesToStorage()
+}, { deep: true })
+
+// 组件挂载时获取汇率数据和加载常用货币
 onMounted(() => {
-  loadFavoriteCurrencies()
+  loadFavoritesFromStorage()
   fetchExchangeRates()
 })
 </script>
@@ -602,110 +718,6 @@ onMounted(() => {
 
   <!-- 主要内容区域 -->
   <main class="main-content">
-    <!-- 常用货币区域 -->
-    <div class="favorite-section">
-      <div class="favorite-header">
-        <h3>常用货币</h3>
-        <button class="manage-button" @click="toggleFavoriteManager">
-          {{ showFavoriteManager ? '完成' : '管理' }}
-        </button>
-      </div>
-      
-      <!-- 常用货币网格 -->
-      <VueDraggableNext 
-        v-model="favoriteCurrencies" 
-        class="favorite-grid"
-        @end="onFavoriteDragEnd"
-        :disabled="showFavoriteManager"
-      >
-        <div 
-           v-for="currency in favoriteCurrencies" 
-           :key="currency"
-           class="favorite-item"
-           :class="{ 'current-input': currency === inputCurrency, 'managing': showFavoriteManager }"
-           @click="!showFavoriteManager && switchInputCurrency(currency)"
-         >
-           <div class="currency-header">
-             <img 
-                v-if="currencyCountryMap[currency]" 
-                :src="`/src/assets/images/w80/${currencyCountryMap[currency]}.png`" 
-                :alt="currency"
-                class="currency-flag"
-                @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='inline-flex'"
-              />
-              <span 
-                v-else-if="currencyEmojis[currency]"
-                class="currency-emoji"
-              >
-                {{ currencyEmojis[currency] }}
-              </span>
-              <span 
-                v-if="currencyCountryMap[currency] && currencyEmojis[currency]"
-                class="currency-emoji"
-                style="display: none;"
-              >
-                {{ currencyEmojis[currency] }}
-              </span>
-             <div class="currency-info">
-               <div class="currency-code">{{ currency }}</div>
-               <div class="currency-name">{{ currencyNames[currency] || currency }}</div>
-             </div>
-           </div>
-           <div class="currency-amount">
-             <span v-if="currencySymbols[currency]" class="currency-symbol">{{ currencySymbols[currency] }}</span>
-             {{ convertedAmounts[currency] || '0.00' }}
-           </div>
-           <button 
-             v-if="showFavoriteManager" 
-             class="remove-button"
-             @click.stop="removeFromFavorites(currency)"
-           >
-             ×
-           </button>
-         </div>
-      </VueDraggableNext>
-      
-      <!-- 添加货币区域 -->
-      <div v-if="showFavoriteManager" class="add-currency-section">
-        <h4>添加货币</h4>
-        <div class="add-currency-grid">
-          <div 
-             v-for="currency in availableCurrencies" 
-             :key="currency"
-             class="add-currency-item"
-             @click="addToFavorites(currency)"
-           >
-             <div class="add-currency-header">
-               <img 
-                  v-if="currencyCountryMap[currency]" 
-                  :src="`/src/assets/images/w80/${currencyCountryMap[currency]}.png`" 
-                  :alt="currency"
-                  class="currency-flag-small"
-                  @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='inline-flex'"
-                />
-                <span 
-                  v-else-if="currencyEmojis[currency]"
-                  class="currency-emoji-small"
-                >
-                  {{ currencyEmojis[currency] }}
-                </span>
-                <span 
-                  v-if="currencyCountryMap[currency] && currencyEmojis[currency]"
-                  class="currency-emoji-small"
-                  style="display: none;"
-                >
-                  {{ currencyEmojis[currency] }}
-                </span>
-               <div class="add-currency-info">
-                 <div class="currency-code">{{ currency }}</div>
-                 <div class="currency-name">{{ currencyNames[currency] || currency }}</div>
-               </div>
-             </div>
-             <div class="add-icon">+</div>
-           </div>
-        </div>
-      </div>
-    </div>
 
     <!-- 加载状态 -->
     <div v-if="loading" class="loading-message">
@@ -717,17 +729,123 @@ onMounted(() => {
       {{ error }}
     </div>
 
-    <!-- 换算结果区域 -->
-    <div v-if="!loading" class="results-section">
-      <h3>换算结果</h3>
-      <div class="currency-grid">
+    <!-- 常用货币区域 -->
+    <div v-if="!loading" class="favorites-section">
+      <div class="section-header">
+        <h3>常用货币</h3>
+        <button 
+          class="manage-button" 
+          @click="toggleManageMode"
+          :class="{ 'active': isManagingFavorites }"
+        >
+          {{ isManagingFavorites ? '完成' : '管理' }}
+        </button>
+      </div>
+      
+      <div class="currency-grid favorites-grid">
         <div 
-          v-for="(amount, currency) in convertedAmounts" 
+          v-for="(currency, index) in favoriteCurrencies" 
+          :key="currency"
+          class="currency-item favorite-item"
+          :class="{ 
+            'current-input': currency === inputCurrency,
+            'managing': isManagingFavorites,
+            'dragging': draggedIndex === index,
+            'drag-over': dragOverIndex === index
+          }"
+          @click="!isManagingFavorites && switchInputCurrency(currency)"
+          :draggable="isManagingFavorites"
+          @dragstart="onDragStart($event, index)"
+          @dragend="onDragEnd"
+          @dragover="onDragOver($event, index)"
+          @dragleave="onDragLeave"
+          @drop="onDrop($event, index)"
+          @touchstart="onTouchStart($event, index)"
+          @touchend="onTouchEnd"
+        >
+          <div v-if="isManagingFavorites" class="remove-button" @click.stop="removeFromFavorites(currency)">
+            ×
+          </div>
+          <div class="currency-header">
+            <img 
+              v-if="currencyCountryMap[currency]" 
+              :src="`/src/assets/images/w80/${currencyCountryMap[currency]}.png`" 
+              :alt="currency"
+              class="currency-flag"
+              @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='inline-flex'"
+            />
+            <span 
+              v-else-if="currencyEmojis[currency]"
+              class="currency-emoji"
+            >
+              {{ currencyEmojis[currency] }}
+            </span>
+            <span 
+              v-if="currencyCountryMap[currency] && currencyEmojis[currency]"
+              class="currency-emoji"
+              style="display: none;"
+            >
+              {{ currencyEmojis[currency] }}
+            </span>
+            <div class="currency-info">
+              <div class="currency-code">{{ currency }}</div>
+              <div class="currency-name">{{ currencyNames[currency] || currency }}</div>
+            </div>
+          </div>
+          <div class="currency-amount" v-if="favoriteConvertedAmounts[currency]">
+            <span v-if="currencySymbols[currency]" class="currency-symbol">{{ currencySymbols[currency] }}</span>
+            {{ favoriteConvertedAmounts[currency] }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 全部货币区域 -->
+    <div v-if="!loading" class="results-section">
+      <div class="section-header">
+        <h3>全部货币</h3>
+        <!-- 搜索输入框 -->
+        <div class="search-input-wrapper">
+          <input 
+            v-model="searchQuery"
+            type="text"
+            class="search-input"
+            placeholder="搜索货币..."
+            @input="() => {}"
+          />
+          <button 
+            v-if="searchQuery"
+            class="clear-search-button"
+            @click="clearSearch"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+       
+       <!-- 无搜索结果提示 -->
+       <div v-if="searchQuery && Object.keys(filteredConvertedAmounts).length === 0" class="no-results">
+         <div class="no-results-icon">🔍</div>
+         <div class="no-results-text">未找到匹配的货币</div>
+         <div class="no-results-hint">请尝试其他关键词</div>
+       </div>
+       
+       <div class="currency-grid">
+        <div 
+          v-for="(amount, currency) in filteredConvertedAmounts" 
           :key="currency"
           class="currency-item"
           :class="{ 'current-input': currency === inputCurrency }"
           @click="switchInputCurrency(currency)"
         >
+          <div 
+            v-if="!favoriteCurrencies.includes(currency)" 
+            class="add-favorite-button" 
+            @click.stop="addToFavorites(currency)"
+            title="添加到常用货币"
+          >
+            +
+          </div>
           <div class="currency-header">
             <img 
               v-if="currencyCountryMap[currency]" 
@@ -858,12 +976,13 @@ onMounted(() => {
 .input-section {
   padding: 1rem 1.5rem;
   background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   margin: 1rem;
   width: calc(100% - 2rem);
+  box-shadow: 0 8px 32px var(--glass-shadow);
 }
 
 .input-section h3 {
@@ -879,6 +998,8 @@ onMounted(() => {
   align-items: center;
   flex-wrap: wrap;
 }
+
+
 
 .currency-select {
   padding: 0.75rem;
@@ -942,9 +1063,295 @@ onMounted(() => {
   box-shadow: var(--glass-shadow);
 }
 
+/* 常用货币区域 */
+.favorites-section {
+  padding: 1.5rem 1.5rem 0 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.section-header .search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.section-header .search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.section-header .search-input:focus {
+  outline: none;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(30, 88, 75, 0.1);
+}
+
+.section-header .search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.section-header .clear-search-button {
+  position: absolute;
+  right: 6px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.2rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-header .clear-search-button:hover {
+  background: var(--glass-bg);
+  color: var(--text-accent);
+}
+
+.section-header h3 {
+  color: var(--text-accent);
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.manage-button {
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
+  color: var(--text-accent);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.manage-button:hover {
+  border-color: var(--text-accent);
+  background: var(--text-accent);
+  color: white;
+}
+
+.manage-button.active {
+  background: var(--text-accent);
+  color: white;
+  border-color: var(--text-accent);
+}
+
+.favorites-grid {
+  margin-bottom: 2rem;
+}
+
+.favorite-item {
+  position: relative;
+}
+
+.favorite-item.managing {
+  cursor: move;
+}
+
+.favorite-item.managing:hover {
+  transform: translateY(-2px);
+}
+
+.favorite-item.dragging {
+  opacity: 0.5;
+  transform: rotate(5deg);
+}
+
+.favorite-item.drag-over {
+  border-color: var(--text-accent);
+  background: rgba(30, 88, 75, 0.1);
+}
+
+.remove-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 10;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+}
+
+.remove-button:hover {
+  background: #ff3742;
+  transform: scale(1.1);
+}
+
+.add-favorite-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: var(--text-accent);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 10;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(30, 88, 75, 0.3);
+}
+
+.add-favorite-button:hover {
+  background: #1a5a4b;
+  transform: scale(1.1);
+}
+
+/* 搜索功能样式 */
+.search-button {
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
+  color: var(--text-accent);
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button:hover {
+  border-color: var(--text-accent);
+  background: var(--text-accent);
+  color: white;
+}
+
+.search-button.active {
+  background: var(--text-accent);
+  color: white;
+  border-color: var(--text-accent);
+}
+
+.search-container {
+  margin-bottom: 1.5rem;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(30, 88, 75, 0.1);
+}
+
+.search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.clear-search-button {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-search-button:hover {
+  background: var(--glass-bg);
+  color: var(--text-accent);
+}
+
+/* 无搜索结果样式 */
+.no-results {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-secondary);
+}
+
+.no-results-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.no-results-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.no-results-hint {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
 /* 结果区域 */
 .results-section {
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1.5rem 2rem 1.5rem;
 }
 
 .results-section h3 {
@@ -1011,16 +1418,6 @@ onMounted(() => {
   flex-shrink: 0;
 }
 
-.currency-emoji-small {
-  font-size: 15px;
-  width: 20px;
-  height: 15px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
 .currency-info {
   flex: 1;
   min-width: 0;
@@ -1059,249 +1456,7 @@ onMounted(() => {
   font-weight: normal;
 }
 
-/* 常用货币区域样式 */
-.favorite-section {
-  padding: 1rem 1.5rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  margin: 1rem;
-  width: calc(100% - 2rem);
-}
 
-.favorite-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.favorite-header h3 {
-  color: var(--text-accent);
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.manage-button {
-  background: var(--text-accent);
-  color: var(--bg-secondary);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.manage-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--shadow-light);
-  opacity: 0.9;
-}
-
-.favorite-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.8rem;
-  margin-bottom: 1rem;
-}
-
-.favorite-item {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 2px solid var(--glass-border);
-  border-radius: 12px;
-  padding: 1rem;
-  text-align: center;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  box-shadow: 0 4px 16px var(--glass-shadow);
-}
-
-.favorite-item:hover {
-  border-color: var(--text-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--shadow-medium);
-}
-
-.favorite-item.current-input {
-  border-color: var(--text-accent);
-  background: var(--glass-bg);
-  box-shadow: 0 6px 20px var(--shadow-medium);
-}
-
-.favorite-item.managing {
-  cursor: default;
-}
-
-.favorite-item.managing:hover {
-  transform: none;
-}
-
-.currency-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.8rem;
-}
-
-.currency-flag {
-  width: 24px;
-  height: 18px;
-  border-radius: 2px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.currency-flag-small {
-  width: 20px;
-  height: 15px;
-  border-radius: 2px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.currency-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.favorite-item .currency-code {
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--text-accent);
-  margin-bottom: 0.2rem;
-}
-
-.favorite-item .currency-name {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  line-height: 1.2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.favorite-item .currency-amount {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-.currency-symbol {
-  font-size: 0.9rem;
-  color: var(--text-accent);
-  font-weight: normal;
-}
-
-.remove-button {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: var(--text-accent);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.remove-button:hover {
-  background: var(--text-primary);
-  transform: scale(1.1);
-  box-shadow: var(--shadow-medium);
-}
-
-.add-currency-section {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
-}
-
-.add-currency-section h4 {
-  color: var(--text-accent);
-  margin: 0 0 1rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.add-currency-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 0.6rem;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.add-currency-item {
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 2px dashed var(--border-color);
-  border-radius: 10px;
-  padding: 0.8rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.add-currency-item:hover {
-  border-color: var(--text-accent);
-  background: var(--glass-bg);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--glass-shadow);
-}
-
-.add-currency-header {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 0.5rem;
-}
-
-.add-currency-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.add-currency-item .currency-code {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: var(--text-accent);
-  margin-bottom: 0.1rem;
-}
-
-.add-currency-item .currency-name {
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-  line-height: 1.1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.add-currency-item .add-icon {
-  font-size: 1.2rem;
-  color: var(--text-accent);
-  font-weight: bold;
-}
 
 /* 响应式设计 */
 /* 大屏幕 - 4列 */
@@ -1335,19 +1490,6 @@ onMounted(() => {
     padding: 1rem;
   }
   
-  .favorite-section {
-    padding: 1rem;
-  }
-  
-  .favorite-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.6rem;
-  }
-  
-  .add-currency-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  }
-  
   .main-content {
     margin-top: 260px;
     padding: 1rem;
@@ -1361,7 +1503,19 @@ onMounted(() => {
   
   .currency-select,
   .amount-input {
-    min-width: auto;
+    min-width: unset;
+    width: 100%;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .section-header .search-input-wrapper {
+    min-width: unset;
+    max-width: unset;
     width: 100%;
   }
   
@@ -1371,6 +1525,30 @@ onMounted(() => {
   
   .api-info {
     font-size: 0.7rem;
+  }
+  
+  .favorites-section {
+    padding: 1rem 1rem 0 1rem;
+  }
+  
+  .results-section {
+    padding: 1rem 1rem 2rem 1rem;
+  }
+  
+  .manage-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .search-button {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  
+  .search-input {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
   }
 }
 
@@ -1394,6 +1572,45 @@ onMounted(() => {
   
   .top-bar {
     padding: 0.8rem;
+  }
+  
+  .section-header {
+    margin-bottom: 1rem;
+  }
+  
+  .section-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .manage-button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .remove-button,
+  .add-favorite-button {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    top: -6px;
+    right: -6px;
+  }
+  
+  .search-button {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+  
+  .search-input {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.85rem;
+  }
+  
+  .clear-search-button {
+    width: 26px;
+    height: 26px;
+    font-size: 1.2rem;
   }
 }
 </style>
