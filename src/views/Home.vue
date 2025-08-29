@@ -1,11 +1,18 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const titleLetters = ref([])
 const fullTitle = 'Glesearch'
 const animationComplete = ref(false)
+const isHeaderFixed = ref(false)
+
+// 滚动监听函数
+const handleScroll = () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+  isHeaderFixed.value = scrollTop > 100
+}
 
 // 页面加载时直接显示所有字母，通过CSS动画实现异想天开的入场效果
 onMounted(() => {
@@ -14,7 +21,25 @@ onMounted(() => {
   setTimeout(() => {
     animationComplete.value = true
   }, 2500)
+  
+  // 添加滚动监听
+  window.addEventListener('scroll', handleScroll)
 })
+
+// 组件卸载时移除监听
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
+// GitHub跳转函数
+const handleGitHub = () => {
+  window.open('https://github.com/Glassous/Glesearch', '_blank')
+}
+
+// API网站跳转函数
+const handleAPI = () => {
+  window.open('https://xxapi.cn/', '_blank')
+}
 
 // 汇率换算按钮点击事件
 const handleExchangeRate = () => {
@@ -71,14 +96,18 @@ const handleVehiclePrice = () => {
 <template>
   <div class="page-container">
     <!-- 动态标题动画 -->
-    <header class="header">
-      <div class="animated-title" :class="{ 'animation-complete': animationComplete }">
-        <span class="letter" v-for="(letter, index) in titleLetters" :key="index" :style="{animationDelay: index * 0.2 + 's'}">
-          {{ letter }}
-          <span class="sparkle sparkle-1" :style="{animationDelay: (index * 0.2 + 1) + 's'}"></span>
-          <span class="sparkle sparkle-2" :style="{animationDelay: (index * 0.2 + 1.5) + 's'}"></span>
-          <span class="sparkle sparkle-3" :style="{animationDelay: (index * 0.2 + 2) + 's'}"></span>
-        </span>
+    <header class="header" :class="{ 'header-fixed': isHeaderFixed }">
+      <div class="header-content">
+        <div class="animated-title" :class="{ 'animation-complete': animationComplete, 'title-small': isHeaderFixed }">
+          <span class="letter" v-for="(letter, index) in titleLetters" :key="index" :style="{animationDelay: index * 0.2 + 's'}">
+            {{ letter }}
+            <span class="sparkle sparkle-1" :style="{animationDelay: (index * 0.2 + 1) + 's'}"></span>
+            <span class="sparkle sparkle-2" :style="{animationDelay: (index * 0.2 + 1.5) + 's'}"></span>
+            <span class="sparkle sparkle-3" :style="{animationDelay: (index * 0.2 + 2) + 's'}"></span>
+          </span>
+        </div>
+        
+
       </div>
     </header>
 
@@ -182,6 +211,29 @@ const handleVehiclePrice = () => {
       </button>
     </div>
   </main>
+
+  <!-- 版权区域 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-buttons">
+        <button class="btn github-btn" @click="handleGitHub">
+          <svg id="github" viewBox="0 0 24 24" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" fill="#0092E4" height="40" width="40">
+            <path d="M12,2.2467A10.00042,10.00042,0,0,0,8.83752,21.73419c.5.08752.6875-.21247.6875-.475,0-.23749-.01251-1.025-.01251-1.86249C7,19.85919,6.35,18.78423,6.15,18.22173A3.636,3.636,0,0,0,5.125,16.8092c-.35-.1875-.85-.65-.01251-.66248A2.00117,2.00117,0,0,1,6.65,17.17169a2.13742,2.13742,0,0,0,2.91248.825A2.10376,2.10376,0,0,1,10.2,16.65923c-2.225-.25-4.55-1.11254-4.55-4.9375a3.89187,3.89187,0,0,1,1.025-2.6875,3.59373,3.59373,0,0,1,.1-2.65s.83747-.26251,2.75,1.025a9.42747,9.42747,0,0,1,5,0c1.91248-1.3,2.75-1.025,2.75-1.025a3.59323,3.59323,0,0,1,.1,2.65,3.869,3.869,0,0,1,1.025,2.6875c0,3.83747-2.33752,4.6875-4.5625,4.9375a2.36814,2.36814,0,0,1,.675,1.85c0,1.33752-.01251,2.41248-.01251,2.75,0,.26251.1875.575.6875.475A10.0053,10.0053,0,0,0,12,2.2467Z"></path>
+          </svg>
+        </button>
+        
+        <button class="btn api-btn" @click="handleAPI">
+          <span class="api-text">
+            <img src="/src/assets/images/favicon.ico" alt="favicon" class="favicon-icon" />
+          </span>
+        </button>
+      </div>
+      
+      <div class="copyright">
+        <p>&copy; 2025 Glesearch. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
   </div>
 </template>
 
@@ -191,10 +243,41 @@ const handleVehiclePrice = () => {
   min-height: calc(100vh - 5rem);
 }
 
+/* 当header固定时，为页面内容添加顶部间距 */
+.header-fixed + * {
+  margin-top: 120px;
+}
+
 .header {
   text-align: center;
   margin-bottom: 1rem;
   padding: 4rem 0 1rem 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.header-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 1rem 0;
+  margin-bottom: 0;
+  box-shadow: 0 4px 20px var(--glass-shadow);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .animated-title {
@@ -205,6 +288,20 @@ const handleVehiclePrice = () => {
   letter-spacing: 0.1em;
   perspective: 1000px;
   position: relative;
+  transition: all 0.3s ease;
+}
+
+.title-small {
+  font-size: 2.5rem !important;
+}
+
+.title-small .letter:first-child {
+  font-size: 3rem !important;
+}
+
+.title-small .sparkle {
+  width: 3px !important;
+  height: 3px !important;
 }
 
 .letter {
@@ -396,6 +493,121 @@ const handleVehiclePrice = () => {
   }
 }
 
+/* GitHub按钮样式 */
+.btn {
+  display: grid;
+  place-items: center;
+  background: #e3edf7;
+  padding: 1.4em;
+  border-radius: 10px;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.15),
+              -6px -6px 10px -1px rgba(255,255,255,0.7);
+  border: 1px solid rgba(0,0,0,0);
+  cursor: pointer;
+  transition: transform 0.5s;
+}
+
+.btn:hover {
+  box-shadow: inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -4px -4px 6px -1px rgba(255,255,255,0.7),
+              -0.5px -0.5px 0px rgba(255,255,255,1),
+              0.5px 0.5px 0px rgba(0,0,0,0.15),
+              0px 12px 10px -10px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.1);
+  transform: translateY(0.5em);
+}
+
+.btn svg {
+  transition: transform 0.5s;
+}
+
+.btn:hover svg {
+  transform: scale(0.9) rotate(360deg);
+  fill: #333333;
+}
+
+/* Footer版权区域样式 */
+.footer {
+  margin-top: 4rem;
+  padding: 2rem 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--glass-border);
+  box-shadow: 0 -4px 20px var(--glass-shadow);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.api-btn {
+  display: grid;
+  place-items: center;
+  background: #e3edf7;
+  padding: 1.4em;
+  border-radius: 10px;
+  box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.15),
+              -6px -6px 10px -1px rgba(255,255,255,0.7);
+  border: 1px solid rgba(0,0,0,0);
+  cursor: pointer;
+  transition: transform 0.5s;
+}
+
+.api-btn:hover {
+  box-shadow: inset 4px 4px 6px -1px rgba(0,0,0,0.2),
+              inset -4px -4px 6px -1px rgba(255,255,255,0.7),
+              -0.5px -0.5px 0px rgba(255,255,255,1),
+              0.5px 0.5px 0px rgba(0,0,0,0.15),
+              0px 12px 10px -10px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.1);
+  transform: translateY(0.5em);
+}
+
+.api-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: #0092E4;
+  transition: all 0.5s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.favicon-icon {
+  width: 40px;
+  height: 40px;
+  transition: all 0.5s;
+}
+
+.api-btn:hover .api-text {
+  color: #333333;
+  transform: scale(0.9);
+}
+
+.api-btn:hover .favicon-icon {
+  transform: scale(0.9) rotate(360deg);
+}
+
+.copyright {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.copyright p {
+  margin: 0;
+}
+
 .main-content {
   display: flex;
   align-items: center;
@@ -579,6 +791,20 @@ const handleVehiclePrice = () => {
   .header {
     padding: 1rem 0;
     margin-bottom: 2rem;
+  }
+  
+  .footer-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .btn {
+    padding: 1rem;
+  }
+  
+  .api-text {
+    font-size: 14px;
   }
 }
 </style>
