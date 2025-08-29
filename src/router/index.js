@@ -12,6 +12,7 @@ import DrivingTest from '../components/DrivingTest.vue'
 import Translate from '../components/Translate.vue'
 import GoldPrice from '../components/GoldPrice.vue'
 import CarPrice from '../components/CarPrice.vue'
+import Solver from '../components/Solver.vue'
 
 const routes = [
   {
@@ -78,6 +79,11 @@ const routes = [
     path: '/car-price',
     name: 'CarPrice',
     component: CarPrice
+  },
+  {
+    path: '/solver',
+    name: 'Solver',
+    component: Solver
   }
 ]
 

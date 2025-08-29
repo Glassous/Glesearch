@@ -96,6 +96,15 @@ const handleGoldPrice = () => {
 const handleVehiclePrice = () => {
   router.push('/car-price')
 }
+
+const handleSolver = () => {
+  router.push('/solver')
+}
+
+// 显示即将推出提示
+const showComingSoon = (featureName) => {
+  alert(`${featureName} 功能即将推出，敬请期待！`)
+}
 </script>
 
 <template>
@@ -191,6 +200,78 @@ const handleVehiclePrice = () => {
             <p>驾考练习题目推荐</p>
           </div>
         </button>
+
+        <button class="feature-button solver" @click="handleSolver">
+          <div class="button-icon">🧠</div>
+          <div class="button-text">
+            <h3>解题助手</h3>
+            <p>AI智能解题分析</p>
+          </div>
+        </button>
+
+        <button class="feature-button ai-assistant" @click="showComingSoon('AI助手')">
+          <div class="button-icon">🤖</div>
+          <div class="button-text">
+            <h3>AI助手</h3>
+            <p>智能AI助手服务</p>
+          </div>
+        </button>
+
+        <button class="feature-button music-parser" @click="showComingSoon('音乐解析')">
+          <div class="button-icon">🎵</div>
+          <div class="button-text">
+            <h3>音乐解析</h3>
+            <p>音乐链接解析下载</p>
+          </div>
+        </button>
+
+        <button class="feature-button mv-parser" @click="showComingSoon('MV解析')">
+          <div class="button-icon">🎬</div>
+          <div class="button-text">
+            <h3>MV解析</h3>
+            <p>MV视频解析下载</p>
+          </div>
+        </button>
+
+        <button class="feature-button random-number" @click="showComingSoon('随机数字生成')">
+          <div class="button-icon">🎲</div>
+          <div class="button-text">
+            <h3>随机数字生成</h3>
+            <p>生成随机数字序列</p>
+          </div>
+        </button>
+
+        <button class="feature-button express-query" @click="showComingSoon('快递单号查询')">
+          <div class="button-icon">📦</div>
+          <div class="button-text">
+            <h3>快递单号查询</h3>
+            <p>快递物流信息查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button ip-query" @click="showComingSoon('IP地址查询')">
+          <div class="button-icon">🌐</div>
+          <div class="button-text">
+            <h3>IP地址查询</h3>
+            <p>IP地址归属地查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button qq-avatar" @click="showComingSoon('QQ头像提取')">
+          <div class="button-icon">👤</div>
+          <div class="button-text">
+            <h3>QQ头像提取</h3>
+            <p>获取QQ用户头像</p>
+          </div>
+        </button>
+
+        <button class="feature-button concert-schedule" @click="showComingSoon('演唱会排期表')">
+          <div class="button-icon">🎤</div>
+          <div class="button-text">
+            <h3>演唱会排期表</h3>
+            <p>演唱会时间安排查询</p>
+          </div>
+        </button>
       </div>
     </section>
 
@@ -227,6 +308,38 @@ const handleVehiclePrice = () => {
           <div class="button-text">
             <h3>随机壁纸图片</h3>
             <p>高清精美壁纸推荐</p>
+          </div>
+        </button>
+
+        <button class="feature-button kfc-crazy" @click="showComingSoon('KFC疯狂星期四')">
+          <div class="button-icon">🍗</div>
+          <div class="button-text">
+            <h3>KFC疯狂星期四</h3>
+            <p>疯狂星期四文案生成</p>
+          </div>
+        </button>
+
+        <button class="feature-button nonsense-article" @click="showComingSoon('狗屁不通文章')">
+          <div class="button-icon">📝</div>
+          <div class="button-text">
+            <h3>狗屁不通文章</h3>
+            <p>自动生成搞笑文章</p>
+          </div>
+        </button>
+
+        <button class="feature-button kuaikan-comic" @click="showComingSoon('快看漫画')">
+          <div class="button-icon">📚</div>
+          <div class="button-text">
+            <h3>快看漫画</h3>
+            <p>热门漫画推荐阅读</p>
+          </div>
+        </button>
+
+        <button class="feature-button tomato-novel" @click="showComingSoon('番茄小说')">
+          <div class="button-icon">🍅</div>
+          <div class="button-text">
+            <h3>番茄小说</h3>
+            <p>精彩小说在线阅读</p>
           </div>
         </button>
       </div>
@@ -781,6 +894,58 @@ const handleVehiclePrice = () => {
 
 .vehicle-price:hover {
   background: linear-gradient(135deg, rgba(52, 152, 219, 0.4) 0%, rgba(41, 128, 185, 0.4) 100%);
+}
+
+.solver:hover {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.4) 0%, rgba(142, 68, 173, 0.4) 100%);
+}
+
+.ai-assistant:hover {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.4) 0%, rgba(41, 128, 185, 0.4) 100%);
+}
+
+.music-parser:hover {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.4) 0%, rgba(39, 174, 96, 0.4) 100%);
+}
+
+.mv-parser:hover {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.4) 0%, rgba(192, 57, 43, 0.4) 100%);
+}
+
+.random-number:hover {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.4) 0%, rgba(142, 68, 173, 0.4) 100%);
+}
+
+.express-query:hover {
+  background: linear-gradient(135deg, rgba(230, 126, 34, 0.4) 0%, rgba(211, 84, 0, 0.4) 100%);
+}
+
+.ip-query:hover {
+  background: linear-gradient(135deg, rgba(26, 188, 156, 0.4) 0%, rgba(22, 160, 133, 0.4) 100%);
+}
+
+.qq-avatar:hover {
+  background: linear-gradient(135deg, rgba(253, 121, 168, 0.4) 0%, rgba(232, 67, 147, 0.4) 100%);
+}
+
+.concert-schedule:hover {
+  background: linear-gradient(135deg, rgba(142, 68, 173, 0.4) 0%, rgba(109, 40, 217, 0.4) 100%);
+}
+
+.kfc-crazy:hover {
+  background: linear-gradient(135deg, rgba(243, 156, 18, 0.4) 0%, rgba(230, 126, 34, 0.4) 100%);
+}
+
+.nonsense-article:hover {
+  background: linear-gradient(135deg, rgba(52, 73, 94, 0.4) 0%, rgba(44, 62, 80, 0.4) 100%);
+}
+
+.kuaikan-comic:hover {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.4) 0%, rgba(142, 68, 173, 0.4) 100%);
+}
+
+.tomato-novel:hover {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.4) 0%, rgba(192, 57, 43, 0.4) 100%);
 }
 
 .button-icon {
