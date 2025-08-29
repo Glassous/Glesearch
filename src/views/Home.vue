@@ -118,103 +118,119 @@ const handleVehiclePrice = () => {
 
   <!-- 功能按钮区域 -->
   <main class="main-content">
-    <div class="button-grid">
-      <button class="feature-button exchange-rate" @click="handleExchangeRate">
-        <div class="button-icon">💱</div>
-        <div class="button-text">
-          <h3>汇率换算</h3>
-          <p>实时汇率查询与换算</p>
-        </div>
-      </button>
-      
-      <button class="feature-button oil-price" @click="handleOilPrice">
-        <div class="button-icon">⛽</div>
-        <div class="button-text">
-          <h3>油价查询</h3>
-          <p>全国各地油价信息</p>
-        </div>
-      </button>
+    <!-- 查询类 -->
+    <section class="category-section">
+      <h2 class="category-title">🔍 查询类</h2>
+      <div class="button-grid">
+        <button class="feature-button oil-price" @click="handleOilPrice">
+          <div class="button-icon">⛽</div>
+          <div class="button-text">
+            <h3>油价查询</h3>
+            <p>全国各地油价信息</p>
+          </div>
+        </button>
 
-      <button class="feature-button hot-ranking" @click="handleHotRanking">
-        <div class="button-icon">🔥</div>
-        <div class="button-text">
-          <h3>热榜汇总</h3>
-          <p>各大平台热门内容汇总</p>
-        </div>
-      </button>
+        <button class="feature-button hot-ranking" @click="handleHotRanking">
+          <div class="button-icon">🔥</div>
+          <div class="button-text">
+            <h3>热榜汇总</h3>
+            <p>各大平台热门内容汇总</p>
+          </div>
+        </button>
 
-      <button class="feature-button history-today" @click="handleHistoryToday">
-        <div class="button-icon">📅</div>
-        <div class="button-text">
-          <h3>历史上的今天</h3>
-          <p>回顾历史上的重要事件</p>
-        </div>
-      </button>
+        <button class="feature-button history-today" @click="handleHistoryToday">
+          <div class="button-icon">📅</div>
+          <div class="button-text">
+            <h3>历史上的今天</h3>
+            <p>回顾历史上的重要事件</p>
+          </div>
+        </button>
 
-      <button class="feature-button genshin-images" @click="handleGenshinImages">
-        <div class="button-icon">⚔️</div>
-        <div class="button-text">
-          <h3>原神图片</h3>
-          <p>精美原神角色图片</p>
-        </div>
-      </button>
+        <button class="feature-button gold-price" @click="handleGoldPrice">
+          <div class="button-icon">🥇</div>
+          <div class="button-text">
+            <h3>今日金价</h3>
+            <p>实时黄金价格查询</p>
+          </div>
+        </button>
 
-      <button class="feature-button random-girl-video" @click="handleRandomGirlVideo">
-        <div class="button-icon">📹</div>
-        <div class="button-text">
-          <h3>随机小姐姐视频</h3>
-          <p>随机推荐精彩视频</p>
-        </div>
-      </button>
+        <button class="feature-button vehicle-price" @click="handleVehiclePrice">
+          <div class="button-icon">🚙</div>
+          <div class="button-text">
+            <h3>车辆信息查询</h3>
+            <p>汽车价格信息查询</p>
+          </div>
+        </button>
+      </div>
+    </section>
 
-      <button class="feature-button random-girl-image" @click="handleRandomGirlImage">
-        <div class="button-icon">📸</div>
-        <div class="button-text">
-          <h3>随机小姐姐图片</h3>
-          <p>随机推荐精美图片</p>
-        </div>
-      </button>
+    <!-- 工具类 -->
+    <section class="category-section">
+      <h2 class="category-title">🔧 工具类</h2>
+      <div class="button-grid">
+        <button class="feature-button exchange-rate" @click="handleExchangeRate">
+          <div class="button-icon">💱</div>
+          <div class="button-text">
+            <h3>汇率换算</h3>
+            <p>实时汇率查询与换算</p>
+          </div>
+        </button>
 
-      <button class="feature-button random-wallpaper" @click="handleRandomWallpaper">
-        <div class="button-icon">🖼️</div>
-        <div class="button-text">
-          <h3>随机壁纸图片</h3>
-          <p>高清精美壁纸推荐</p>
-        </div>
-      </button>
+        <button class="feature-button translate" @click="handleTranslate">
+          <div class="button-icon">🌐</div>
+          <div class="button-text">
+            <h3>翻译</h3>
+            <p>多语言在线翻译</p>
+          </div>
+        </button>
 
-      <button class="feature-button driving-test" @click="handleDrivingTest">
-        <div class="button-icon">🚗</div>
-        <div class="button-text">
-          <h3>随机驾考题目</h3>
-          <p>驾考练习题目推荐</p>
-        </div>
-      </button>
+        <button class="feature-button driving-test" @click="handleDrivingTest">
+          <div class="button-icon">🚗</div>
+          <div class="button-text">
+            <h3>随机驾考题目</h3>
+            <p>驾考练习题目推荐</p>
+          </div>
+        </button>
+      </div>
+    </section>
 
-      <button class="feature-button translate" @click="handleTranslate">
-        <div class="button-icon">🌐</div>
-        <div class="button-text">
-          <h3>翻译</h3>
-          <p>多语言在线翻译</p>
-        </div>
-      </button>
+    <!-- 娱乐类 -->
+    <section class="category-section">
+      <h2 class="category-title">🎮 娱乐类</h2>
+      <div class="button-grid">
+        <button class="feature-button genshin-images" @click="handleGenshinImages">
+          <div class="button-icon">⚔️</div>
+          <div class="button-text">
+            <h3>原神图片</h3>
+            <p>精美原神角色图片</p>
+          </div>
+        </button>
 
-      <button class="feature-button gold-price" @click="handleGoldPrice">
-        <div class="button-icon">🥇</div>
-        <div class="button-text">
-          <h3>今日金价</h3>
-          <p>实时黄金价格查询</p>
-        </div>
-      </button>
+        <button class="feature-button random-girl-image" @click="handleRandomGirlImage">
+          <div class="button-icon">📸</div>
+          <div class="button-text">
+            <h3>随机小姐姐图片</h3>
+            <p>随机推荐精美图片</p>
+          </div>
+        </button>
 
-      <button class="feature-button vehicle-price" @click="handleVehiclePrice">
-        <div class="button-icon">🚙</div>
-        <div class="button-text">
-          <h3>车辆信息查询</h3>
-          <p>汽车价格信息查询</p>
-        </div>
-      </button>
-    </div>
+        <button class="feature-button random-girl-video" @click="handleRandomGirlVideo">
+          <div class="button-icon">📹</div>
+          <div class="button-text">
+            <h3>随机小姐姐视频</h3>
+            <p>随机推荐精彩视频</p>
+          </div>
+        </button>
+
+        <button class="feature-button random-wallpaper" @click="handleRandomWallpaper">
+          <div class="button-icon">🖼️</div>
+          <div class="button-text">
+            <h3>随机壁纸图片</h3>
+            <p>高清精美壁纸推荐</p>
+          </div>
+        </button>
+      </div>
+    </section>
   </main>
 
   <!-- 版权区域 -->
@@ -620,18 +636,45 @@ const handleVehiclePrice = () => {
 }
 
 .main-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 0 2rem 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.category-section {
+  margin-bottom: 4rem;
+}
+
+.category-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.category-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
 }
 
 .button-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
-  max-width: 800px;
-  width: 100%;
+  justify-items: center;
 }
 
 /* 毛玻璃效果和曲面屏效果按钮样式 */
