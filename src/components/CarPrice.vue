@@ -1,51 +1,45 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-// 车辆价格数据
-const carPriceData = ref([])
+// 响应式数据
+const cars = ref([])
 const loading = ref(false)
 const error = ref('')
-const apiSource = ref('xxapi.cn')
-const lastUpdateTime = ref('')
-
-// 搜索相关
 const brand = ref('')
 const model = ref('')
-const searchQuery = computed(() => {
-  if (brand.value && model.value) {
-    return `${brand.value}${model.value}`
-  }
-  return brand.value || model.value
-})
+const apiSource = ref('jkyai.top')
+const lastUpdateTime = ref('')
 
-// 获取车辆价格数据
-const fetchCarPrices = async () => {
-  if (!searchQuery.value.trim()) {
-    error.value = '请输入品牌或型号'
+// 搜索车辆
+const searchCars = async () => {
+  const searchQuery = `${brand.value}${model.value}`.trim()
+  if (!searchQuery) {
+    cars.value = []
     return
   }
 
+  loading.value = true
+  error.value = ''
+  
   try {
-    loading.value = true
-    error.value = ''
+    const response = await fetch(`https://api.jkyai.top/API/clxxcx.php?msg=${encodeURIComponent(searchQuery)}`)
+    const data = await response.json()
     
-    const requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    }
-
-    const response = await fetch(`https://v2.xxapi.cn/api/carprice?search=${encodeURIComponent(searchQuery.value)}`, requestOptions)
-    const result = await response.json()
+    console.log('API返回数据:', data) // 调试日志
     
-    console.log('API返回数据:', result) // 调试日志
-    
-    if (result.code === 200 && result.data) {
-      carPriceData.value = result.data
+    if (data.code === 201 && data.data) {
+      cars.value = data.data.map(car => ({
+        brand: car.brand_name,
+        model: car.series_name,
+        price: car.official_price,
+        level: car.level,
+        image: car.white_pic_url || 'https://via.placeholder.com/300x200?text=暂无图片'
+      }))
       
-      // 设置更新时间（使用当前时间）
+      // 设置更新时间
       const now = new Date()
       lastUpdateTime.value = now.toLocaleString('zh-CN', {
         year: 'numeric',
@@ -55,21 +49,16 @@ const fetchCarPrices = async () => {
         minute: '2-digit'
       })
     } else {
-      throw new Error(`API返回错误: ${result.msg || '未知错误'}`)
+      cars.value = []
+      error.value = '未找到相关车辆信息'
     }
   } catch (err) {
-    error.value = '获取车辆价格数据失败，请检查网络连接或确认输入的品牌型号是否正确'
-    lastUpdateTime.value = 'Error'
-    console.error('车辆价格API请求失败:', err)
-    console.error('错误详情:', err.message)
+    console.error('搜索失败:', err)
+    error.value = '搜索失败，请检查网络连接'
+    cars.value = []
   } finally {
     loading.value = false
   }
-}
-
-// 搜索车辆
-const searchCars = () => {
-  fetchCarPrices()
 }
 
 // 返回主页
@@ -82,6 +71,11 @@ const searchOnDongchedi = (carName) => {
   const keyword = encodeURIComponent(carName)
   const url = `https://www.dongchedi.com/search?keyword=${keyword}`
   window.open(url, '_blank')
+}
+
+// 处理图片加载错误
+const handleImageError = (event) => {
+  event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+Cjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZmlsbD0iIzk5OSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0Ij7mmoLml6Dlm77niYc8L3RleHQ+Cjwvc3ZnPgo='
 }
 </script>
 
@@ -104,7 +98,7 @@ const searchOnDongchedi = (carName) => {
 
     <!-- 搜索区域 -->
     <div class="search-section">
-      <div class="search-inputs">
+      <div class="search-row">
         <div class="input-group">
           <label for="brand">品牌</label>
           <input 
@@ -127,14 +121,14 @@ const searchOnDongchedi = (carName) => {
             @keyup.enter="searchCars"
           />
         </div>
+        <button 
+          @click="searchCars" 
+          :disabled="(!brand.trim() && !model.trim()) || loading"
+          class="search-button"
+        >
+          {{ loading ? '查询中...' : '查询' }}
+        </button>
       </div>
-      <button 
-        @click="searchCars" 
-        :disabled="!searchQuery.trim() || loading"
-        class="search-button"
-      >
-        {{ loading ? '查询中...' : '查询' }}
-      </button>
     </div>
   </div>
 
@@ -142,7 +136,7 @@ const searchOnDongchedi = (carName) => {
   <main class="main-content">
     <!-- 加载状态 -->
     <div v-if="loading" class="loading-message">
-      正在获取车辆价格数据...
+      正在搜索车辆信息...
     </div>
     
     <!-- 错误信息 -->
@@ -150,61 +144,62 @@ const searchOnDongchedi = (carName) => {
       {{ error }}
     </div>
 
-    <!-- 车辆价格数据展示 -->
-    <div v-if="!loading && !error && carPriceData.length > 0" class="car-price-sections">
-      <section class="price-section">
-        <h3>{{ carPriceData[0].brand_name }} 车辆价格信息 ({{ carPriceData.length }} 条结果)</h3>
-        
-        <!-- 车辆展示区域 -->
-        <div class="car-display-container">
+    <!-- 车辆信息展示 -->
+    <div v-if="!loading && !error && cars.length > 0" class="cars-container">
+      <h3 class="results-title">找到 {{ cars.length }} 个相关车型</h3>
+      
+      <div class="car-grid">
+        <div 
+          v-for="(car, index) in cars" 
+          :key="index"
+          class="car-card"
+          @click="searchOnDongchedi(`${car.brand} ${car.model}`)"
+        >
           <!-- 车辆图片 -->
           <div class="car-image-container">
             <img 
-              :src="carPriceData[0].cover_url" 
-              :alt="carPriceData[0].brand_name"
-              class="main-car-image"
-              @error="$event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNjBMMTIwIDQwSDgwTDEwMCA2MFoiIGZpbGw9IiNDQ0MiLz4KPHN2Zz4K'"
+              :src="car.image" 
+              :alt="`${car.brand} ${car.model}`"
+              class="car-image"
+              @error="handleImageError"
             />
           </div>
-
-          <!-- 车型卡片列表 -->
-          <div class="car-cards-container">
-            <div 
-              v-for="(item, index) in carPriceData" 
-              :key="index"
-              class="car-card"
-              @click="searchOnDongchedi(item.car_name)"
-            >
-              <div class="card-header">
-                <h4 class="car-name">{{ item.car_name }}</h4>
-              </div>
+          
+          <!-- 车辆信息 -->
+          <div class="car-info">
+            <div class="car-header">
+              <h4 class="car-brand">{{ car.brand }}</h4>
+              <h5 class="car-model">{{ car.model }}</h5>
+            </div>
+            
+            <div class="car-details">
               <div class="price-info">
-                <div class="price-row">
-                  <span class="price-label">指导价</span>
-                  <span class="guide-price">{{ item.price }}</span>
-                </div>
-                <div class="price-row">
-                  <span class="price-label">经销商价</span>
-                  <span class="dealer-price">{{ item.dealer_price }}</span>
-                </div>
+                <span class="price-label">官方指导价</span>
+                <span class="price-value">{{ car.price }}</span>
               </div>
-              <div class="card-footer">
-                <span class="click-hint">点击查看详情</span>
+              
+              <div class="level-info">
+                <span class="level-label">车型级别</span>
+                <span class="level-value">{{ car.level }}</span>
               </div>
+            </div>
+            
+            <div class="card-footer">
+              <span class="click-hint">点击查看详情</span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
 
     <!-- 无数据提示 -->
-    <div v-if="!loading && !error && carPriceData.length === 0 && (brand || model)" class="no-data-message">
+    <div v-if="!loading && !error && cars.length === 0 && (brand || model)" class="no-data-message">
       未找到相关车辆信息，请尝试其他关键词
     </div>
 
     <!-- 初始提示 -->
-    <div v-if="!loading && !error && carPriceData.length === 0 && !brand && !model" class="initial-message">
-      请输入品牌或型号查询车辆价格信息
+    <div v-if="!loading && !error && cars.length === 0 && !brand && !model" class="initial-message">
+      请输入车辆品牌或型号进行搜索
     </div>
   </main>
 </template>
@@ -308,10 +303,10 @@ const searchOnDongchedi = (carName) => {
   border-bottom: 1px solid var(--glass-border);
 }
 
-.search-inputs {
+.search-row {
   display: flex;
   gap: 1rem;
-  margin-bottom: 1rem;
+  align-items: end;
 }
 
 .input-group {
@@ -353,8 +348,9 @@ const searchOnDongchedi = (carName) => {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  align-self: flex-end;
   box-shadow: 0 2px 8px var(--shadow-light);
+  flex-shrink: 0;
+  height: fit-content;
 }
 
 .search-button:hover:not(:disabled) {
@@ -370,9 +366,9 @@ const searchOnDongchedi = (carName) => {
 
 /* 主要内容区域 */
 .main-content {
-  margin-top: 240px;
+  margin-top: 200px;
   padding: 2rem 1.5rem;
-  min-height: calc(100vh - 240px);
+  min-height: calc(100vh - 200px);
   width: 100%;
 }
 
@@ -410,14 +406,12 @@ const searchOnDongchedi = (carName) => {
   box-shadow: 0 4px 16px var(--glass-shadow);
 }
 
-/* 车辆价格数据区域 */
-.car-price-sections {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+/* 车辆信息展示区域 */
+.cars-container {
+  width: 100%;
 }
 
-.price-section h3 {
+.results-title {
   color: var(--text-accent);
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
@@ -426,74 +420,23 @@ const searchOnDongchedi = (carName) => {
   padding-bottom: 0.5rem;
 }
 
-/* 车辆展示容器 */
-.car-display-container {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-}
-
-/* 车辆图片容器 */
-.car-image-container {
-  flex: 0 0 400px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px var(--glass-shadow);
-}
-
-.main-car-image {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  display: block;
-}
-
-/* 车型卡片容器 */
-.car-cards-container {
-  flex: 1;
+.car-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
-  max-height: 600px;
-  overflow-y: auto;
-  padding-right: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 
-/* 滚动条样式 */
-.car-cards-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.car-cards-container::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 3px;
-}
-
-.car-cards-container::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 3px;
-}
-
-.car-cards-container::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
-}
-
-/* 车型卡片 */
+/* 车辆卡片 */
 .car-card {
   background: var(--glass-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
-  padding: 1.2rem;
+  overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 8px 32px var(--glass-shadow);
-  position: relative;
 }
 
 .car-card:hover {
@@ -502,49 +445,84 @@ const searchOnDongchedi = (carName) => {
   box-shadow: 0 12px 40px var(--shadow-medium);
 }
 
-.card-header {
+/* 车辆图片 */
+.car-image-container {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.car-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.car-card:hover .car-image {
+  transform: scale(1.05);
+}
+
+/* 车辆信息 */
+.car-info {
+  padding: 1.2rem;
+}
+
+.car-header {
   margin-bottom: 1rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid var(--border-color);
 }
 
-.car-name {
-  color: var(--text-primary);
-  font-size: 1.1rem;
+.car-brand {
+  color: var(--text-accent);
+  font-size: 1rem;
   font-weight: 600;
-  margin: 0;
-  line-height: 1.4;
+  margin: 0 0 0.3rem 0;
 }
 
-.price-info {
+.car-model {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.car-details {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
   margin-bottom: 1rem;
 }
 
-.price-row {
+.price-info, .level-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.price-label {
+.price-label, .level-label {
   font-weight: 500;
   color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
-.guide-price {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.dealer-price {
+.price-value {
   font-size: 1.1rem;
   font-weight: bold;
   color: var(--text-accent);
+}
+
+.level-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
 }
 
 .card-footer {
@@ -569,37 +547,31 @@ const searchOnDongchedi = (carName) => {
     padding: 1rem;
   }
   
-  .search-inputs {
+  .search-row {
     flex-direction: column;
     gap: 0.8rem;
+    align-items: stretch;
+  }
+  
+  .search-button {
+    width: 100%;
   }
   
   .main-content {
     padding: 1rem;
-    margin-top: 260px;
+    margin-top: 200px;
   }
   
-  .car-display-container {
-    flex-direction: column;
-    gap: 1.5rem;
+  .car-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
   .car-image-container {
-    flex: none;
-    width: 100%;
+    height: 180px;
   }
   
-  .main-car-image {
-    height: 200px;
-  }
-  
-  .car-cards-container {
-    grid-template-columns: 1fr;
-    max-height: none;
-    overflow-y: visible;
-  }
-  
-  .car-card {
+  .car-info {
     padding: 1rem;
   }
   
@@ -630,27 +602,23 @@ const searchOnDongchedi = (carName) => {
   }
   
   .main-content {
-    margin-top: 280px;
+    margin-top: 160px;
   }
   
   .car-image-container {
-    flex: none;
+    height: 160px;
   }
   
-  .main-car-image {
-    height: 180px;
-  }
-  
-  .car-card {
+  .car-info {
     padding: 0.8rem;
   }
   
-  .car-name {
-    font-size: 1rem;
+  .car-model {
+    font-size: 1.1rem;
   }
   
-  .guide-price, .dealer-price {
-    font-size: 0.95rem;
+  .price-value {
+    font-size: 1rem;
   }
 }
 </style>
