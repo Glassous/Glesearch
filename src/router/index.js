@@ -13,6 +13,8 @@ import Translate from '../components/Translate.vue'
 import GoldPrice from '../components/GoldPrice.vue'
 import CarPrice from '../components/CarPrice.vue'
 import Solver from '../components/Solver.vue'
+import MusicParser from '../components/MusicParser.vue'
+import MVParser from '../components/MVParser.vue'
 
 const routes = [
   {
@@ -84,6 +86,16 @@ const routes = [
     path: '/solver',
     name: 'Solver',
     component: Solver
+  },
+  {
+    path: '/music-parser',
+    name: 'MusicParser',
+    component: MusicParser
+  },
+  {
+    path: '/mv-parser',
+    name: 'MVParser',
+    component: MVParser
   }
 ]
 

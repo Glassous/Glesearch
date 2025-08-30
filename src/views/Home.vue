@@ -101,6 +101,14 @@ const handleSolver = () => {
   router.push('/solver')
 }
 
+const handleMusicParser = () => {
+  router.push('/music-parser')
+}
+
+const handleMVParser = () => {
+  router.push('/mv-parser')
+}
+
 // 显示即将推出提示
 const showComingSoon = (featureName) => {
   alert(`${featureName} 功能即将推出，敬请期待！`)
@@ -217,7 +225,7 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button music-parser" @click="showComingSoon('音乐解析')">
+        <button class="feature-button music-parser" @click="handleMusicParser">
           <div class="button-icon">🎵</div>
           <div class="button-text">
             <h3>音乐解析</h3>
@@ -225,7 +233,7 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button mv-parser" @click="showComingSoon('MV解析')">
+        <button class="feature-button mv-parser" @click="handleMVParser">
           <div class="button-icon">🎬</div>
           <div class="button-text">
             <h3>MV解析</h3>
@@ -645,6 +653,8 @@ const showComingSoon = (featureName) => {
   border: 1px solid rgba(0,0,0,0);
   cursor: pointer;
   transition: transform 0.5s;
+  width: 80px;
+  height: 80px;
 }
 
 .btn:hover {
@@ -702,6 +712,8 @@ const showComingSoon = (featureName) => {
   border: 1px solid rgba(0,0,0,0);
   cursor: pointer;
   transition: transform 0.5s;
+  width: 80px;
+  height: 80px;
 }
 
 .api-btn:hover {
@@ -809,6 +821,8 @@ const showComingSoon = (featureName) => {
   overflow: hidden;
   transform-style: preserve-3d;
   perspective: 1000px;
+  width: 320px;
+  min-height: 120px;
 }
 
 .feature-button::before {
