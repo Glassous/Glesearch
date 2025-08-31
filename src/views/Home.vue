@@ -56,6 +56,15 @@ const handleOilPrice = () => {
   router.push('/oil-price')
 }
 
+// 快看漫画按钮点击事件
+const handleKuaiKanComic = () => {
+  router.push('/kuaikan-comic')
+}
+
+const handleTomatoNovel = () => {
+  router.push('/tomato-novel')
+}
+
 // 新功能按钮点击事件
 const handleHotRanking = () => {
   router.push('/hot-list')
@@ -134,6 +143,16 @@ const handleQQAvatar = () => {
 
 const handleConcertSchedule = () => {
   router.push('/concert-schedule')
+}
+
+// KFC疯狂星期四按钮点击事件
+const handleKFCThursday = () => {
+  router.push('/kfc-thursday')
+}
+
+// 狗屁不通文章按钮点击事件
+const handleNonsenseArticle = () => {
+  router.push('/nonsense-article')
 }
 
 // 显示即将推出提示
@@ -346,7 +365,7 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button kfc-crazy" @click="showComingSoon('KFC疯狂星期四')">
+        <button class="feature-button kfc-crazy" @click="handleKFCThursday">
           <div class="button-icon">🍗</div>
           <div class="button-text">
             <h3>KFC疯狂星期四</h3>
@@ -354,7 +373,7 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button nonsense-article" @click="showComingSoon('狗屁不通文章')">
+        <button class="feature-button nonsense-article" @click="handleNonsenseArticle">
           <div class="button-icon">📝</div>
           <div class="button-text">
             <h3>狗屁不通文章</h3>
@@ -362,7 +381,7 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button kuaikan-comic" @click="showComingSoon('快看漫画')">
+        <button class="feature-button kuaikan-comic" @click="handleKuaiKanComic">
           <div class="button-icon">📚</div>
           <div class="button-text">
             <h3>快看漫画</h3>
@@ -370,7 +389,7 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button tomato-novel" @click="showComingSoon('番茄小说')">
+        <button class="feature-button tomato-novel" @click="handleTomatoNovel">
           <div class="button-icon">🍅</div>
           <div class="button-text">
             <h3>番茄小说</h3>

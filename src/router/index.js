@@ -21,6 +21,12 @@ import IPQuery from '../components/IPQuery.vue'
 import QQAvatar from '../components/QQAvatar.vue'
 import ConcertSchedule from '../components/ConcertSchedule.vue'
 import AIAssistant from '../components/AIAssistant.vue'
+import KFCThursday from '../components/KFCThursday.vue'
+import NonsenseArticle from '../components/NonsenseArticle.vue'
+import KuaiKanComic from '../components/KuaiKanComic.vue'
+import TomatoNovel from '../components/TomatoNovel.vue'
+import NovelChapter from '../components/NovelChapter.vue'
+import NovelReader from '../components/NovelReader.vue'
 
 const routes = [
   {
@@ -132,6 +138,36 @@ const routes = [
     path: '/ai-assistant',
     name: 'AIAssistant',
     component: AIAssistant
+  },
+  {
+    path: '/kfc-thursday',
+    name: 'KFCThursday',
+    component: KFCThursday
+  },
+  {
+    path: '/nonsense-article',
+    name: 'NonsenseArticle',
+    component: NonsenseArticle
+  },
+  {
+    path: '/kuaikan-comic',
+    name: 'KuaiKanComic',
+    component: KuaiKanComic
+  },
+  {
+    path: '/tomato-novel',
+    name: 'TomatoNovel',
+    component: TomatoNovel
+  },
+  {
+    path: '/novel-chapter',
+    name: 'NovelChapter',
+    component: NovelChapter
+  },
+  {
+    path: '/novel-reader',
+    name: 'NovelReader',
+    component: NovelReader
   }
 ]
 

@@ -32,7 +32,9 @@ onUnmounted(() => {
 
 <template> 
   <div class="safe-area">
+    <keep-alive include="TomatoNovel,NovelChapter">
     <router-view />
+  </keep-alive>
   </div>
 </template>
 
