@@ -699,8 +699,6 @@ const showComingSoon = (featureName) => {
   border: 1px solid rgba(0,0,0,0);
   cursor: pointer;
   transition: transform 0.5s;
-  width: 80px;
-  height: 80px;
 }
 
 .btn:hover {
@@ -758,8 +756,6 @@ const showComingSoon = (featureName) => {
   border: 1px solid rgba(0,0,0,0);
   cursor: pointer;
   transition: transform 0.5s;
-  width: 80px;
-  height: 80px;
 }
 
 .api-btn:hover {
