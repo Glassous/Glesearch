@@ -128,6 +128,10 @@ const handleQQAvatar = () => {
   router.push('/qq-avatar')
 }
 
+const handleConcertSchedule = () => {
+  router.push('/concert-schedule')
+}
+
 // 显示即将推出提示
 const showComingSoon = (featureName) => {
   alert(`${featureName} 功能即将推出，敬请期待！`)
@@ -292,11 +296,11 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button concert-schedule" @click="showComingSoon('演唱会排期表')">
+        <button class="feature-button concert-schedule" @click="handleConcertSchedule">
           <div class="button-icon">🎤</div>
           <div class="button-text">
             <h3>演唱会排期表</h3>
-            <p>演唱会时间安排查询</p>
+            <p>查看最新演唱会排期表</p>
           </div>
         </button>
       </div>

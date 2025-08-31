@@ -19,6 +19,7 @@ import RandomNumber from '../components/RandomNumber.vue'
 import ExpressQuery from '../components/ExpressQuery.vue'
 import IPQuery from '../components/IPQuery.vue'
 import QQAvatar from '../components/QQAvatar.vue'
+import ConcertSchedule from '../components/ConcertSchedule.vue'
 
 const routes = [
   {
@@ -120,6 +121,11 @@ const routes = [
     path: '/qq-avatar',
     name: 'QQAvatar',
     component: QQAvatar
+  },
+  {
+    path: '/concert-schedule',
+    name: 'ConcertSchedule',
+    component: ConcertSchedule
   }
 ]
 
