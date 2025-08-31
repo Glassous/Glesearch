@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -7,6 +7,22 @@ const titleLetters = ref([])
 const fullTitle = 'Glesearch'
 const animationComplete = ref(false)
 const isHeaderFixed = ref(false)
+const searchQuery = ref('')
+const selectedEngine = ref('google')
+const showEngineDropdown = ref(false)
+
+// 搜索引擎配置
+const searchEngines = [
+  { id: 'google', name: 'Google', icon: '/src/assets/images/icons8-google.svg' },
+  { id: 'bing', name: 'Bing', icon: '/src/assets/images/icons8-bing.svg' },
+  { id: 'duckduckgo', name: 'DuckDuckGo', icon: '/src/assets/images/icons8-duckduckgo.svg' },
+  { id: 'baidu', name: 'Baidu', icon: '/src/assets/images/icons8-baidu.svg' }
+]
+
+// 当前搜索引擎
+const currentEngine = computed(() => {
+  return searchEngines.find(engine => engine.id === selectedEngine.value) || searchEngines[0]
+})
 
 // 滚动监听函数
 const handleScroll = () => {
@@ -159,6 +175,41 @@ const handleNonsenseArticle = () => {
 const showComingSoon = (featureName) => {
   alert(`${featureName} 功能即将推出，敬请期待！`)
 }
+
+// 搜索功能
+const performSearch = () => {
+  if (!searchQuery.value.trim()) {
+    alert('请输入搜索关键词')
+    return
+  }
+  
+  const searchEngines = {
+    google: `https://www.google.com/search?q=${encodeURIComponent(searchQuery.value)}`,
+    bing: `https://www.bing.com/search?q=${encodeURIComponent(searchQuery.value)}`,
+    duckduckgo: `https://duckduckgo.com/?q=${encodeURIComponent(searchQuery.value)}`,
+    baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(searchQuery.value)}`
+  }
+  
+  window.open(searchEngines[selectedEngine.value], '_blank')
+}
+
+// 切换搜索引擎下拉菜单
+const toggleEngineDropdown = () => {
+  showEngineDropdown.value = !showEngineDropdown.value
+}
+
+// 选择搜索引擎
+const selectEngine = (engine) => {
+  selectedEngine.value = engine
+  showEngineDropdown.value = false
+}
+
+// 循环切换搜索引擎
+const switchEngine = () => {
+  const currentIndex = searchEngines.findIndex(engine => engine.id === selectedEngine.value)
+  const nextIndex = (currentIndex + 1) % searchEngines.length
+  selectedEngine.value = searchEngines[nextIndex].id
+}
 </script>
 
 <template>
@@ -181,6 +232,34 @@ const showComingSoon = (featureName) => {
 
   <!-- 功能按钮区域 -->
   <main class="main-content">
+    <!-- 搜索框 -->
+    <div class="search-container">
+      <div class="search-box">
+        <!-- 搜索引擎切换 -->
+        <div class="search-engine-selector" @click="switchEngine">
+          <div class="engine-display">
+            <img :src="currentEngine.icon" :alt="currentEngine.name" class="engine-icon-svg" />
+          </div>
+        </div>
+        
+        <!-- 搜索输入框 -->
+        <input 
+          type="text" 
+          v-model="searchQuery"
+          @keyup.enter="performSearch"
+          placeholder="输入搜索关键词..."
+          class="search-input"
+        />
+        
+        <!-- 搜索按钮 -->
+        <button @click="performSearch" class="search-button">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
     <!-- 查询类 -->
     <section class="category-section">
       <h2 class="category-title">🔍 查询类</h2>
@@ -808,6 +887,155 @@ const showComingSoon = (featureName) => {
   margin: 0 auto;
 }
 
+/* 搜索框样式 */
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  padding: 0 1rem;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 50px;
+  padding: 0.5rem;
+  box-shadow: 0 8px 32px var(--glass-shadow);
+  transition: all 0.3s ease;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.search-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.05) 50%, 
+    rgba(0, 0, 0, 0.02) 100%);
+  border-radius: 50px;
+  z-index: -1;
+}
+
+.search-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px var(--shadow-heavy);
+  border-color: var(--text-accent);
+}
+
+.search-box:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px var(--shadow-heavy);
+  border-color: #667eea;
+}
+
+.search-engine-selector {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.engine-display {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.engine-display:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.engine-display:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.engine-icon-svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+
+.engine-name {
+  transition: all 0.3s ease;
+}
+
+.search-engine-selector:hover .engine-icon-svg {
+  transform: rotate(360deg);
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 1rem 1.5rem;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.search-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.search-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.search-button:active {
+  transform: scale(0.95);
+}
+
+.search-button svg {
+  transition: all 0.3s ease;
+}
+
+.search-button:hover svg {
+  transform: scale(1.1);
+}
+
 .category-section {
   margin-bottom: 4rem;
 }
@@ -1042,6 +1270,35 @@ const showComingSoon = (featureName) => {
   
   .feature-button {
     padding: 1.5rem;
+  }
+  
+  .search-container {
+    padding: 0 0.5rem;
+  }
+  
+  .search-box {
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: 20px;
+    padding: 1rem;
+  }
+  
+  .search-engine-selector {
+    width: 100%;
+  }
+  
+  .engine-display {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .search-input {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .search-button {
+    align-self: center;
   }
 }
 

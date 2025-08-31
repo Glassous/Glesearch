@@ -32,9 +32,11 @@ onUnmounted(() => {
 
 <template> 
   <div class="safe-area">
-    <keep-alive include="TomatoNovel,NovelChapter">
-    <router-view />
-  </keep-alive>
+    <router-view v-slot="{ Component }">
+      <keep-alive include="TomatoNovel,NovelChapter">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
   </div>
 </template>
 
