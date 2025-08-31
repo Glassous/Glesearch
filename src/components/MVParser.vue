@@ -15,10 +15,8 @@ const mvIndex = ref(1)
 
 // 视频播放相关
 const videoRef = ref(null)
+const urlInputRef = ref(null)
 const isPlaying = ref(false)
-const videoError = ref(false)
-const videoErrorMessage = ref('')
-const videoLoading = ref(false)
 
 // 获取MV信息
 const fetchMVInfo = async () => {
@@ -67,65 +65,17 @@ const togglePlay = () => {
   }
 }
 
-const onPlay = () => { 
-  isPlaying.value = true 
-  videoError.value = false
+// 视频访问方法
+const openVideoInNewTab = () => {
+  if (!mvData.value?.url) return
+  window.open(mvData.value.url, '_blank')
 }
-const onPause = () => { isPlaying.value = false }
-const onEnded = () => { isPlaying.value = false }
 
-// 视频错误处理
-const onVideoError = (event) => {
-  console.error('视频加载错误:', event)
-  videoError.value = true
-  isPlaying.value = false
-  videoLoading.value = false
-  
-  const video = event.target
-  const error = video.error
-  
-  if (error) {
-    switch (error.code) {
-      case error.MEDIA_ERR_ABORTED:
-        videoErrorMessage.value = '视频加载被中断'
-        break
-      case error.MEDIA_ERR_NETWORK:
-        videoErrorMessage.value = '网络错误，无法加载视频'
-        break
-      case error.MEDIA_ERR_DECODE:
-        videoErrorMessage.value = '视频解码失败，格式不支持'
-        break
-      case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-        videoErrorMessage.value = '视频格式不支持或链接无效'
-        break
-      default:
-        videoErrorMessage.value = '未知错误，无法播放视频'
-    }
-  } else {
-    videoErrorMessage.value = '视频加载失败，请检查网络连接'
+const selectUrl = () => {
+  if (urlInputRef.value) {
+    urlInputRef.value.select()
+    urlInputRef.value.setSelectionRange(0, 99999) // 移动端兼容
   }
-}
-
-const onVideoLoadStart = () => {
-  videoLoading.value = true
-  videoError.value = false
-}
-
-const onVideoCanPlay = () => {
-  videoLoading.value = false
-  videoError.value = false
-}
-
-// 重试视频加载
-const retryVideo = () => {
-  if (!videoRef.value || !mvData.value?.url) return
-  
-  videoError.value = false
-  videoErrorMessage.value = ''
-  videoLoading.value = true
-  
-  // 重新设置视频源
-  videoRef.value.load()
 }
 
 // 工具函数
@@ -155,9 +105,6 @@ const clearForm = () => {
   error.value = ''
   lastUpdateTime.value = ''
   isPlaying.value = false
-  videoError.value = false
-  videoErrorMessage.value = ''
-  videoLoading.value = false
 }
 
 const useExampleMV = () => {
@@ -317,43 +264,61 @@ onUnmounted(() => {})
         </div>
         <div class="card-content">
           <div class="video-player">
-            <video
-              ref="videoRef"
-              :poster="mvData.cover"
-              @play="onPlay"
-              @pause="onPause"
-              @ended="onEnded"
-              @error="onVideoError"
-              @loadstart="onVideoLoadStart"
-              @canplay="onVideoCanPlay"
-              controls
-              preload="metadata"
-              class="video-element"
-              crossorigin="anonymous"
-            >
-              <source :src="mvData.url" type="video/mp4">
-              <source :src="mvData.url" type="video/webm">
-              <source :src="mvData.url" type="video/ogg">
-              <p class="video-error">
-                您的浏览器不支持视频播放。
-                <a :href="mvData.url" target="_blank" class="video-link">点击此处直接访问视频</a>
-              </p>
-            </video>
-            
-            <!-- 视频加载失败时的备用方案 -->
-            <div v-if="videoError" class="video-fallback">
-              <div class="fallback-content">
-                <div class="fallback-icon">⚠️</div>
-                <h4>视频加载失败</h4>
-                <p>{{ videoErrorMessage }}</p>
-                <div class="fallback-actions">
-                  <a :href="mvData.url" target="_blank" class="fallback-btn primary">
-                    🔗 在新窗口打开
-                  </a>
-                  <button @click="retryVideo" class="fallback-btn secondary">
-                    🔄 重试加载
-                  </button>
+            <!-- CORS提示信息 -->
+            <div class="cors-notice">
+              <div class="notice-content">
+                <span class="notice-icon">ℹ️</span>
+                <div class="notice-text">
+                  <strong>播放说明：</strong>由于跨域限制，无法直接在页面内播放视频。请使用下方链接在新窗口中观看。
                 </div>
+              </div>
+            </div>
+            
+            <!-- 视频访问选项 -->
+            <div class="video-access-options">
+              <div class="access-option primary" @click="openVideoInNewTab">
+                <div class="option-icon">🎬</div>
+                <div class="option-content">
+                  <h4>在新窗口播放</h4>
+                  <p>直接在浏览器新标签页中打开视频</p>
+                </div>
+                <div class="option-arrow">→</div>
+              </div>
+              
+              <div class="access-option secondary" @click="copyVideoUrl">
+                <div class="option-icon">📋</div>
+                <div class="option-content">
+                  <h4>复制视频链接</h4>
+                  <p>复制链接到剪贴板，可在其他播放器中使用</p>
+                </div>
+                <div class="option-arrow">→</div>
+              </div>
+              
+              <div class="access-option secondary" @click="downloadVideo">
+                <div class="option-icon">⬇️</div>
+                <div class="option-content">
+                  <h4>下载视频</h4>
+                  <p>尝试下载视频到本地</p>
+                </div>
+                <div class="option-arrow">→</div>
+              </div>
+            </div>
+            
+            <!-- 视频链接信息 -->
+            <div class="video-url-info">
+              <div class="url-label">视频链接：</div>
+              <div class="url-content">
+                <input 
+                  type="text" 
+                  :value="mvData.url" 
+                  readonly 
+                  class="url-input"
+                  @click="selectUrl"
+                  ref="urlInputRef"
+                />
+                <button @click="copyVideoUrl" class="copy-btn" title="复制链接">
+                  📋
+                </button>
               </div>
             </div>
           </div>
@@ -728,99 +693,156 @@ onUnmounted(() => {})
   gap: 1rem;
 }
 
-.video-element {
-  width: 100%;
+/* CORS提示样式 */
+.cors-notice {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border: 1px solid #ffc107;
   border-radius: 12px;
-  background: #000;
-  max-height: 500px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.video-error {
-  color: var(--text-secondary);
-  text-align: center;
-  padding: 2rem;
-}
-
-.video-link {
-  color: var(--text-accent);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.video-link:hover {
-  text-decoration: underline;
-}
-
-/* 视频加载失败备用方案样式 */
-.video-fallback {
-  background: var(--glass-bg);
-  border: 2px dashed var(--glass-border);
-  border-radius: 12px;
-  padding: 2rem;
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.fallback-content {
+.notice-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 0.8rem;
 }
 
-.fallback-icon {
-  font-size: 3rem;
-}
-
-.fallback-content h4 {
-  color: var(--text-accent);
-  margin: 0;
+.notice-icon {
   font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
 }
 
-.fallback-content p {
-  color: var(--text-secondary);
-  margin: 0;
-  max-width: 400px;
+.notice-text {
+  color: #856404;
   line-height: 1.5;
-}
-
-.fallback-actions {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.fallback-btn {
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
   font-size: 0.9rem;
 }
 
-.fallback-btn.primary {
-  background: var(--text-accent);
-  color: white;
+.notice-text strong {
+  font-weight: 600;
 }
 
-.fallback-btn.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+/* 视频访问选项样式 */
+.video-access-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.fallback-btn.secondary {
-  background: var(--glass-bg);
-  color: var(--text-secondary);
+.access-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
   border: 2px solid var(--glass-border);
 }
 
-.fallback-btn.secondary:hover {
+.access-option.primary {
+  background: linear-gradient(135deg, var(--text-accent), #7c3aed);
+  color: white;
+  border-color: var(--text-accent);
+}
+
+.access-option.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.access-option.secondary {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+}
+
+.access-option.secondary:hover {
   background: var(--bg-secondary);
+  border-color: var(--text-accent);
+}
+
+.option-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.option-content {
+  flex: 1;
+}
+
+.option-content h4 {
+  margin: 0 0 0.3rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.option-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.option-arrow {
+  font-size: 1.2rem;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+/* 视频链接信息样式 */
+.video-url-info {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.url-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.url-content {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.url-input {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-family: monospace;
+  cursor: pointer;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: var(--text-accent);
+}
+
+.copy-btn {
+  background: var(--text-accent);
+  color: white;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: #5a67d8;
+  transform: scale(1.05);
 }
 
 /* 响应式设计 */
@@ -861,6 +883,23 @@ onUnmounted(() => {})
     font-size: 0.8rem;
     padding: 0.4rem 0.8rem;
     justify-content: center;
+  }
+  
+  .notice-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .access-option {
+    padding: 1rem;
+  }
+  
+  .option-content h4 {
+    font-size: 1rem;
+  }
+  
+  .option-content p {
+    font-size: 0.8rem;
   }
 }
 
