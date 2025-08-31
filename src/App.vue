@@ -41,6 +41,20 @@ onUnmounted(() => {
 </template>
 
 <style>
+/* 全局禁用按钮点击时的原生蓝色覆盖 */
+button, input[type="button"], input[type="submit"], input[type="reset"] {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-focus-ring-color: transparent !important;
+  -webkit-appearance: none;
+}
+
+/* 禁用所有可点击元素的蓝色覆盖 */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none;
+}
+
 /* 全局样式 - 使用统一的主题变量 */
 body {
   background-color: var(--bg-primary);

@@ -1936,32 +1936,76 @@ onMounted(() => {
   }
   
   .search-container {
-    padding: 0 0.5rem;
+    padding: 0 1rem;
+    margin-bottom: 2.5rem;
   }
   
   .search-box {
-    flex-direction: column;
-    gap: 0.5rem;
-    border-radius: 20px;
-    padding: 1rem;
-  }
-  
-  .search-engine-selector {
-    width: 100%;
+    max-width: 500px;
+    padding: 0.4rem;
+    border-radius: 40px;
   }
   
   .engine-display {
-    width: 100%;
-    justify-content: center;
+    width: 44px;
+    height: 44px;
+  }
+  
+  .engine-icon-svg {
+    width: 20px;
+    height: 20px;
   }
   
   .search-input {
-    width: 100%;
-    text-align: center;
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
   }
   
   .search-button {
-    align-self: center;
+    width: 44px;
+    height: 44px;
+  }
+  
+  .search-button svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .search-container {
+    padding: 0 0.8rem;
+  }
+  
+  .search-box {
+    max-width: 420px;
+    padding: 0.35rem;
+    border-radius: 35px;
+  }
+  
+  .engine-display {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .engine-icon-svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .search-input {
+    padding: 0.7rem 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .search-button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .search-button svg {
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -1988,6 +2032,42 @@ onMounted(() => {
     margin-bottom: 2rem;
   }
   
+  .search-container {
+    padding: 0 0.6rem;
+    margin-bottom: 2rem;
+  }
+  
+  .search-box {
+    max-width: 360px;
+    padding: 0.3rem;
+    border-radius: 30px;
+  }
+  
+  .engine-display {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .engine-icon-svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .search-input {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .search-button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .search-button svg {
+    width: 20px;
+    height: 20px;
+  }
+  
   .footer-buttons {
     flex-direction: row;
     justify-content: center;
@@ -2002,6 +2082,43 @@ onMounted(() => {
   
   .api-text {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .search-container {
+    padding: 0 0.4rem;
+  }
+  
+  .search-box {
+    max-width: 320px;
+    padding: 0.25rem;
+    border-radius: 25px;
+  }
+  
+  .engine-display {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .engine-icon-svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .search-input {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  .search-button {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .search-button svg {
+    width: 18px;
+    height: 18px;
   }
 }
 
