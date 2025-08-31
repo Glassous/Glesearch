@@ -16,6 +16,9 @@ const mvIndex = ref(1)
 // 视频播放相关
 const videoRef = ref(null)
 const isPlaying = ref(false)
+const videoError = ref(false)
+const videoErrorMessage = ref('')
+const videoLoading = ref(false)
 
 // 获取MV信息
 const fetchMVInfo = async () => {
@@ -64,9 +67,66 @@ const togglePlay = () => {
   }
 }
 
-const onPlay = () => { isPlaying.value = true }
+const onPlay = () => { 
+  isPlaying.value = true 
+  videoError.value = false
+}
 const onPause = () => { isPlaying.value = false }
 const onEnded = () => { isPlaying.value = false }
+
+// 视频错误处理
+const onVideoError = (event) => {
+  console.error('视频加载错误:', event)
+  videoError.value = true
+  isPlaying.value = false
+  videoLoading.value = false
+  
+  const video = event.target
+  const error = video.error
+  
+  if (error) {
+    switch (error.code) {
+      case error.MEDIA_ERR_ABORTED:
+        videoErrorMessage.value = '视频加载被中断'
+        break
+      case error.MEDIA_ERR_NETWORK:
+        videoErrorMessage.value = '网络错误，无法加载视频'
+        break
+      case error.MEDIA_ERR_DECODE:
+        videoErrorMessage.value = '视频解码失败，格式不支持'
+        break
+      case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+        videoErrorMessage.value = '视频格式不支持或链接无效'
+        break
+      default:
+        videoErrorMessage.value = '未知错误，无法播放视频'
+    }
+  } else {
+    videoErrorMessage.value = '视频加载失败，请检查网络连接'
+  }
+}
+
+const onVideoLoadStart = () => {
+  videoLoading.value = true
+  videoError.value = false
+}
+
+const onVideoCanPlay = () => {
+  videoLoading.value = false
+  videoError.value = false
+}
+
+// 重试视频加载
+const retryVideo = () => {
+  if (!videoRef.value || !mvData.value?.url) return
+  
+  videoError.value = false
+  videoErrorMessage.value = ''
+  videoLoading.value = true
+  
+  // 重新设置视频源
+  videoRef.value.load()
+}
 
 // 工具函数
 const copyVideoUrl = () => {
@@ -95,6 +155,9 @@ const clearForm = () => {
   error.value = ''
   lastUpdateTime.value = ''
   isPlaying.value = false
+  videoError.value = false
+  videoErrorMessage.value = ''
+  videoLoading.value = false
 }
 
 const useExampleMV = () => {
@@ -256,17 +319,43 @@ onUnmounted(() => {})
           <div class="video-player">
             <video
               ref="videoRef"
-              :src="mvData.url"
               :poster="mvData.cover"
               @play="onPlay"
               @pause="onPause"
               @ended="onEnded"
+              @error="onVideoError"
+              @loadstart="onVideoLoadStart"
+              @canplay="onVideoCanPlay"
               controls
               preload="metadata"
               class="video-element"
+              crossorigin="anonymous"
             >
-              您的浏览器不支持视频播放
+              <source :src="mvData.url" type="video/mp4">
+              <source :src="mvData.url" type="video/webm">
+              <source :src="mvData.url" type="video/ogg">
+              <p class="video-error">
+                您的浏览器不支持视频播放。
+                <a :href="mvData.url" target="_blank" class="video-link">点击此处直接访问视频</a>
+              </p>
             </video>
+            
+            <!-- 视频加载失败时的备用方案 -->
+            <div v-if="videoError" class="video-fallback">
+              <div class="fallback-content">
+                <div class="fallback-icon">⚠️</div>
+                <h4>视频加载失败</h4>
+                <p>{{ videoErrorMessage }}</p>
+                <div class="fallback-actions">
+                  <a :href="mvData.url" target="_blank" class="fallback-btn primary">
+                    🔗 在新窗口打开
+                  </a>
+                  <button @click="retryVideo" class="fallback-btn secondary">
+                    🔄 重试加载
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -643,6 +732,95 @@ onUnmounted(() => {})
   width: 100%;
   border-radius: 12px;
   background: #000;
+  max-height: 500px;
+}
+
+.video-error {
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 2rem;
+}
+
+.video-link {
+  color: var(--text-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.video-link:hover {
+  text-decoration: underline;
+}
+
+/* 视频加载失败备用方案样式 */
+.video-fallback {
+  background: var(--glass-bg);
+  border: 2px dashed var(--glass-border);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.fallback-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fallback-icon {
+  font-size: 3rem;
+}
+
+.fallback-content h4 {
+  color: var(--text-accent);
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.fallback-content p {
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.fallback-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.fallback-btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 0.9rem;
+}
+
+.fallback-btn.primary {
+  background: var(--text-accent);
+  color: white;
+}
+
+.fallback-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.fallback-btn.secondary {
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  border: 2px solid var(--glass-border);
+}
+
+.fallback-btn.secondary:hover {
+  background: var(--bg-secondary);
 }
 
 /* 响应式设计 */
