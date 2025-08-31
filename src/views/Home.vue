@@ -231,6 +231,21 @@ const handleNonsenseArticle = () => {
   router.push('/nonsense-article')
 }
 
+// 二维码生成按钮点击事件
+const handleQRCodeGenerator = () => {
+  alert('二维码生成功能即将推出，敬请期待！')
+}
+
+// Github链接增强按钮点击事件
+const handleGithubEnhancer = () => {
+  alert('Github链接增强功能即将推出，敬请期待！')
+}
+
+// Markdown阅读器按钮点击事件
+const handleMarkdownReader = () => {
+  alert('Markdown阅读器功能即将推出，敬请期待！')
+}
+
 // 显示即将推出提示
 const showComingSoon = (featureName) => {
   alert(`${featureName} 功能即将推出，敬请期待！`)
@@ -783,6 +798,30 @@ onMounted(() => {
           <div class="button-text">
             <h3>演唱会排期表</h3>
             <p>查看最新演唱会排期表</p>
+          </div>
+        </button>
+
+        <button class="feature-button qr-generator" @click="handleQRCodeGenerator">
+          <div class="button-icon">📱</div>
+          <div class="button-text">
+            <h3>二维码生成</h3>
+            <p>快速生成各种二维码</p>
+          </div>
+        </button>
+
+        <button class="feature-button github-enhancer" @click="handleGithubEnhancer">
+          <div class="button-icon">🔗</div>
+          <div class="button-text">
+            <h3>Github增强</h3>
+            <p>Github下载链接增强</p>
+          </div>
+        </button>
+
+        <button class="feature-button markdown-reader" @click="handleMarkdownReader">
+          <div class="button-icon">📖</div>
+          <div class="button-text">
+            <h3>Markdown阅读器</h3>
+            <p>在线Markdown文档阅读</p>
           </div>
         </button>
       </div>
@@ -1893,6 +1932,18 @@ onMounted(() => {
 
 .tomato-novel:hover {
   background: linear-gradient(135deg, rgba(231, 76, 60, 0.4) 0%, rgba(192, 57, 43, 0.4) 100%);
+}
+
+.qr-generator:hover {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.4) 0%, rgba(39, 174, 96, 0.4) 100%);
+}
+
+.github-enhancer:hover {
+  background: linear-gradient(135deg, rgba(52, 73, 94, 0.4) 0%, rgba(44, 62, 80, 0.4) 100%);
+}
+
+.markdown-reader:hover {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.4) 0%, rgba(142, 68, 173, 0.4) 100%);
 }
 
 .button-icon {
