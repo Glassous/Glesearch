@@ -124,6 +124,10 @@ const handleIPQuery = () => {
   router.push('/ip-query')
 }
 
+const handleAIAssistant = () => {
+  router.push('/ai-assistant')
+}
+
 const handleQQAvatar = () => {
   router.push('/qq-avatar')
 }
@@ -240,11 +244,11 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button ai-assistant" @click="showComingSoon('AI助手')">
+        <button class="feature-button ai-assistant" @click="handleAIAssistant">
           <div class="button-icon">🤖</div>
           <div class="button-text">
             <h3>AI助手</h3>
-            <p>智能AI助手服务</p>
+            <p>快速访问各种AI助手服务</p>
           </div>
         </button>
 

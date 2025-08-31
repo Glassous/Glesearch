@@ -20,6 +20,7 @@ import ExpressQuery from '../components/ExpressQuery.vue'
 import IPQuery from '../components/IPQuery.vue'
 import QQAvatar from '../components/QQAvatar.vue'
 import ConcertSchedule from '../components/ConcertSchedule.vue'
+import AIAssistant from '../components/AIAssistant.vue'
 
 const routes = [
   {
@@ -126,6 +127,11 @@ const routes = [
     path: '/concert-schedule',
     name: 'ConcertSchedule',
     component: ConcertSchedule
+  },
+  {
+    path: '/ai-assistant',
+    name: 'AIAssistant',
+    component: AIAssistant
   }
 ]
 
