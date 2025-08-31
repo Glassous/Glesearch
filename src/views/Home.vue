@@ -276,6 +276,11 @@ const handleSearch = () => {
   }
 }
 
+// performSearch方法 - 与handleSearch功能相同
+const performSearch = () => {
+  handleSearch()
+}
+
 // 切换搜索引擎下拉菜单
 const toggleEngineDropdown = () => {
   showEngineDropdown.value = !showEngineDropdown.value
