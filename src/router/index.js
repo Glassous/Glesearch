@@ -15,6 +15,10 @@ import CarPrice from '../components/CarPrice.vue'
 import Solver from '../components/Solver.vue'
 import MusicParser from '../components/MusicParser.vue'
 import MVParser from '../components/MVParser.vue'
+import RandomNumber from '../components/RandomNumber.vue'
+import ExpressQuery from '../components/ExpressQuery.vue'
+import IPQuery from '../components/IPQuery.vue'
+import QQAvatar from '../components/QQAvatar.vue'
 
 const routes = [
   {
@@ -96,6 +100,26 @@ const routes = [
     path: '/mv-parser',
     name: 'MVParser',
     component: MVParser
+  },
+  {
+    path: '/random-number',
+    name: 'RandomNumber',
+    component: RandomNumber
+  },
+  {
+    path: '/express-query',
+    name: 'ExpressQuery',
+    component: ExpressQuery
+  },
+  {
+    path: '/ip-query',
+    name: 'IPQuery',
+    component: IPQuery
+  },
+  {
+    path: '/qq-avatar',
+    name: 'QQAvatar',
+    component: QQAvatar
   }
 ]
 

@@ -109,6 +109,25 @@ const handleMVParser = () => {
   router.push('/mv-parser')
 }
 
+// 随机数生成按钮点击事件
+const handleRandomNumber = () => {
+  router.push('/random-number')
+}
+
+// 快递查询按钮点击事件
+const handleExpressQuery = () => {
+  router.push('/express-query')
+}
+
+// IP查询按钮点击事件
+const handleIPQuery = () => {
+  router.push('/ip-query')
+}
+
+const handleQQAvatar = () => {
+  router.push('/qq-avatar')
+}
+
 // 显示即将推出提示
 const showComingSoon = (featureName) => {
   alert(`${featureName} 功能即将推出，敬请期待！`)
@@ -241,15 +260,15 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button random-number" @click="showComingSoon('随机数字生成')">
+        <button class="feature-button random-number" @click="handleRandomNumber">
           <div class="button-icon">🎲</div>
           <div class="button-text">
             <h3>随机数字生成</h3>
-            <p>生成随机数字序列</p>
+            <p>生成指定范围内的随机数字</p>
           </div>
         </button>
 
-        <button class="feature-button express-query" @click="showComingSoon('快递单号查询')">
+        <button class="feature-button express-query" @click="handleExpressQuery">
           <div class="button-icon">📦</div>
           <div class="button-text">
             <h3>快递单号查询</h3>
@@ -257,7 +276,7 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button ip-query" @click="showComingSoon('IP地址查询')">
+        <button class="feature-button ip-query" @click="handleIPQuery">
           <div class="button-icon">🌐</div>
           <div class="button-text">
             <h3>IP地址查询</h3>
@@ -265,7 +284,7 @@ const showComingSoon = (featureName) => {
           </div>
         </button>
 
-        <button class="feature-button qq-avatar" @click="showComingSoon('QQ头像提取')">
+        <button class="feature-button qq-avatar" @click="handleQQAvatar">
           <div class="button-icon">👤</div>
           <div class="button-text">
             <h3>QQ头像提取</h3>
