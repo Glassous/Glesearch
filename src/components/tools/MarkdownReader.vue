@@ -16,6 +16,8 @@ const uploadedFileName = ref('')
 const loading = ref(false)
 const errorMessage = ref('')
 const showOptions = ref(false)
+const viewMode = ref('convert') // 'convert' | 'split'
+const convertMode = ref('markdown') // 'markdown' | 'plain' 转换模式下显示的内容类型
 
 // Markdown选项
 const markdownOptions = ref({
@@ -23,24 +25,6 @@ const markdownOptions = ref({
   gfm: true,
   highlight: true
 })
-
-// 示例模板
-const exampleTemplates = ref([
-  {
-    id: 'basic',
-    name: '基础语法',
-    icon: '📝',
-    description: 'Markdown基本语法示例',
-    content: `# 标题示例\n\n## 二级标题\n\n这是**粗体**和*斜体*文本。\n\n> 这是引用块\n\n- 列表项1\n- 列表项2\n\n\`\`\`javascript\nconsole.log("Hello World");\n\`\`\``
-  },
-  {
-    id: 'table',
-    name: '表格示例',
-    icon: '📊',
-    description: '表格格式示例',
-    content: `# 表格示例\n\n| 列1 | 列2 | 列3 |\n|-----|-----|-----|\n| 数据1 | 数据2 | 数据3 |\n| 数据4 | 数据5 | 数据6 |`
-  }
-])
 
 // 配置marked
 const configureMarked = () => {
@@ -119,12 +103,7 @@ const clearContent = () => {
   }
 }
 
-// 使用模板
-const useTemplate = (template) => {
-  markdownContent.value = template.content
-  uploadedFileName.value = `${template.name}.md`
-  renderMarkdown()
-}
+
 
 // 下载文件
 const downloadMarkdown = () => {
@@ -152,8 +131,81 @@ const goBack = () => {
 
 // 输入处理
 const handleInput = () => {
-  clearTimeout(window.markdownRenderTimeout)
-  window.markdownRenderTimeout = setTimeout(renderMarkdown, 300)
+  if (viewMode.value === 'split') {
+    clearTimeout(window.markdownRenderTimeout)
+    window.markdownRenderTimeout = setTimeout(renderMarkdown, 300)
+  }
+}
+
+// 转换模式输入处理
+const handleConvertInput = (event) => {
+  updateCurrentDisplayContent(event.target.value)
+}
+
+// 切换视图模式
+const switchViewMode = (mode) => {
+  viewMode.value = mode
+  if (mode === 'split' && markdownContent.value.trim()) {
+    renderMarkdown()
+  }
+}
+
+// 切换转换模式显示内容
+const switchConvertMode = (mode) => {
+  convertMode.value = mode
+}
+
+// 将Markdown转换为纯文本
+const convertToPlainText = (markdown) => {
+  if (!markdown) return ''
+  
+  return markdown
+    // 移除标题标记
+    .replace(/^#{1,6}\s+/gm, '')
+    // 移除粗体和斜体标记
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/__([^_]+)__/g, '$1')
+    .replace(/_([^_]+)_/g, '$1')
+    // 移除删除线
+    .replace(/~~([^~]+)~~/g, '$1')
+    // 移除内联代码标记
+    .replace(/`([^`]+)`/g, '$1')
+    // 移除链接，保留链接文本
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    // 移除图片标记
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+    // 移除引用标记
+    .replace(/^>\s+/gm, '')
+    // 移除列表标记
+    .replace(/^[\s]*[-*+]\s+/gm, '')
+    .replace(/^[\s]*\d+\.\s+/gm, '')
+    // 移除代码块标记
+    .replace(/```[\s\S]*?```/g, (match) => {
+      return match.replace(/```\w*\n?/g, '').replace(/```$/g, '')
+    })
+    // 移除水平分割线
+    .replace(/^[-*_]{3,}$/gm, '')
+    // 清理多余的空行
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
+// 获取当前显示的内容
+const getCurrentDisplayContent = () => {
+  if (convertMode.value === 'markdown') {
+    return markdownContent.value
+  } else {
+    return convertToPlainText(markdownContent.value)
+  }
+}
+
+// 更新当前显示的内容
+const updateCurrentDisplayContent = (value) => {
+  if (convertMode.value === 'markdown') {
+    markdownContent.value = value
+  }
+  // 纯文本模式下不允许编辑
 }
 
 onMounted(() => {
@@ -198,22 +250,24 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- 示例模板 -->
-    <section class="templates-section">
-      <h3>📋 示例模板</h3>
-      <div class="templates-grid">
-        <div 
-          v-for="template in exampleTemplates" 
-          :key="template.id"
-          class="template-card"
-          @click="useTemplate(template)"
+    <!-- 视图模式切换 -->
+    <section class="view-mode-section">
+      <h3>🔧 视图模式</h3>
+      <div class="mode-switcher">
+        <button 
+          :class="['mode-btn', { active: viewMode === 'convert' }]"
+          @click="switchViewMode('convert')"
         >
-          <div class="template-icon">{{ template.icon }}</div>
-          <div class="template-info">
-            <h4>{{ template.name }}</h4>
-            <p>{{ template.description }}</p>
-          </div>
-        </div>
+          <span class="mode-icon">🔄</span>
+          <span>转换模式</span>
+        </button>
+        <button 
+          :class="['mode-btn', { active: viewMode === 'split' }]"
+          @click="switchViewMode('split')"
+        >
+          <span class="mode-icon">📱</span>
+          <span>分屏模式</span>
+        </button>
       </div>
     </section>
 
@@ -245,36 +299,100 @@ onMounted(() => {
       </div>
     </section>
 
-    <!-- 编辑器 -->
-    <section class="editor-section">
-      <h3>✏️ 编辑器</h3>
-      <div class="editor-form">
-        <textarea 
-          v-model="markdownContent"
-          @input="handleInput"
-          placeholder="在此输入Markdown内容..."
-          class="form-textarea"
-          rows="12"
-        ></textarea>
+    <!-- 编辑器和预览区域 -->
+    <section class="editor-preview-section">
+      <h3>✏️ {{ viewMode === 'split' ? 'Markdown编辑器 & 预览' : 'Markdown编辑器' }}</h3>
+      
+      <!-- 转换模式 -->
+      <div v-if="viewMode === 'convert'" class="convert-mode">
+        <div class="editor-form">
+          <!-- 转换模式切换器 -->
+          <div class="convert-switcher">
+            <button 
+              :class="['convert-btn', { active: convertMode === 'markdown' }]"
+              @click="switchConvertMode('markdown')"
+            >
+              <span class="convert-icon">📝</span>
+              <span>编辑模式</span>
+            </button>
+            <button 
+              :class="['convert-btn', { active: convertMode === 'plain' }]"
+              @click="switchConvertMode('plain')"
+            >
+              <span class="convert-icon">📜</span>
+              <span>Markdown预览</span>
+            </button>
+          </div>
+
+          <textarea 
+            :value="getCurrentDisplayContent()"
+            @input="handleConvertInput"
+            :placeholder="convertMode === 'markdown' ? '在此编辑...' : 'Markdown显示区域'"
+            :readonly="convertMode === 'plain'"
+            class="form-textarea"
+            :class="{ 'readonly': convertMode === 'plain' }"
+            rows="12"
+          ></textarea>
+          
+          <div class="editor-actions">
+            <button 
+              v-if="convertMode === 'markdown' && markdownContent.trim()"
+              @click="switchConvertMode('plain')" 
+              class="btn-primary"
+            >
+              🔄 转换为纯文本
+            </button>
+            <button 
+              v-if="convertMode === 'plain' && markdownContent.trim()"
+              @click="switchConvertMode('markdown')" 
+              class="btn-primary"
+            >
+              ← 返回Markdown
+            </button>
+            <button @click="downloadMarkdown" class="btn-secondary" :disabled="!markdownContent.trim()">
+              💾 下载MD
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分屏模式 -->
+      <div v-if="viewMode === 'split'" class="split-mode">
+        <div class="split-container">
+          <div class="preview-panel">
+            <div class="panel-header">
+              <h4>👀 实时预览</h4>
+            </div>
+            <div class="preview-content">
+              <div v-if="loading" class="loading-message">
+                <span class="loading-spinner"></span>
+                渲染中...
+              </div>
+              <div v-else-if="htmlContent" class="markdown-content" v-html="htmlContent"></div>
+              <div v-else class="empty-preview">
+                在右侧输入Markdown内容查看预览
+              </div>
+            </div>
+          </div>
+          
+          <div class="editor-panel">
+            <div class="panel-header">
+              <h4>✏️ Markdown编辑器</h4>
+            </div>
+            <textarea 
+              v-model="markdownContent"
+              @input="handleInput"
+              placeholder="在此输入Markdown内容..."
+              class="form-textarea split-textarea"
+            ></textarea>
+          </div>
+        </div>
         
-        <div class="editor-actions">
-          <button @click="renderMarkdown" class="btn-primary" :disabled="loading">
-            <span v-if="loading" class="loading-spinner"></span>
-            <span v-else>🔄</span>
-            {{ loading ? '渲染中...' : '刷新预览' }}
-          </button>
+        <div class="split-actions">
           <button @click="downloadMarkdown" class="btn-secondary" :disabled="!markdownContent.trim()">
             💾 下载MD
           </button>
         </div>
-      </div>
-    </section>
-
-    <!-- 预览区域 -->
-    <section v-if="htmlContent" class="preview-section">
-      <h3>👀 预览效果</h3>
-      <div class="preview-container">
-        <div class="markdown-content" v-html="htmlContent"></div>
       </div>
     </section>
   </main>
@@ -373,33 +491,194 @@ onMounted(() => {
   background: var(--glass-bg);
 }
 
-/* 模板样式 */
-.templates-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+/* 模式切换器 */
+.mode-switcher {
+  display: flex;
   gap: 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px var(--glass-shadow);
 }
 
-.template-card {
-  background: var(--glass-bg);
-  border: 2px solid var(--glass-border);
-  border-radius: 12px;
-  padding: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.mode-btn {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  justify-content: center;
 }
 
-.template-card:hover {
+.mode-btn:hover {
   border-color: var(--text-accent);
   transform: translateY(-2px);
 }
 
-.template-icon {
-  font-size: 2rem;
-  min-width: 50px;
+.mode-btn.active {
+  background: var(--text-accent);
+  color: white;
+  border-color: var(--text-accent);
+}
+
+.mode-icon {
+  font-size: 1.2rem;
+}
+
+/* 转换模式切换器 */
+.convert-switcher {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 0.5rem;
+}
+
+.convert-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.convert-btn:hover {
+  background: var(--glass-bg);
+}
+
+.convert-btn.active {
+  background: var(--text-accent);
+  color: white;
+}
+
+.convert-icon {
+  font-size: 1rem;
+}
+
+/* 只读输入框 */
+.form-textarea.readonly {
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: default;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 0.9rem;
+}
+
+/* 分屏模式 */
+.split-mode {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.split-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.editor-panel, .preview-panel {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
+
+.panel-header {
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.panel-header h4 {
+  margin: 0;
+  color: var(--text-accent);
+  font-size: 1.1rem;
+}
+
+.split-textarea {
+  flex: 1;
+  border-radius: 0 0 8px 8px;
+  border-top: none;
+  resize: none;
+  margin: 0;
+}
+
+.preview-content {
+  flex: 1;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0 0 8px 8px;
+  border-top: none;
+  overflow-y: auto;
+}
+
+.empty-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+  text-align: center;
+  font-style: italic;
+}
+
+.loading-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 100%;
+  color: var(--text-secondary);
+}
+
+.split-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+/* 转换模式 */
+.convert-mode .editor-form {
+  margin-bottom: 0;
+}
+
+.preview-header {
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 16px 16px 0 0;
+  border-bottom: 1px solid var(--border-color);
+  margin: -2rem -2rem 1rem -2rem;
+}
+
+.preview-header h4 {
+  margin: 0;
+  color: var(--text-accent);
+  font-size: 1.1rem;
 }
 
 /* 上传区域 */
@@ -581,11 +860,25 @@ section h3 {
     padding: 1rem;
   }
   
-  .templates-grid {
-    grid-template-columns: 1fr;
+  .mode-switcher {
+    flex-direction: column;
   }
   
-  .upload-actions, .editor-actions {
+  .convert-switcher {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .split-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .editor-panel, .preview-panel {
+    height: 300px;
+  }
+  
+  .upload-actions, .editor-actions, .split-actions {
     flex-direction: column;
   }
 }
