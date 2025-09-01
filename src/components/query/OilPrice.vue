@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 // 油价数据
 const oilPriceData = ref([])
@@ -149,7 +150,15 @@ const fetchOilPrices = async () => {
 
 // 返回主页
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'query') {
+    router.push('/query')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 格式化价格变化

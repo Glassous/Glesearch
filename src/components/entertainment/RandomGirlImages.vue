@@ -151,7 +151,15 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.go(-1)
+      const from = this.$route.query.from
+      if (from === 'home') {
+        this.$router.push('/')
+      } else if (from === 'entertainment') {
+        this.$router.push('/entertainment')
+      } else {
+        // 默认返回首页
+        this.$router.push('/')
+      }
     },
     
     switchMode(mode) {

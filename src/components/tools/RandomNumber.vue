@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 // 随机数生成相关数据
 const minValue = ref(1)
@@ -72,7 +73,15 @@ const generateRandomNumber = async () => {
 
 // 返回主页
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'tools') {
+    router.push('/tools')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 清空历史记录

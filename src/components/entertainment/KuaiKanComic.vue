@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 // 漫画数据
 const comicData = ref([])
@@ -93,7 +94,15 @@ const hideSuggestions = () => {
 
 // 返回主页
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'entertainment') {
+    router.push('/entertainment')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 跳转到必应搜索

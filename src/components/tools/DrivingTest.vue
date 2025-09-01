@@ -178,9 +178,10 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 // 响应式数据
 const selectedSubject = ref(1)
@@ -245,7 +246,15 @@ const isCorrect = computed(() => {
 
 // 方法
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'tools') {
+    router.push('/tools')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 const isCorrectOption = (optionKey) => {

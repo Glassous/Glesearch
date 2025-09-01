@@ -74,7 +74,7 @@ export default {
           icon: '⛽',
           title: '油价查询',
           description: '实时油价信息',
-          action: () => this.showComingSoon('油价查询')
+          action: () => this.$router.push({ path: '/oil-price', query: { from: 'query' } })
         },
         {
           id: 'hot-ranking',
@@ -82,7 +82,7 @@ export default {
           icon: '🔥',
           title: '热榜汇总',
           description: '各平台热门内容',
-          action: () => this.showComingSoon('热榜汇总')
+          action: () => this.$router.push({ path: '/hot-list', query: { from: 'query' } })
         },
         {
           id: 'history-today',
@@ -90,7 +90,7 @@ export default {
           icon: '📅',
           title: '历史上的今天',
           description: '历史事件回顾',
-          action: () => this.showComingSoon('历史上的今天')
+          action: () => this.$router.push({ path: '/history-today', query: { from: 'query' } })
         },
         {
           id: 'gold-price',
@@ -98,7 +98,7 @@ export default {
           icon: '🥇',
           title: '今日金价',
           description: '实时黄金价格',
-          action: () => this.showComingSoon('今日金价')
+          action: () => this.$router.push({ path: '/gold-price', query: { from: 'query' } })
         },
         {
           id: 'vehicle-info',
@@ -106,7 +106,7 @@ export default {
           icon: '🚗',
           title: '车辆信息查询',
           description: '车牌号码查询',
-          action: () => this.showComingSoon('车辆信息查询')
+          action: () => this.$router.push({ path: '/car-price', query: { from: 'query' } })
         },
         {
           id: 'movie-box-office',
@@ -247,7 +247,7 @@ export default {
           icon: '💱',
           title: '汇率换算',
           description: '实时汇率转换',
-          action: () => this.showComingSoon('汇率换算')
+          action: () => this.$router.push({ path: '/exchange-rate', query: { from: 'tools' } })
         },
         {
           id: 'translation',
@@ -255,7 +255,7 @@ export default {
           icon: '🌐',
           title: '翻译',
           description: '多语言翻译服务',
-          action: () => this.showComingSoon('翻译')
+          action: () => this.$router.push({ path: '/translate', query: { from: 'tools' } })
         },
         {
           id: 'driving-test',
@@ -263,7 +263,7 @@ export default {
           icon: '🚗',
           title: '驾考题目',
           description: '驾照考试练习',
-          action: () => this.showComingSoon('驾考题目')
+          action: () => this.$router.push({ path: '/driving-test', query: { from: 'tools' } })
         },
         {
           id: 'ai-assistant',
@@ -271,7 +271,7 @@ export default {
           icon: '🤖',
           title: 'AI助手',
           description: '智能对话助手',
-          action: () => this.$router.push('/ai-assistant')
+          action: () => this.$router.push({ path: '/ai-assistant', query: { from: 'tools' } })
         },
         {
           id: 'music-parser',
@@ -279,7 +279,7 @@ export default {
           icon: '🎵',
           title: '音乐解析',
           description: '音乐链接解析下载',
-          action: () => this.showComingSoon('音乐解析')
+          action: () => this.$router.push({ path: '/music-parser', query: { from: 'tools' } })
         },
         {
           id: 'mv-parser',
@@ -287,7 +287,7 @@ export default {
           icon: '🎬',
           title: 'MV解析',
           description: '音乐视频解析',
-          action: () => this.showComingSoon('MV解析')
+          action: () => this.$router.push({ path: '/mv-parser', query: { from: 'tools' } })
         },
         {
           id: 'random-number',
@@ -295,7 +295,7 @@ export default {
           icon: '🎲',
           title: '随机数字生成',
           description: '生成随机数字',
-          action: () => this.showComingSoon('随机数字生成')
+          action: () => this.$router.push({ path: '/random-number', query: { from: 'tools' } })
         },
         {
           id: 'express-tracking',
@@ -303,7 +303,7 @@ export default {
           icon: '📦',
           title: '快递单号查询',
           description: '物流信息追踪',
-          action: () => this.showComingSoon('快递单号查询')
+          action: () => this.$router.push({ path: '/express-query', query: { from: 'tools' } })
         },
         {
           id: 'ip-query',
@@ -311,7 +311,7 @@ export default {
           icon: '🌐',
           title: 'IP地址查询',
           description: 'IP归属地查询',
-          action: () => this.showComingSoon('IP地址查询')
+          action: () => this.$router.push({ path: '/ip-query', query: { from: 'tools' } })
         },
         {
           id: 'qq-avatar',
@@ -319,7 +319,7 @@ export default {
           icon: '👤',
           title: 'QQ头像提取',
           description: '获取QQ用户头像',
-          action: () => this.showComingSoon('QQ头像提取')
+          action: () => this.$router.push({ path: '/qq-avatar', query: { from: 'tools' } })
         },
         {
           id: 'concert-schedule',
@@ -327,7 +327,7 @@ export default {
           icon: '🎤',
           title: '演唱会排期表',
           description: '演出信息查询',
-          action: () => this.showComingSoon('演唱会排期表')
+          action: () => this.$router.push({ path: '/concert-schedule', query: { from: 'tools' } })
         },
         {
           id: 'qr-generator',
@@ -420,7 +420,7 @@ export default {
           icon: '⚔️',
           title: '原神图片',
           description: '精美原神壁纸',
-          action: () => this.showComingSoon('原神图片')
+          action: () => this.$router.push({ path: '/genshin-images', query: { from: 'entertainment' } })
         },
         {
           id: 'random-girl-images',
@@ -428,7 +428,7 @@ export default {
           icon: '👧',
           title: '随机小姐姐图片',
           description: '随机美女图片',
-          action: () => this.showComingSoon('随机小姐姐图片')
+          action: () => this.$router.push({ path: '/random-girl-images', query: { from: 'entertainment' } })
         },
         {
           id: 'random-girl-videos',
@@ -436,7 +436,7 @@ export default {
           icon: '🎬',
           title: '随机小姐姐视频',
           description: '随机美女视频',
-          action: () => this.showComingSoon('随机小姐姐视频')
+          action: () => this.$router.push({ path: '/random-girl-video', query: { from: 'entertainment' } })
         },
         {
           id: 'random-wallpaper',
@@ -444,7 +444,7 @@ export default {
           icon: '🖼️',
           title: '随机壁纸图片',
           description: '高清随机壁纸',
-          action: () => this.showComingSoon('随机壁纸图片')
+          action: () => this.$router.push({ path: '/random-wallpaper', query: { from: 'entertainment' } })
         },
         {
           id: 'kfc-crazy-thursday',
@@ -452,7 +452,7 @@ export default {
           icon: '🍗',
           title: 'KFC疯狂星期四',
           description: '疯狂星期四文案',
-          action: () => this.showComingSoon('KFC疯狂星期四')
+          action: () => this.$router.push({ path: '/kfc-thursday', query: { from: 'entertainment' } })
         },
         {
           id: 'nonsense-article',
@@ -460,7 +460,7 @@ export default {
           icon: '📝',
           title: '狗屁不通文章',
           description: '自动生成文章',
-          action: () => this.showComingSoon('狗屁不通文章')
+          action: () => this.$router.push({ path: '/nonsense-article', query: { from: 'entertainment' } })
         },
         {
           id: 'kuaikan-comic',
@@ -468,7 +468,7 @@ export default {
           icon: '📚',
           title: '快看漫画',
           description: '热门漫画推荐',
-          action: () => this.showComingSoon('快看漫画')
+          action: () => this.$router.push({ path: '/kuaikan-comic', query: { from: 'entertainment' } })
         },
         {
           id: 'tomato-novel',
@@ -476,7 +476,7 @@ export default {
           icon: '📖',
           title: '番茄小说',
           description: '免费小说阅读',
-          action: () => this.showComingSoon('番茄小说')
+          action: () => this.$router.push({ path: '/tomato-novel', query: { from: 'entertainment' } })
         },
         {
           id: 'brain-teaser',
@@ -502,7 +502,12 @@ export default {
     },
     
     goBack() {
-      this.$router.push('/')
+      const from = this.$route.query.from
+      if (from === 'entertainment') {
+        this.$router.push('/entertainment')
+      } else {
+        this.$router.push('/')
+      }
     }
   }
 }

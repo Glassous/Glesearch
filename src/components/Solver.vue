@@ -132,7 +132,16 @@ const lastUpdateTime = ref('')
 
 // 返回上一页
 function goBack() {
-  window.history.back()
+  const urlParams = new URLSearchParams(window.location.search)
+  const from = urlParams.get('from')
+  if (from === 'home') {
+    window.location.href = '/'
+  } else if (from === 'tools') {
+    window.location.href = '/tools'
+  } else {
+    // 默认返回首页
+    window.location.href = '/'
+  }
 }
 
 // 解题函数

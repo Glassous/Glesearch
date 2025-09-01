@@ -51,7 +51,7 @@ export default {
           icon: '💱',
           title: '汇率换算',
           description: '实时汇率转换',
-          action: () => this.showComingSoon('汇率换算')
+          action: () => this.$router.push({ path: '/exchange-rate', query: { from: 'home' } })
         },
         {
           id: 'translation',
@@ -59,7 +59,7 @@ export default {
           icon: '🌐',
           title: '翻译',
           description: '多语言翻译服务',
-          action: () => this.showComingSoon('翻译')
+          action: () => this.$router.push({ path: '/translate', query: { from: 'home' } })
         },
         {
           id: 'driving-test',
@@ -67,7 +67,7 @@ export default {
           icon: '🚗',
           title: '驾考题目',
           description: '驾照考试练习',
-          action: () => this.showComingSoon('驾考题目')
+          action: () => this.$router.push({ path: '/driving-test', query: { from: 'home' } })
         },
         {
           id: 'ai-assistant',
@@ -83,7 +83,7 @@ export default {
           icon: '🎵',
           title: '音乐解析',
           description: '音乐链接解析下载',
-          action: () => this.showComingSoon('音乐解析')
+          action: () => this.$router.push({ path: '/music-parser', query: { from: 'home' } })
         },
         {
           id: 'mv-parser',
@@ -91,7 +91,7 @@ export default {
           icon: '🎬',
           title: 'MV解析',
           description: '音乐视频解析',
-          action: () => this.showComingSoon('MV解析')
+          action: () => this.$router.push({ path: '/mv-parser', query: { from: 'home' } })
         },
         {
           id: 'random-number',
@@ -99,7 +99,7 @@ export default {
           icon: '🎲',
           title: '随机数字生成',
           description: '生成随机数字',
-          action: () => this.showComingSoon('随机数字生成')
+          action: () => this.$router.push({ path: '/random-number', query: { from: 'home' } })
         },
         {
           id: 'express-tracking',
@@ -107,7 +107,7 @@ export default {
           icon: '📦',
           title: '快递单号查询',
           description: '物流信息追踪',
-          action: () => this.showComingSoon('快递单号查询')
+          action: () => this.$router.push({ path: '/express-query', query: { from: 'home' } })
         },
         {
           id: 'ip-query',
@@ -115,7 +115,7 @@ export default {
           icon: '🌐',
           title: 'IP地址查询',
           description: 'IP归属地查询',
-          action: () => this.showComingSoon('IP地址查询')
+          action: () => this.$router.push({ path: '/ip-query', query: { from: 'home' } })
         },
         {
           id: 'qq-avatar',
@@ -123,7 +123,7 @@ export default {
           icon: '👤',
           title: 'QQ头像提取',
           description: '获取QQ用户头像',
-          action: () => this.showComingSoon('QQ头像提取')
+          action: () => this.$router.push({ path: '/qq-avatar', query: { from: 'home' } })
         },
         {
           id: 'concert-schedule',
@@ -131,7 +131,7 @@ export default {
           icon: '🎤',
           title: '演唱会排期表',
           description: '演出信息查询',
-          action: () => this.showComingSoon('演唱会排期表')
+          action: () => this.$router.push({ path: '/concert-schedule', query: { from: 'home' } })
         },
         {
           id: 'qr-generator',

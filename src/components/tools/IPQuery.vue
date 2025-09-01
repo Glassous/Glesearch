@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 // IP查询相关数据
 const ipAddress = ref('')
@@ -129,7 +130,15 @@ const queryIPInfo = async (ip = null) => {
 
 // 返回主页
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'tools') {
+    router.push('/tools')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 清空查询历史

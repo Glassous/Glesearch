@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 // 黄金价格数据
 const goldPriceData = ref({
@@ -58,7 +59,15 @@ const fetchGoldPrices = async () => {
 
 // 返回主页
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'query') {
+    router.push('/query')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 组件挂载时获取数据

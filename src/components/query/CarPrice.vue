@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 // 响应式数据
 const cars = ref([])
@@ -63,7 +64,15 @@ const searchCars = async () => {
 
 // 返回主页
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'query') {
+    router.push('/query')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 跳转到懂车帝搜索

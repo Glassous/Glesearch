@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 // 音乐解析数据
 const musicData = ref(null)
@@ -217,7 +218,15 @@ const downloadAudio = () => {
 
 // 返回主页
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'tools') {
+    router.push('/tools')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 清空表单

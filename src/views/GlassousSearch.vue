@@ -134,7 +134,12 @@ const openLink = (url) => {
 
 // 返回主页
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'entertainment') {
+    router.push('/entertainment')
+  } else {
+    router.push('/')
+  }
 }
 
 // 处理回车键搜索

@@ -51,7 +51,7 @@ export default {
           icon: '⚔️',
           title: '原神图片',
           description: '精美原神壁纸',
-          action: () => this.showComingSoon('原神图片')
+          action: () => this.$router.push({ path: '/genshin-images', query: { from: 'home' } })
         },
         {
           id: 'random-girl-images',
@@ -59,7 +59,7 @@ export default {
           icon: '👧',
           title: '随机小姐姐图片',
           description: '随机美女图片',
-          action: () => this.showComingSoon('随机小姐姐图片')
+          action: () => this.$router.push({ path: '/random-girl-images', query: { from: 'home' } })
         },
         {
           id: 'random-girl-videos',
@@ -67,7 +67,7 @@ export default {
           icon: '🎬',
           title: '随机小姐姐视频',
           description: '随机美女视频',
-          action: () => this.showComingSoon('随机小姐姐视频')
+          action: () => this.$router.push({ path: '/random-girl-video', query: { from: 'home' } })
         },
         {
           id: 'random-wallpaper',
@@ -75,7 +75,7 @@ export default {
           icon: '🖼️',
           title: '随机壁纸图片',
           description: '高清随机壁纸',
-          action: () => this.showComingSoon('随机壁纸图片')
+          action: () => this.$router.push({ path: '/random-wallpaper', query: { from: 'home' } })
         },
         {
           id: 'kfc-crazy-thursday',
@@ -83,7 +83,7 @@ export default {
           icon: '🍗',
           title: 'KFC疯狂星期四',
           description: '疯狂星期四文案',
-          action: () => this.showComingSoon('KFC疯狂星期四')
+          action: () => this.$router.push({ path: '/kfc-thursday', query: { from: 'home' } })
         },
         {
           id: 'nonsense-article',
@@ -91,7 +91,7 @@ export default {
           icon: '📝',
           title: '狗屁不通文章',
           description: '自动生成文章',
-          action: () => this.showComingSoon('狗屁不通文章')
+          action: () => this.$router.push({ path: '/nonsense-article', query: { from: 'home' } })
         },
         {
           id: 'kuaikan-comic',
@@ -99,7 +99,7 @@ export default {
           icon: '📚',
           title: '快看漫画',
           description: '热门漫画推荐',
-          action: () => this.showComingSoon('快看漫画')
+          action: () => this.$router.push({ path: '/kuaikan-comic', query: { from: 'home' } })
         },
         {
           id: 'tomato-novel',
@@ -107,7 +107,7 @@ export default {
           icon: '📖',
           title: '番茄小说',
           description: '免费小说阅读',
-          action: () => this.showComingSoon('番茄小说')
+          action: () => this.$router.push({ path: '/tomato-novel', query: { from: 'home' } })
         },
         {
           id: 'brain-teaser',

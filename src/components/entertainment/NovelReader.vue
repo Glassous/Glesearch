@@ -71,11 +71,6 @@ const cleanPageInfo = (content) => {
   return cleanedContent
 }
 
-// 返回上一页
-const goBack = () => {
-  router.go(-1)
-}
-
 // 上一页
 const prevPage = () => {
   const currentNum = parseInt(route.query.num || '1')
@@ -116,6 +111,19 @@ const nextPage = () => {
       author: route.query.author
     }
   })
+}
+
+// 返回上一页
+const goBack = () => {
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'entertainment') {
+    router.push('/entertainment')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 格式化内容

@@ -153,7 +153,15 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.go(-1)
+      const from = this.$route.query.from
+      if (from === 'home') {
+        this.$router.push('/')
+      } else if (from === 'tools') {
+        this.$router.push('/tools')
+      } else {
+        // 默认返回首页
+        this.$router.push('/')
+      }
     },
     
     async translate() {

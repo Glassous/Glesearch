@@ -51,7 +51,7 @@ export default {
           icon: '⛽',
           title: '油价查询',
           description: '实时油价信息',
-          action: () => this.showComingSoon('油价查询')
+          action: () => this.$router.push({ path: '/oil-price', query: { from: 'home' } })
         },
         {
           id: 'hot-ranking',
@@ -59,7 +59,7 @@ export default {
           icon: '🔥',
           title: '热榜汇总',
           description: '各平台热门内容',
-          action: () => this.showComingSoon('热榜汇总')
+          action: () => this.$router.push({ path: '/hot-list', query: { from: 'home' } })
         },
         {
           id: 'history-today',
@@ -67,7 +67,7 @@ export default {
           icon: '📅',
           title: '历史上的今天',
           description: '历史事件回顾',
-          action: () => this.showComingSoon('历史上的今天')
+          action: () => this.$router.push({ path: '/history-today', query: { from: 'home' } })
         },
         {
           id: 'gold-price',
@@ -75,7 +75,7 @@ export default {
           icon: '🥇',
           title: '今日金价',
           description: '实时黄金价格',
-          action: () => this.showComingSoon('今日金价')
+          action: () => this.$router.push({ path: '/gold-price', query: { from: 'home' } })
         },
         {
           id: 'vehicle-info',
@@ -83,7 +83,7 @@ export default {
           icon: '🚗',
           title: '车辆信息查询',
           description: '车牌号码查询',
-          action: () => this.showComingSoon('车辆信息查询')
+          action: () => this.$router.push({ path: '/car-price', query: { from: 'home' } })
         },
         {
           id: 'movie-box-office',

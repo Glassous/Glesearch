@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 // MV解析数据
 const mvData = ref(null)
@@ -96,7 +97,17 @@ const downloadVideo = () => {
   link.click()
 }
 
-const goBack = () => { router.push('/') }
+const goBack = () => {
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'tools') {
+    router.push('/tools')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
+}
 
 const clearForm = () => {
   mvName.value = ''

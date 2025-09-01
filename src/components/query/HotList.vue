@@ -76,7 +76,15 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.push('/')
+      const from = this.$route.query.from
+      if (from === 'home') {
+        this.$router.push('/')
+      } else if (from === 'query') {
+        this.$router.push('/query')
+      } else {
+        // 默认返回首页
+        this.$router.push('/')
+      }
     },
     switchTab(tabKey) {
       this.activeTab = tabKey

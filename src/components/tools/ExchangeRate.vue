@@ -1,9 +1,10 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 // 使用路由导航
 const router = useRouter()
+const route = useRoute()
 
 // 汇率数据
 const exchangeRates = ref({})
@@ -540,7 +541,15 @@ const filteredConvertedAmounts = computed(() => {
 
 // 返回主页
 const goBack = () => {
-  router.push('/')
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'tools') {
+    router.push('/tools')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 更新输入金额

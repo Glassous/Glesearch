@@ -61,7 +61,15 @@ const fetchChapters = async (href) => {
 
 // 返回上一页
 const goBack = () => {
-  router.go(-1)
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'entertainment') {
+    router.push('/entertainment')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
 }
 
 // 阅读章节
