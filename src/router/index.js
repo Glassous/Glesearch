@@ -1,38 +1,54 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import ExchangeRate from '../components/ExchangeRate.vue'
-import OilPrice from '../components/OilPrice.vue'
-import HotList from '../components/HotList.vue'
-import HistoryToday from '../components/HistoryToday.vue'
-import GenshinImages from '../components/GenshinImages.vue'
-import RandomGirlImages from '../components/RandomGirlImages.vue'
-import RandomWallpaper from '../components/RandomWallpaper.vue'
-import RandomGirlVideo from '../components/RandomGirlVideo.vue'
-import DrivingTest from '../components/DrivingTest.vue'
-import Translate from '../components/Translate.vue'
-import GoldPrice from '../components/GoldPrice.vue'
-import CarPrice from '../components/CarPrice.vue'
+import CategoryPage from '../views/CategoryPage.vue'
+import ExchangeRate from '../components/tools/ExchangeRate.vue'
+import OilPrice from '../components/query/OilPrice.vue'
+import HotList from '../components/query/HotList.vue'
+import HistoryToday from '../components/query/HistoryToday.vue'
+import GenshinImages from '../components/entertainment/GenshinImages.vue'
+import RandomGirlImages from '../components/entertainment/RandomGirlImages.vue'
+import RandomWallpaper from '../components/entertainment/RandomWallpaper.vue'
+import RandomGirlVideo from '../components/entertainment/RandomGirlVideo.vue'
+import DrivingTest from '../components/tools/DrivingTest.vue'
+import Translate from '../components/tools/Translate.vue'
+import GoldPrice from '../components/query/GoldPrice.vue'
+import CarPrice from '../components/query/CarPrice.vue'
 import Solver from '../components/Solver.vue'
-import MusicParser from '../components/MusicParser.vue'
-import MVParser from '../components/MVParser.vue'
-import RandomNumber from '../components/RandomNumber.vue'
-import ExpressQuery from '../components/ExpressQuery.vue'
-import IPQuery from '../components/IPQuery.vue'
-import QQAvatar from '../components/QQAvatar.vue'
-import ConcertSchedule from '../components/ConcertSchedule.vue'
-import AIAssistant from '../components/AIAssistant.vue'
-import KFCThursday from '../components/KFCThursday.vue'
-import NonsenseArticle from '../components/NonsenseArticle.vue'
-import KuaiKanComic from '../components/KuaiKanComic.vue'
-import TomatoNovel from '../components/TomatoNovel.vue'
-import NovelChapter from '../components/NovelChapter.vue'
-import NovelReader from '../components/NovelReader.vue'
+import MusicParser from '../components/tools/MusicParser.vue'
+import MVParser from '../components/tools/MVParser.vue'
+import RandomNumber from '../components/tools/RandomNumber.vue'
+import ExpressQuery from '../components/tools/ExpressQuery.vue'
+import IPQuery from '../components/tools/IPQuery.vue'
+import QQAvatar from '../components/tools/QQAvatar.vue'
+import ConcertSchedule from '../components/tools/ConcertSchedule.vue'
+import AIAssistant from '../components/tools/AIAssistant.vue'
+import KFCThursday from '../components/entertainment/KFCThursday.vue'
+import NonsenseArticle from '../components/entertainment/NonsenseArticle.vue'
+import KuaiKanComic from '../components/entertainment/KuaiKanComic.vue'
+import TomatoNovel from '../components/entertainment/TomatoNovel.vue'
+import NovelChapter from '../components/entertainment/NovelChapter.vue'
+import NovelReader from '../components/entertainment/NovelReader.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/query',
+    name: 'QueryPage',
+    component: CategoryPage
+  },
+  {
+    path: '/tools',
+    name: 'ToolsPage',
+    component: CategoryPage
+  },
+  {
+    path: '/entertainment',
+    name: 'EntertainmentPage',
+    component: CategoryPage
   },
   {
     path: '/exchange-rate',
