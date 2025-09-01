@@ -53,6 +53,7 @@ import KuaiKanComic from '../components/entertainment/KuaiKanComic.vue'
 import TomatoNovel from '../components/entertainment/TomatoNovel.vue'
 import NovelChapter from '../components/entertainment/NovelChapter.vue'
 import NovelReader from '../components/entertainment/NovelReader.vue'
+import AlipayVoice from '../components/entertainment/AlipayVoice.vue'
 
 const routes = [
   {
@@ -334,6 +335,11 @@ const routes = [
     path: '/novel-reader',
     name: 'NovelReader',
     component: NovelReader
+  },
+  {
+    path: '/alipay-voice',
+    name: 'AlipayVoice',
+    component: AlipayVoice
   }
 ]
 

@@ -485,6 +485,54 @@ export default {
           title: '今天吃什么',
           description: '随机美食推荐',
           action: () => this.showComingSoon('今天吃什么')
+        },
+        {
+          id: 'alipay-voice',
+          class: 'alipay-voice',
+          icon: '💰',
+          title: '支付宝收款语音生成',
+          description: '自定义收款语音',
+          action: () => this.$router.push({ path: '/alipay-voice', query: { from: 'entertainment' } })
+        },
+        {
+          id: 'hidden-poem',
+          class: 'hidden-poem',
+          icon: '📜',
+          title: '藏头藏尾诗词生成',
+          description: '创作藏头藏尾诗',
+          action: () => this.showComingSoon('藏头藏尾诗词生成')
+        },
+        {
+          id: 'certificate-generator',
+          class: 'certificate-generator',
+          icon: '🏆',
+          title: '在线证书生成器',
+          description: '制作各类证书',
+          action: () => this.showComingSoon('在线证书生成器')
+        },
+        {
+          id: 'homophone-name',
+          class: 'homophone-name',
+          icon: '😄',
+          title: '姓氏谐音梗网名生成器',
+          description: '趣味谐音网名',
+          action: () => this.showComingSoon('姓氏谐音梗网名生成器')
+        },
+        {
+          id: 'diploma-generator',
+          class: 'diploma-generator',
+          icon: '🎓',
+          title: '在线奖状生成器',
+          description: '制作精美奖状',
+          action: () => this.showComingSoon('在线奖状生成器')
+        },
+        {
+          id: 'us-identity',
+          class: 'us-identity',
+          icon: '🇺🇸',
+          title: '随机美国人身份证',
+          description: '生成虚拟身份信息',
+          action: () => this.showComingSoon('随机美国人身份证')
         }
       ]
     },
