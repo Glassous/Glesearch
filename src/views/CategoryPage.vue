@@ -189,14 +189,6 @@ export default {
           action: () => this.$router.push({ path: '/map-search', query: { from: 'query' } })
         },
         {
-          id: 'steam-free',
-          class: 'steam-free',
-          icon: '🎮',
-          title: 'Steam喜加一',
-          description: '免费游戏推荐',
-          action: () => this.showComingSoon('Steam喜加一')
-        },
-        {
           id: 'english-dict',
           class: 'english-dict',
           icon: '📖',
