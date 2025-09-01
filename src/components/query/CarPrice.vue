@@ -11,7 +11,7 @@ const loading = ref(false)
 const error = ref('')
 const brand = ref('')
 const model = ref('')
-const apiSource = ref('jkyai.top')
+const apiSource = ref('api.pearktrue.cn')
 const lastUpdateTime = ref('')
 
 // 搜索车辆
@@ -26,18 +26,19 @@ const searchCars = async () => {
   error.value = ''
   
   try {
-    const response = await fetch(`https://api.jkyai.top/API/clxxcx.php?msg=${encodeURIComponent(searchQuery)}`)
+    const response = await fetch(`https://api.pearktrue.cn/api/car/?search=${encodeURIComponent(searchQuery)}`)
     const data = await response.json()
     
     console.log('API返回数据:', data) // 调试日志
     
-    if (data.code === 201 && data.data) {
+    if (data.code === 200 && data.data) {
       cars.value = data.data.map(car => ({
-        brand: car.brand_name,
-        model: car.series_name,
-        price: car.official_price,
-        level: car.level,
-        image: car.white_pic_url || 'https://via.placeholder.com/300x200?text=暂无图片'
+        brand: car.car_name.split(' - ')[2] || '未知品牌',
+        model: car.car_name.split(' - ')[1] || car.car_name,
+        price: car.price,
+        dealerPrice: car.dealer_price,
+        level: car.tags ? car.tags.join(' / ') : '未知',
+        image: car.cover_url || 'https://via.placeholder.com/300x200?text=暂无图片'
       }))
       
       // 设置更新时间
@@ -185,6 +186,11 @@ const handleImageError = (event) => {
               <div class="price-info">
                 <span class="price-label">官方指导价</span>
                 <span class="price-value">{{ car.price }}</span>
+              </div>
+              
+              <div class="price-info" v-if="car.dealerPrice">
+                <span class="price-label">经销商报价</span>
+                <span class="dealer-price-value">{{ car.dealerPrice }}</span>
               </div>
               
               <div class="level-info">
@@ -522,6 +528,12 @@ const handleImageError = (event) => {
   font-size: 1.1rem;
   font-weight: bold;
   color: var(--text-accent);
+}
+
+.dealer-price-value {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #e91e63;
 }
 
 .level-value {

@@ -127,6 +127,11 @@ const handleCloudAPI = () => {
   window.open('https://api.jkyai.top/', '_blank')
 }
 
+// PearAPI网站跳转函数
+const handlePearAPI = () => {
+  window.open('https://api.pearktrue.cn/dashboard/home', '_blank')
+}
+
 // 汇率换算按钮点击事件
 const handleExchangeRate = () => {
   router.push('/exchange-rate')
@@ -707,6 +712,12 @@ onMounted(() => {
           <button class="btn api-btn" @click="handleCloudAPI">
             <span class="api-text">
               <img src="/src/assets/images/云智api.ico" alt="云智api" class="favicon-icon" />
+            </span>
+          </button>
+          
+          <button class="btn api-btn" @click="handlePearAPI">
+            <span class="api-text">
+              <img src="/src/assets/images/pearapi.png" alt="PearAPI" class="favicon-icon" />
             </span>
           </button>
         </div>
