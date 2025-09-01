@@ -22,6 +22,7 @@ import IPQuery from '../components/tools/IPQuery.vue'
 import QQAvatar from '../components/tools/QQAvatar.vue'
 import ConcertSchedule from '../components/tools/ConcertSchedule.vue'
 import AIAssistant from '../components/tools/AIAssistant.vue'
+import GlassousSearch from '../views/GlassousSearch.vue'
 import KFCThursday from '../components/entertainment/KFCThursday.vue'
 import NonsenseArticle from '../components/entertainment/NonsenseArticle.vue'
 import KuaiKanComic from '../components/entertainment/KuaiKanComic.vue'
@@ -154,6 +155,11 @@ const routes = [
     path: '/ai-assistant',
     name: 'AIAssistant',
     component: AIAssistant
+  },
+  {
+    path: '/glassous-search',
+    name: 'GlassousSearch',
+    component: GlassousSearch
   },
   {
     path: '/kfc-thursday',
