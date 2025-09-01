@@ -139,15 +139,7 @@ export default {
           icon: '📱',
           title: '二维码生成',
           description: '文本转二维码',
-          action: () => this.showComingSoon('二维码生成')
-        },
-        {
-          id: 'github-enhance',
-          class: 'github-enhance',
-          icon: '🐙',
-          title: 'Github增强',
-          description: 'Github功能增强',
-          action: () => this.showComingSoon('Github增强')
+          action: () => this.$router.push({ path: '/qr-generator', query: { from: 'tools' } })
         },
         {
           id: 'markdown-reader',
@@ -155,7 +147,7 @@ export default {
           icon: '📝',
           title: 'Markdown阅读器',
           description: 'Markdown文档预览',
-          action: () => this.showComingSoon('Markdown阅读器')
+          action: () => this.$router.push({ path: '/markdown-reader', query: { from: 'tools' } })
         },
         {
           id: 'ai-prompt-generator',
@@ -163,7 +155,7 @@ export default {
           icon: '🧠',
           title: 'AI提示词生成器',
           description: '智能生成AI提示词',
-          action: () => this.showComingSoon('AI提示词生成器')
+          action: () => this.$router.push({ path: '/ai-prompt-generator', query: { from: 'tools' } })
         },
         {
           id: 'douyin-parser',
@@ -172,14 +164,6 @@ export default {
           title: '抖音视频解析',
           description: '抖音无水印下载',
           action: () => this.$router.push({ path: '/douyin-parser', query: { from: 'tools' } })
-        },
-        {
-          id: 'xiaohongshu-parser',
-          class: 'xiaohongshu-parser',
-          icon: '📷',
-          title: '小红书图集详情',
-          description: '小红书内容解析',
-          action: () => this.showComingSoon('小红书图集详情')
         },
         {
           id: 'anime-avatar-ai',

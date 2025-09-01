@@ -43,6 +43,9 @@ import SpeechToText from '../components/tools/SpeechToText.vue'
 import BaiduTiku from '../components/tools/BaiduTiku.vue'
 import OCRTextRecognition from '../components/tools/OCRTextRecognition.vue'
 import TextConverter from '../components/tools/TextConverter.vue'
+import QRGenerator from '../components/tools/QRGenerator.vue'
+import MarkdownReader from '../components/tools/MarkdownReader.vue'
+import AIPromptGenerator from '../components/tools/AIPromptGenerator.vue'
 import GlassousSearch from '../views/GlassousSearch.vue'
 import KFCThursday from '../components/entertainment/KFCThursday.vue'
 import NonsenseArticle from '../components/entertainment/NonsenseArticle.vue'
@@ -281,6 +284,21 @@ const routes = [
     path: '/text-converter',
     name: 'TextConverter',
     component: TextConverter
+  },
+  {
+    path: '/qr-generator',
+    name: 'QRGenerator',
+    component: QRGenerator
+  },
+  {
+    path: '/markdown-reader',
+    name: 'MarkdownReader',
+    component: MarkdownReader
+  },
+  {
+    path: '/ai-prompt-generator',
+    name: 'AIPromptGenerator',
+    component: AIPromptGenerator
   },
   {
     path: '/glassous-search',
