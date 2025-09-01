@@ -681,7 +681,7 @@ onMounted(() => {
     </div>
 
     <!-- 功能分类区域 -->
-    <QuerySection />
+    <QuerySection @show-coming-soon="showComingSoon" />
     <ToolsSection />
     <EntertainmentSection />
   </main>

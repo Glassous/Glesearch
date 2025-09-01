@@ -3,6 +3,21 @@ import Home from '../views/Home.vue'
 import CategoryPage from '../views/CategoryPage.vue'
 import ExchangeRate from '../components/tools/ExchangeRate.vue'
 import OilPrice from '../components/query/OilPrice.vue'
+import MovieBox from '../components/query/MovieBox.vue'
+import CountdownDay from '../components/query/CountdownDay.vue'
+import RecipeInfo from '../components/query/RecipeInfo.vue'
+import LotteryResults from '../components/query/LotteryResults.vue'
+import StockData from '../components/query/StockData.vue'
+import TrademarkInfo from '../components/query/TrademarkInfo.vue'
+import CityRoutes from '../components/query/CityRoutes.vue'
+import HighSpeedTicket from '../components/query/HighSpeedTicket.vue'
+import WebsiteInfo from '../components/query/WebsiteInfo.vue'
+import MapSearch from '../components/query/MapSearch.vue'
+import EnglishDict from '../components/query/EnglishDict.vue'
+import TechNews from '../components/query/TechNews.vue'
+import WorldPopulation from '../components/query/WorldPopulation.vue'
+import NameDuplicate from '../components/query/NameDuplicate.vue'
+import PerformanceRanking from '../components/query/PerformanceRanking.vue'
 import HotList from '../components/query/HotList.vue'
 import HistoryToday from '../components/query/HistoryToday.vue'
 import GenshinImages from '../components/entertainment/GenshinImages.vue'
@@ -60,6 +75,81 @@ const routes = [
     path: '/oil-price',
     name: 'OilPrice',
     component: OilPrice
+  },
+  {
+    path: '/movie-box',
+    name: 'MovieBox',
+    component: MovieBox
+  },
+  {
+    path: '/countdown-day',
+    name: 'CountdownDay',
+    component: CountdownDay
+  },
+  {
+    path: '/recipe-info',
+    name: 'RecipeInfo',
+    component: RecipeInfo
+  },
+  {
+    path: '/lottery-results',
+    name: 'LotteryResults',
+    component: LotteryResults
+  },
+  {
+    path: '/stock-data',
+    name: 'StockData',
+    component: StockData
+  },
+  {
+    path: '/trademark-info',
+    name: 'TrademarkInfo',
+    component: TrademarkInfo
+  },
+  {
+    path: '/city-routes',
+    name: 'CityRoutes',
+    component: CityRoutes
+  },
+  {
+    path: '/high-speed-ticket',
+    name: 'HighSpeedTicket',
+    component: HighSpeedTicket
+  },
+  {
+    path: '/website-info',
+    name: 'WebsiteInfo',
+    component: WebsiteInfo
+  },
+  {
+    path: '/map-search',
+    name: 'MapSearch',
+    component: MapSearch
+  },
+  {
+    path: '/english-dict',
+    name: 'EnglishDict',
+    component: EnglishDict
+  },
+  {
+    path: '/tech-news',
+    name: 'TechNews',
+    component: TechNews
+  },
+  {
+    path: '/world-population',
+    name: 'WorldPopulation',
+    component: WorldPopulation
+  },
+  {
+    path: '/name-duplicate',
+    name: 'NameDuplicate',
+    component: NameDuplicate
+  },
+  {
+    path: '/performance-ranking',
+    name: 'PerformanceRanking',
+    component: PerformanceRanking
   },
   {
     path: '/hot-list',

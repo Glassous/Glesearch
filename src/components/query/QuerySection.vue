@@ -91,7 +91,7 @@ export default {
           icon: '🎬',
           title: '猫眼电影票房',
           description: '实时票房数据',
-          action: () => this.showComingSoon('猫眼电影票房')
+          action: () => this.$router.push({ path: '/movie-box', query: { from: 'home' } })
         },
         {
           id: 'countdown',
@@ -99,7 +99,7 @@ export default {
           icon: '⏰',
           title: '倒数日获取',
           description: '重要日期倒计时',
-          action: () => this.showComingSoon('倒数日获取')
+          action: () => this.$router.push({ path: '/countdown-day', query: { from: 'home' } })
         },
         {
           id: 'recipe-info',
@@ -107,7 +107,7 @@ export default {
           icon: '🍳',
           title: '菜谱信息大全',
           description: '丰富菜谱资源',
-          action: () => this.showComingSoon('菜谱信息大全')
+          action: () => this.$router.push({ path: '/recipe-info', query: { from: 'home' } })
         },
         {
           id: 'lottery-results',
@@ -115,7 +115,7 @@ export default {
           icon: '🎲',
           title: '彩票开奖查询',
           description: '最新开奖结果',
-          action: () => this.showComingSoon('彩票开奖查询')
+          action: () => this.$router.push({ path: '/lottery-results', query: { from: 'home' } })
         },
         {
           id: 'stock-data',
@@ -123,7 +123,7 @@ export default {
           icon: '📈',
           title: '股票数据查询',
           description: '实时股价信息',
-          action: () => this.showComingSoon('股票数据查询')
+          action: () => this.$router.push({ path: '/stock-data', query: { from: 'home' } })
         },
         {
           id: 'trademark-info',
@@ -131,7 +131,7 @@ export default {
           icon: '®️',
           title: '商标信息查询',
           description: '商标注册信息',
-          action: () => this.showComingSoon('商标信息查询')
+          action: () => this.$router.push({ path: '/trademark-info', query: { from: 'home' } })
         },
         {
           id: 'route-query',
@@ -139,7 +139,7 @@ export default {
           icon: '🚌',
           title: '城际路线查询',
           description: '交通路线规划',
-          action: () => this.showComingSoon('城际路线查询')
+          action: () => this.$router.push({ path: '/city-routes', query: { from: 'home' } })
         },
         {
           id: 'train-tickets',
@@ -147,7 +147,7 @@ export default {
           icon: '🚄',
           title: '高铁车票查询',
           description: '车次时刻查询',
-          action: () => this.showComingSoon('高铁车票查询')
+          action: () => this.$router.push({ path: '/high-speed-ticket', query: { from: 'query' } })
         },
         {
           id: 'website-info',

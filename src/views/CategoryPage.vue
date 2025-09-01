@@ -114,7 +114,7 @@ export default {
           icon: '🎬',
           title: '猫眼电影票房',
           description: '实时票房数据',
-          action: () => this.showComingSoon('猫眼电影票房')
+          action: () => this.$router.push({ path: '/movie-box', query: { from: 'query' } })
         },
         {
           id: 'countdown',
@@ -122,7 +122,7 @@ export default {
           icon: '⏰',
           title: '倒数日获取',
           description: '重要日期倒计时',
-          action: () => this.showComingSoon('倒数日获取')
+          action: () => this.$router.push({ path: '/countdown-day', query: { from: 'query' } })
         },
         {
           id: 'recipe-info',
@@ -130,7 +130,7 @@ export default {
           icon: '🍳',
           title: '菜谱信息大全',
           description: '丰富菜谱资源',
-          action: () => this.showComingSoon('菜谱信息大全')
+          action: () => this.$router.push({ path: '/recipe-info', query: { from: 'query' } })
         },
         {
           id: 'lottery-results',
@@ -138,7 +138,7 @@ export default {
           icon: '🎲',
           title: '彩票开奖查询',
           description: '最新开奖结果',
-          action: () => this.showComingSoon('彩票开奖查询')
+          action: () => this.$router.push({ path: '/lottery-results', query: { from: 'query' } })
         },
         {
           id: 'stock-data',
@@ -146,7 +146,7 @@ export default {
           icon: '📈',
           title: '股票数据查询',
           description: '实时股价信息',
-          action: () => this.showComingSoon('股票数据查询')
+          action: () => this.$router.push({ path: '/stock-data', query: { from: 'query' } })
         },
         {
           id: 'trademark-info',
@@ -154,7 +154,7 @@ export default {
           icon: '®️',
           title: '商标信息查询',
           description: '商标注册信息',
-          action: () => this.showComingSoon('商标信息查询')
+          action: () => this.$router.push({ path: '/trademark-info', query: { from: 'query' } })
         },
         {
           id: 'route-query',
@@ -162,7 +162,7 @@ export default {
           icon: '🚌',
           title: '城际路线查询',
           description: '交通路线规划',
-          action: () => this.showComingSoon('城际路线查询')
+          action: () => this.$router.push({ path: '/city-routes', query: { from: 'query' } })
         },
         {
           id: 'train-tickets',
@@ -170,7 +170,7 @@ export default {
           icon: '🚄',
           title: '高铁车票查询',
           description: '车次时刻查询',
-          action: () => this.showComingSoon('高铁车票查询')
+          action: () => this.$router.push({ path: '/high-speed-ticket', query: { from: 'query' } })
         },
         {
           id: 'website-info',
@@ -178,7 +178,7 @@ export default {
           icon: '🌐',
           title: '网站信息获取',
           description: '网站详细信息',
-          action: () => this.showComingSoon('网站信息获取')
+          action: () => this.$router.push({ path: '/website-info', query: { from: 'query' } })
         },
         {
           id: 'map-search',
@@ -186,7 +186,7 @@ export default {
           icon: '🗺️',
           title: '地图地名检索',
           description: '地理位置查询',
-          action: () => this.showComingSoon('地图地名检索')
+          action: () => this.$router.push({ path: '/map-search', query: { from: 'query' } })
         },
         {
           id: 'steam-free',
@@ -202,7 +202,7 @@ export default {
           icon: '📖',
           title: '英文词典',
           description: '单词释义查询',
-          action: () => this.showComingSoon('英文词典')
+          action: () => this.$router.push({ path: '/english-dict', query: { from: 'query' } })
         },
         {
           id: 'tech-news',
@@ -210,7 +210,7 @@ export default {
           icon: '📱',
           title: '实时科技资讯',
           description: '最新科技动态',
-          action: () => this.showComingSoon('实时科技资讯')
+          action: () => this.$router.push({ path: '/tech-news', query: { from: 'query' } })
         },
         {
           id: 'world-population',
@@ -218,7 +218,7 @@ export default {
           icon: '🌍',
           title: '世界人口统计',
           description: '全球人口数据',
-          action: () => this.showComingSoon('世界人口统计')
+          action: () => this.$router.push({ path: '/world-population', query: { from: 'query' } })
         },
         {
           id: 'name-duplicate',
@@ -226,7 +226,7 @@ export default {
           icon: '👥',
           title: '全国重名查询',
           description: '姓名重复统计',
-          action: () => this.showComingSoon('全国重名查询')
+          action: () => this.$router.push({ path: '/name-duplicate', query: { from: 'query' } })
         },
         {
           id: 'performance-ranking',
@@ -234,7 +234,7 @@ export default {
           icon: '🏆',
           title: '性能天梯排行',
           description: '硬件性能对比',
-          action: () => this.showComingSoon('性能天梯排行')
+          action: () => this.$router.push({ path: '/performance-ranking', query: { from: 'query' } })
         }
       ]
     },
