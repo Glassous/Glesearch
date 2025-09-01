@@ -698,6 +698,254 @@ onMounted(() => {
             <p>汽车价格信息查询</p>
           </div>
         </button>
+
+        <button class="feature-button movie-box-office" @click="showComingSoon('猫眼电影实时票房排行')">
+          <div class="button-icon">🎬</div>
+          <div class="button-text">
+            <h3>猫眼电影票房</h3>
+            <p>实时票房排行榜</p>
+          </div>
+        </button>
+
+        <button class="feature-button countdown" @click="showComingSoon('倒数日获取')">
+          <div class="button-icon">📅</div>
+          <div class="button-text">
+            <h3>倒数日获取</h3>
+            <p>重要日期倒计时</p>
+          </div>
+        </button>
+
+        <button class="feature-button recipe" @click="showComingSoon('菜谱信息大全')">
+          <div class="button-icon">🍳</div>
+          <div class="button-text">
+            <h3>菜谱信息大全</h3>
+            <p>丰富的菜谱资源</p>
+          </div>
+        </button>
+
+        <button class="feature-button lottery" @click="showComingSoon('彩票开奖查询')">
+          <div class="button-icon">🎲</div>
+          <div class="button-text">
+            <h3>彩票开奖查询</h3>
+            <p>最新开奖结果</p>
+          </div>
+        </button>
+
+        <button class="feature-button stock" @click="showComingSoon('股票数据查询')">
+          <div class="button-icon">📈</div>
+          <div class="button-text">
+            <h3>股票数据查询</h3>
+            <p>实时股票行情</p>
+          </div>
+        </button>
+
+        <button class="feature-button trademark" @click="showComingSoon('商标信息查询')">
+          <div class="button-icon">®️</div>
+          <div class="button-text">
+            <h3>商标信息查询</h3>
+            <p>商标注册信息</p>
+          </div>
+        </button>
+
+        <button class="feature-button intercity-route" @click="showComingSoon('城际路线查询')">
+          <div class="button-icon">🚇</div>
+          <div class="button-text">
+            <h3>城际路线查询</h3>
+            <p>城际交通路线规划</p>
+          </div>
+        </button>
+
+        <button class="feature-button train-ticket" @click="showComingSoon('高铁动车车票查询')">
+          <div class="button-icon">🚄</div>
+          <div class="button-text">
+            <h3>高铁车票查询</h3>
+            <p>车票信息查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button website-info" @click="showComingSoon('网站基础信息获取')">
+          <div class="button-icon">🌐</div>
+          <div class="button-text">
+            <h3>网站信息获取</h3>
+            <p>网站基础信息查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button map-search" @click="showComingSoon('百度地图地名检索')">
+          <div class="button-icon">🗺️</div>
+          <div class="button-text">
+            <h3>地图地名检索</h3>
+            <p>地理位置查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button steam-free" @click="showComingSoon('Steam喜加一获取')">
+          <div class="button-icon">🎮</div>
+          <div class="button-text">
+            <h3>Steam喜加一</h3>
+            <p>免费游戏推荐</p>
+          </div>
+        </button>
+
+        <button class="feature-button dictionary" @click="showComingSoon('英文词典')">
+          <div class="button-icon">📚</div>
+          <div class="button-text">
+            <h3>英文词典</h3>
+            <p>英语单词查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button tech-news" @click="showComingSoon('实时科技资讯')">
+          <div class="button-icon">📱</div>
+          <div class="button-text">
+            <h3>科技资讯</h3>
+            <p>最新科技动态</p>
+          </div>
+        </button>
+
+        <button class="feature-button world-population" @click="showComingSoon('全世界人口数量详情')">
+          <div class="button-icon">🌍</div>
+          <div class="button-text">
+            <h3>世界人口统计</h3>
+            <p>全球人口数据</p>
+          </div>
+        </button>
+
+        <button class="feature-button name-duplicate" @click="showComingSoon('全国重名查询')">
+          <div class="button-icon">👥</div>
+          <div class="button-text">
+            <h3>全国重名查询</h3>
+            <p>姓名重复度查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button performance-ranking" @click="showComingSoon('性能天梯排行')">
+          <div class="button-icon">🏆</div>
+          <div class="button-text">
+            <h3>性能天梯排行</h3>
+            <p>硬件性能排行榜</p>
+          </div>
+        </button>
+
+        <button class="feature-button movie-box-office" @click="showComingSoon('猫眼电影实时票房排行')">
+          <div class="button-icon">🎬</div>
+          <div class="button-text">
+            <h3>猫眼电影票房</h3>
+            <p>实时票房排行榜</p>
+          </div>
+        </button>
+
+        <button class="feature-button countdown" @click="showComingSoon('倒数日获取')">
+          <div class="button-icon">📅</div>
+          <div class="button-text">
+            <h3>倒数日获取</h3>
+            <p>重要日期倒计时</p>
+          </div>
+        </button>
+
+        <button class="feature-button recipe" @click="showComingSoon('菜谱信息大全')">
+          <div class="button-icon">🍳</div>
+          <div class="button-text">
+            <h3>菜谱信息大全</h3>
+            <p>丰富的菜谱资源</p>
+          </div>
+        </button>
+
+        <button class="feature-button lottery" @click="showComingSoon('彩票开奖查询')">
+          <div class="button-icon">🎲</div>
+          <div class="button-text">
+            <h3>彩票开奖查询</h3>
+            <p>最新开奖结果</p>
+          </div>
+        </button>
+
+        <button class="feature-button stock" @click="showComingSoon('股票数据查询')">
+          <div class="button-icon">📈</div>
+          <div class="button-text">
+            <h3>股票数据查询</h3>
+            <p>实时股票行情</p>
+          </div>
+        </button>
+
+        <button class="feature-button trademark" @click="showComingSoon('商标信息查询')">
+          <div class="button-icon">®️</div>
+          <div class="button-text">
+            <h3>商标信息查询</h3>
+            <p>商标注册信息</p>
+          </div>
+        </button>
+
+        <button class="feature-button train-ticket" @click="showComingSoon('高铁动车车票查询')">
+          <div class="button-icon">🚄</div>
+          <div class="button-text">
+            <h3>高铁车票查询</h3>
+            <p>车票信息查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button website-info" @click="showComingSoon('网站基础信息获取')">
+          <div class="button-icon">🌐</div>
+          <div class="button-text">
+            <h3>网站信息获取</h3>
+            <p>网站基础信息查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button map-search" @click="showComingSoon('百度地图地名检索')">
+          <div class="button-icon">🗺️</div>
+          <div class="button-text">
+            <h3>地图地名检索</h3>
+            <p>地理位置查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button steam-free" @click="showComingSoon('Steam喜加一获取')">
+          <div class="button-icon">🎮</div>
+          <div class="button-text">
+            <h3>Steam喜加一</h3>
+            <p>免费游戏推荐</p>
+          </div>
+        </button>
+
+        <button class="feature-button dictionary" @click="showComingSoon('英文词典')">
+          <div class="button-icon">📚</div>
+          <div class="button-text">
+            <h3>英文词典</h3>
+            <p>英语单词查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button tech-news" @click="showComingSoon('实时科技资讯')">
+          <div class="button-icon">📱</div>
+          <div class="button-text">
+            <h3>科技资讯</h3>
+            <p>最新科技动态</p>
+          </div>
+        </button>
+
+        <button class="feature-button world-population" @click="showComingSoon('全世界人口数量详情')">
+          <div class="button-icon">🌍</div>
+          <div class="button-text">
+            <h3>世界人口统计</h3>
+            <p>全球人口数据</p>
+          </div>
+        </button>
+
+        <button class="feature-button name-duplicate" @click="showComingSoon('全国重名查询')">
+          <div class="button-icon">👥</div>
+          <div class="button-text">
+            <h3>全国重名查询</h3>
+            <p>姓名重复度查询</p>
+          </div>
+        </button>
+
+        <button class="feature-button performance-ranking" @click="showComingSoon('性能天梯排行')">
+          <div class="button-icon">🏆</div>
+          <div class="button-text">
+            <h3>性能天梯排行</h3>
+            <p>硬件性能排行榜</p>
+          </div>
+        </button>
       </div>
     </section>
 
@@ -824,6 +1072,62 @@ onMounted(() => {
             <p>在线Markdown文档阅读</p>
           </div>
         </button>
+
+        <button class="feature-button douyin-parser" @click="showComingSoon('抖音单视频解析')">
+          <div class="button-icon">📱</div>
+          <div class="button-text">
+            <h3>抖音视频解析</h3>
+            <p>解析抖音单个视频</p>
+          </div>
+        </button>
+
+        <button class="feature-button xiaohongshu-parser" @click="showComingSoon('小红书图集详情')">
+          <div class="button-icon">📷</div>
+          <div class="button-text">
+            <h3>小红书图集详情</h3>
+            <p>获取小红书图集信息</p>
+          </div>
+        </button>
+
+        <button class="feature-button anime-avatar-ai" @click="showComingSoon('动漫头像AI一键转换')">
+          <div class="button-icon">🎨</div>
+          <div class="button-text">
+            <h3>动漫头像AI转换</h3>
+            <p>AI一键生成动漫头像</p>
+          </div>
+        </button>
+
+        <button class="feature-button speech-to-text" @click="showComingSoon('视频音频识别转文本')">
+          <div class="button-icon">🎙️</div>
+          <div class="button-text">
+            <h3>语音转文本</h3>
+            <p>视频音频识别转文字</p>
+          </div>
+        </button>
+
+        <button class="feature-button baidu-question-search" @click="showComingSoon('百度题库搜索')">
+          <div class="button-icon">📝</div>
+          <div class="button-text">
+            <h3>百度题库搜索</h3>
+            <p>搜索题目答案</p>
+          </div>
+        </button>
+
+        <button class="feature-button ocr-recognition" @click="showComingSoon('OCR图像文字识别')">
+          <div class="button-icon">🔍</div>
+          <div class="button-text">
+            <h3>OCR文字识别</h3>
+            <p>图像文字识别提取</p>
+          </div>
+        </button>
+
+        <button class="feature-button text-converter" @click="showComingSoon('简体繁体互转')">
+          <div class="button-icon">🔄</div>
+          <div class="button-text">
+            <h3>简繁体互转</h3>
+            <p>简体繁体文字转换</p>
+          </div>
+        </button>
       </div>
     </section>
 
@@ -892,6 +1196,70 @@ onMounted(() => {
           <div class="button-text">
             <h3>番茄小说</h3>
             <p>精彩小说在线阅读</p>
+          </div>
+        </button>
+
+        <button class="feature-button acrostic-poem" @click="showComingSoon('藏头藏尾诗词生成')">
+          <div class="button-icon">📜</div>
+          <div class="button-text">
+            <h3>藏头藏尾诗词</h3>
+            <p>生成个性化诗词</p>
+          </div>
+        </button>
+
+        <button class="feature-button certificate-generator" @click="showComingSoon('在线证书生成器')">
+          <div class="button-icon">🏆</div>
+          <div class="button-text">
+            <h3>在线证书生成</h3>
+            <p>制作各种证书模板</p>
+          </div>
+        </button>
+
+        <button class="feature-button brain-teaser" @click="showComingSoon('脑筋急转弯')">
+          <div class="button-icon">🧠</div>
+          <div class="button-text">
+            <h3>脑筋急转弯</h3>
+            <p>趣味智力问答</p>
+          </div>
+        </button>
+
+        <button class="feature-button nickname-generator" @click="showComingSoon('姓氏谐音梗网名生成器')">
+          <div class="button-icon">😄</div>
+          <div class="button-text">
+            <h3>谐音梗网名生成</h3>
+            <p>姓氏谐音趣味网名</p>
+          </div>
+        </button>
+
+        <button class="feature-button alipay-voice" @click="showComingSoon('支付宝收款语音生成')">
+          <div class="button-icon">💰</div>
+          <div class="button-text">
+            <h3>支付宝语音生成</h3>
+            <p>自定义收款语音</p>
+          </div>
+        </button>
+
+        <button class="feature-button award-generator" @click="showComingSoon('在线奖状生成器')">
+          <div class="button-icon">🥇</div>
+          <div class="button-text">
+            <h3>在线奖状生成</h3>
+            <p>制作个性化奖状</p>
+          </div>
+        </button>
+
+        <button class="feature-button us-identity" @click="showComingSoon('随机美国人身份证')">
+          <div class="button-icon">🆔</div>
+          <div class="button-text">
+            <h3>随机美国身份</h3>
+            <p>生成虚拟身份信息</p>
+          </div>
+        </button>
+
+        <button class="feature-button food-suggestion" @click="showComingSoon('今天吃什么')">
+          <div class="button-icon">🍽️</div>
+          <div class="button-text">
+            <h3>今天吃什么</h3>
+            <p>随机美食推荐</p>
           </div>
         </button>
       </div>
