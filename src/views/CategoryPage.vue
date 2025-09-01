@@ -354,12 +354,20 @@ export default {
           action: () => this.showComingSoon('Markdown阅读器')
         },
         {
+          id: 'ai-prompt-generator',
+          class: 'ai-prompt-generator',
+          icon: '🧠',
+          title: 'AI提示词生成器',
+          description: '智能生成AI提示词',
+          action: () => this.showComingSoon('AI提示词生成器')
+        },
+        {
           id: 'douyin-parser',
           class: 'douyin-parser',
           icon: '🎵',
           title: '抖音视频解析',
           description: '抖音无水印下载',
-          action: () => this.showComingSoon('抖音视频解析')
+          action: () => this.$router.push({ path: '/douyin-parser', query: { from: 'tools' } })
         },
         {
           id: 'xiaohongshu-parser',
@@ -375,7 +383,7 @@ export default {
           icon: '🎨',
           title: '动漫头像AI转换',
           description: 'AI生成动漫头像',
-          action: () => this.showComingSoon('动漫头像AI转换')
+          action: () => this.$router.push({ path: '/anime-avatar-ai', query: { from: 'tools' } })
         },
         {
           id: 'speech-to-text',
@@ -383,7 +391,7 @@ export default {
           icon: '🎙️',
           title: '语音转文本',
           description: '语音识别转换',
-          action: () => this.showComingSoon('语音转文本')
+          action: () => this.$router.push({ path: '/speech-to-text', query: { from: 'tools' } })
         },
         {
           id: 'baidu-question-search',
@@ -391,7 +399,7 @@ export default {
           icon: '🔍',
           title: '百度题库搜索',
           description: '题目答案查询',
-          action: () => this.showComingSoon('百度题库搜索')
+          action: () => this.$router.push({ path: '/baidu-tiku', query: { from: 'tools' } })
         },
         {
           id: 'ocr-text-recognition',
@@ -399,7 +407,7 @@ export default {
           icon: '📸',
           title: 'OCR文字识别',
           description: '图片文字提取',
-          action: () => this.showComingSoon('OCR文字识别')
+          action: () => this.$router.push({ path: '/ocr-text-recognition', query: { from: 'tools' } })
         },
         {
           id: 'text-converter',
@@ -407,7 +415,7 @@ export default {
           icon: '🔄',
           title: '简繁体互转',
           description: '中文简繁转换',
-          action: () => this.showComingSoon('简繁体互转')
+          action: () => this.$router.push({ path: '/text-converter', query: { from: 'tools' } })
         }
       ]
     },

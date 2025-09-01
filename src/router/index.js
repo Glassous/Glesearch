@@ -37,6 +37,12 @@ import IPQuery from '../components/tools/IPQuery.vue'
 import QQAvatar from '../components/tools/QQAvatar.vue'
 import ConcertSchedule from '../components/tools/ConcertSchedule.vue'
 import AIAssistant from '../components/tools/AIAssistant.vue'
+import DouyinParser from '../components/tools/DouyinParser.vue'
+import AnimeAvatarAI from '../components/tools/AnimeAvatarAI.vue'
+import SpeechToText from '../components/tools/SpeechToText.vue'
+import BaiduTiku from '../components/tools/BaiduTiku.vue'
+import OCRTextRecognition from '../components/tools/OCRTextRecognition.vue'
+import TextConverter from '../components/tools/TextConverter.vue'
 import GlassousSearch from '../views/GlassousSearch.vue'
 import KFCThursday from '../components/entertainment/KFCThursday.vue'
 import NonsenseArticle from '../components/entertainment/NonsenseArticle.vue'
@@ -245,6 +251,36 @@ const routes = [
     path: '/ai-assistant',
     name: 'AIAssistant',
     component: AIAssistant
+  },
+  {
+    path: '/douyin-parser',
+    name: 'DouyinParser',
+    component: DouyinParser
+  },
+  {
+    path: '/anime-avatar-ai',
+    name: 'AnimeAvatarAI',
+    component: AnimeAvatarAI
+  },
+  {
+    path: '/speech-to-text',
+    name: 'SpeechToText',
+    component: SpeechToText
+  },
+  {
+    path: '/baidu-tiku',
+    name: 'BaiduTiku',
+    component: BaiduTiku
+  },
+  {
+    path: '/ocr-text-recognition',
+    name: 'OCRTextRecognition',
+    component: OCRTextRecognition
+  },
+  {
+    path: '/text-converter',
+    name: 'TextConverter',
+    component: TextConverter
   },
   {
     path: '/glassous-search',

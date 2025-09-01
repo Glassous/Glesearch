@@ -1,0 +1,1002 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+
+// OCR文字识别相关状态
+const selectedFile = ref(null)
+const imageUrl = ref('')
+const previewUrl = ref('')
+const isLoading = ref(false)
+const result = ref(null)
+const error = ref('')
+const uploadMethod = ref('file') // 'file' 或 'url'
+
+// 处理文件选择
+const handleFileSelect = (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  // 验证文件类型
+  if (!file.type.startsWith('image/')) {
+    error.value = '请选择有效的图片文件'
+    return
+  }
+
+  // 验证文件大小 (10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    error.value = '图片文件大小不能超过10MB'
+    return
+  }
+
+  selectedFile.value = file
+  error.value = ''
+  result.value = null
+
+  // 创建预览
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    previewUrl.value = e.target.result
+  }
+  reader.readAsDataURL(file)
+}
+
+// 切换上传方式
+const switchUploadMethod = (method) => {
+  uploadMethod.value = method
+  selectedFile.value = null
+  imageUrl.value = ''
+  previewUrl.value = ''
+  error.value = ''
+  result.value = null
+}
+
+// 处理图片URL输入
+const handleUrlInput = () => {
+  if (!imageUrl.value.trim()) {
+    previewUrl.value = ''
+    return
+  }
+
+  // 简单验证URL格式
+  if (!imageUrl.value.match(/\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i)) {
+    error.value = '请输入有效的图片链接'
+    return
+  }
+
+  error.value = ''
+  result.value = null
+  previewUrl.value = imageUrl.value
+}
+
+// OCR文字识别
+const recognizeText = async () => {
+  if (uploadMethod.value === 'file' && !selectedFile.value) {
+    error.value = '请选择要识别的图片'
+    return
+  }
+
+  if (uploadMethod.value === 'url' && !imageUrl.value.trim()) {
+    error.value = '请输入图片链接'
+    return
+  }
+
+  isLoading.value = true
+  error.value = ''
+  result.value = null
+
+  try {
+    let response
+    
+    if (uploadMethod.value === 'file') {
+      // 使用FormData上传文件
+      const formData = new FormData()
+      formData.append('file', selectedFile.value)
+      
+      response = await fetch('https://api.pearktrue.cn/api/ocr/', {
+        method: 'POST',
+        body: formData
+      })
+    } else {
+      // 使用JSON发送图片链接
+      response = await fetch('https://api.pearktrue.cn/api/ocr/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          file: imageUrl.value
+        })
+      })
+    }
+
+    const data = await response.json()
+
+    if (data.code === 200) {
+      result.value = {
+        originalUrl: previewUrl.value,
+        textLines: data.data.TextLine || [],
+        parsedText: data.data.ParsedText || '',
+        message: data.msg,
+        fileName: selectedFile.value ? selectedFile.value.name : '网络图片'
+      }
+    } else {
+      error.value = data.msg || '识别失败，请稍后重试'
+    }
+  } catch (err) {
+    console.error('识别失败:', err)
+    error.value = '网络错误，请稍后重试'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// 复制识别结果到剪贴板
+const copyResult = async () => {
+  if (result.value?.parsedText) {
+    try {
+      await navigator.clipboard.writeText(result.value.parsedText)
+      // 可以添加一个简单的提示
+      const button = document.querySelector('.copy-button')
+      const originalText = button.textContent
+      button.textContent = '已复制!'
+      setTimeout(() => {
+        button.textContent = originalText
+      }, 2000)
+    } catch (err) {
+      console.error('复制失败:', err)
+      error.value = '复制失败，请手动选择文本复制'
+    }
+  }
+}
+
+// 下载识别结果
+const downloadResult = () => {
+  if (result.value?.parsedText) {
+    const blob = new Blob([result.value.parsedText], { type: 'text/plain;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `OCR识别结果_${new Date().getTime()}.txt`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+}
+
+// 清空结果
+const clearResult = () => {
+  result.value = null
+  error.value = ''
+  selectedFile.value = null
+  imageUrl.value = ''
+  previewUrl.value = ''
+}
+
+// 处理键盘事件
+const handleKeyPress = (event) => {
+  if (event.key === 'Enter' && uploadMethod.value === 'url') {
+    recognizeText()
+  }
+}
+
+// 格式化文件大小
+const formatFileSize = (bytes) => {
+  if (bytes === 0) return '0 Bytes'
+  const k = 1024
+  const sizes = ['Bytes', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+
+// 返回主页
+const goBack = () => {
+  const from = route.query.from
+  if (from === 'home') {
+    router.push('/')
+  } else if (from === 'tools') {
+    router.push('/tools')
+  } else {
+    // 默认返回首页
+    router.push('/')
+  }
+}
+</script>
+
+<template>
+  <!-- 顶部固定区域 -->
+  <div class="fixed-header">
+    <!-- 顶部导航栏 -->
+    <header class="top-bar">
+      <button class="back-button" @click="goBack">
+        <span class="back-icon">←</span>
+      </button>
+      <h2 class="page-title">OCR文字识别</h2>
+      <button class="clear-button" @click="clearResult" v-if="result">
+        <span class="clear-icon">✕</span>
+      </button>
+      <div v-else style="width: 40px;"></div>
+    </header>
+  </div>
+
+  <!-- 主要内容区域 -->
+  <main class="main-content">
+    <!-- 识别表单区域 -->
+    <section class="recognize-section">
+      <div class="recognize-form">
+        <h3>📸 OCR文字识别</h3>
+        <p class="description">上传图片或输入图片链接，AI将为您识别图片中的文字内容</p>
+        
+        <!-- 上传方式选择 -->
+        <div class="upload-method-selector">
+          <button 
+            @click="switchUploadMethod('file')"
+            class="method-button"
+            :class="{ active: uploadMethod === 'file' }"
+          >
+            <span class="method-icon">📁</span>
+            上传图片
+          </button>
+          <button 
+            @click="switchUploadMethod('url')"
+            class="method-button"
+            :class="{ active: uploadMethod === 'url' }"
+          >
+            <span class="method-icon">🔗</span>
+            图片链接
+          </button>
+        </div>
+
+        <!-- 文件上传 -->
+        <div v-if="uploadMethod === 'file'" class="form-group">
+          <label>选择图片文件</label>
+          <div class="file-upload-area">
+            <input 
+              type="file"
+              accept="image/*"
+              @change="handleFileSelect"
+              class="file-input"
+              id="fileInput"
+            />
+            <label for="fileInput" class="file-upload-label">
+              <span class="upload-icon">📷</span>
+              <span class="upload-text">
+                {{ selectedFile ? selectedFile.name : '点击选择图片文件' }}
+              </span>
+              <span class="upload-hint">
+                支持 JPG、PNG、GIF、WebP、BMP，最大10MB
+                {{ selectedFile ? `（${formatFileSize(selectedFile.size)}）` : '' }}
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- URL输入 -->
+        <div v-if="uploadMethod === 'url'" class="form-group">
+          <label>图片链接</label>
+          <div class="input-group">
+            <input 
+              v-model="imageUrl"
+              type="url" 
+              placeholder="请输入图片链接（如：https://example.com/image.jpg）"
+              class="form-input"
+              @input="handleUrlInput"
+              @keypress="handleKeyPress"
+              :disabled="isLoading"
+            />
+            <button 
+              @click="recognizeText"
+              class="recognize-button"
+              :disabled="isLoading || (!selectedFile && !imageUrl.trim())"
+            >
+              <span v-if="isLoading" class="loading-spinner"></span>
+              <span v-else>🔍</span>
+              {{ isLoading ? '识别中...' : '识别' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- 文件上传时的识别按钮 -->
+        <div v-if="uploadMethod === 'file' && selectedFile" class="recognize-action">
+          <button 
+            @click="recognizeText"
+            class="recognize-button-large"
+            :disabled="isLoading"
+          >
+            <span v-if="isLoading" class="loading-spinner"></span>
+            <span v-else>🔍</span>
+            {{ isLoading ? '识别中...' : '开始文字识别' }}
+          </button>
+        </div>
+
+        <!-- 错误提示 -->
+        <div v-if="error" class="error-message">
+          <span class="error-icon">⚠️</span>
+          {{ error }}
+        </div>
+
+        <!-- 图片预览 -->
+        <div v-if="previewUrl" class="preview-section">
+          <h4>🖼️ 图片预览</h4>
+          <div class="preview-container">
+            <img :src="previewUrl" alt="预览图片" class="preview-image" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 识别结果区域 -->
+    <section v-if="result" class="result-section">
+      <div class="result-card">
+        <h3>✅ 识别完成</h3>
+        
+        <!-- 识别统计 -->
+        <div class="recognition-stats">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">识别文本行数</span>
+              <span class="stat-value">{{ result.textLines.length }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">总字符数</span>
+              <span class="stat-value">{{ result.parsedText.length }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">图片来源</span>
+              <span class="stat-value">{{ result.fileName }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 识别结果展示 -->
+        <div class="text-result">
+          <div class="section-header">
+            <h4>📝 识别结果</h4>
+            <div class="result-actions">
+              <button @click="copyResult" class="action-button copy-button">
+                <span class="btn-icon">📋</span>
+                复制文本
+              </button>
+              <button @click="downloadResult" class="action-button download-button">
+                <span class="btn-icon">💾</span>
+                下载文本
+              </button>
+            </div>
+          </div>
+          
+          <div class="text-content">
+            <div class="parsed-text">
+              <h5>📄 完整文本</h5>
+              <div class="text-display">
+                {{ result.parsedText || '未识别到文字内容' }}
+              </div>
+            </div>
+            
+            <!-- 分行显示 -->
+            <div v-if="result.textLines.length > 0" class="text-lines">
+              <h5>📋 分行文本</h5>
+              <div class="lines-container">
+                <div 
+                  v-for="(line, index) in result.textLines" 
+                  :key="index"
+                  class="text-line-item"
+                >
+                  <span class="line-number">{{ index + 1 }}</span>
+                  <span class="line-content">{{ line }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 识别信息 -->
+        <div class="recognition-info">
+          <p><strong>识别状态：</strong>{{ result.message }}</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</template>
+
+<style scoped>
+/* 全局样式 */
+* {
+  box-sizing: border-box;
+}
+
+/* 顶部区域 */
+.fixed-header {
+  padding-top: env(safe-area-inset-top);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 4px 16px var(--glass-shadow);
+}
+
+/* 顶部导航栏 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  height: 60px;
+}
+
+.back-button, .clear-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-accent);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+}
+
+.back-button:hover, .clear-button:hover {
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transform: translateY(-1px);
+}
+
+.back-icon, .clear-icon {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: var(--text-accent);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* 主要内容区域 */
+.main-content {
+  margin-top: 60px;
+  padding: 2rem 1.5rem;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+}
+
+/* 识别表单区域 */
+.recognize-section {
+  margin-bottom: 2rem;
+}
+
+.recognize-form {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.recognize-form h3 {
+  color: var(--text-accent);
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.description {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* 上传方式选择器 */
+.upload-method-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.25rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.method-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.method-button.active {
+  background: var(--text-accent);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.method-button:hover:not(.active) {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+}
+
+.method-icon {
+  font-size: 1.1rem;
+}
+
+/* 表单组 */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* 文件上传区域 */
+.file-upload-area {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.file-upload-label:hover {
+  border-color: var(--text-accent);
+  background: var(--glass-bg);
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-text {
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.upload-hint {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+/* 输入组 */
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.form-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+/* 识别按钮 */
+.recognize-button, .recognize-button-large {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--text-accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.recognize-button-large {
+  width: 100%;
+  justify-content: center;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+
+.recognize-button:hover:not(:disabled), 
+.recognize-button-large:hover:not(:disabled) {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+}
+
+.recognize-button:disabled, 
+.recognize-button-large:disabled {
+  background: var(--border-color);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.recognize-action {
+  margin-top: 1rem;
+}
+
+/* 加载动画 */
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 错误提示 */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 8px;
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.error-icon {
+  font-size: 1rem;
+}
+
+/* 预览区域 */
+.preview-section {
+  margin-top: 1.5rem;
+}
+
+.preview-section h4 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.preview-container {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* 结果区域 */
+.result-section {
+  animation: slideInUp 0.5s ease;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.result-card h3 {
+  color: var(--text-accent);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.result-card h4 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.result-card h5 {
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+/* 识别统计 */
+.recognition-stats {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  display: block;
+  color: var(--text-accent);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* 文本结果 */
+.text-result {
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.result-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--text-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-button:hover {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+}
+
+.btn-icon {
+  font-size: 1rem;
+}
+
+.text-content {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.parsed-text {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.text-display {
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.text-lines {
+  padding: 1.5rem;
+}
+
+.lines-container {
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.text-line-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.text-line-item:last-child {
+  border-bottom: none;
+}
+
+.line-number {
+  color: var(--text-accent);
+  font-weight: bold;
+  min-width: 2rem;
+  font-size: 0.9rem;
+}
+
+.line-content {
+  flex: 1;
+  color: var(--text-primary);
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+/* 识别信息 */
+.recognition-info {
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.recognition-info p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.recognition-info strong {
+  color: var(--text-primary);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .top-bar {
+    padding: 1rem;
+  }
+  
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.3rem;
+  }
+  
+  .recognize-form {
+    padding: 1.5rem;
+  }
+  
+  .input-group {
+    flex-direction: column;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .result-actions {
+    align-self: stretch;
+  }
+  
+  .action-button {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.2rem;
+  }
+  
+  .recognize-form {
+    padding: 1rem;
+  }
+  
+  .result-card {
+    padding: 1.5rem;
+  }
+  
+  .text-line-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .line-number {
+    min-width: auto;
+  }
+}
+</style>
