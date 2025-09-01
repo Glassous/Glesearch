@@ -359,6 +359,18 @@ onMounted(() => {
       <!-- 分屏模式 -->
       <div v-if="viewMode === 'split'" class="split-mode">
         <div class="split-container">
+          <div class="editor-panel">
+            <div class="panel-header">
+              <h4>✏️ Markdown编辑器</h4>
+            </div>
+            <textarea 
+              v-model="markdownContent"
+              @input="handleInput"
+              placeholder="在此输入Markdown内容..."
+              class="form-textarea split-textarea"
+            ></textarea>
+          </div>
+          
           <div class="preview-panel">
             <div class="panel-header">
               <h4>👀 实时预览</h4>
@@ -370,21 +382,9 @@ onMounted(() => {
               </div>
               <div v-else-if="htmlContent" class="markdown-content" v-html="htmlContent"></div>
               <div v-else class="empty-preview">
-                在右侧输入Markdown内容查看预览
+                在左侧输入Markdown内容查看预览
               </div>
             </div>
-          </div>
-          
-          <div class="editor-panel">
-            <div class="panel-header">
-              <h4>✏️ Markdown编辑器</h4>
-            </div>
-            <textarea 
-              v-model="markdownContent"
-              @input="handleInput"
-              placeholder="在此输入Markdown内容..."
-              class="form-textarea split-textarea"
-            ></textarea>
           </div>
         </div>
         
@@ -598,12 +598,15 @@ onMounted(() => {
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   margin-bottom: 1.5rem;
+  overflow: hidden; /* 防止子元素溢出 */
 }
 
 .editor-panel, .preview-panel {
   display: flex;
   flex-direction: column;
   height: 500px;
+  overflow: hidden; /* 防止内容溢出 */
+  min-width: 0; /* 防止grid子元素溢出 */
 }
 
 .panel-header {
@@ -625,6 +628,8 @@ onMounted(() => {
   border-top: none;
   resize: none;
   margin: 0;
+  box-sizing: border-box; /* 确保padding不会导致溢出 */
+  min-height: 0; /* 允许flex容器正确计算高度 */
 }
 
 .preview-content {
@@ -635,6 +640,9 @@ onMounted(() => {
   border-radius: 0 0 8px 8px;
   border-top: none;
   overflow-y: auto;
+  overflow-x: hidden; /* 防止水平溢出 */
+  box-sizing: border-box;
+  min-height: 0; /* 允许flex容器正确计算高度 */
 }
 
 .empty-preview {
@@ -720,6 +728,9 @@ onMounted(() => {
   resize: vertical;
   min-height: 300px;
   transition: all 0.3s ease;
+  box-sizing: border-box; /* 确保padding不会导致溢出 */
+  overflow-wrap: break-word; /* 处理长文本换行 */
+  word-wrap: break-word;
 }
 
 .form-textarea:focus {
@@ -876,6 +887,17 @@ section h3 {
   
   .editor-panel, .preview-panel {
     height: 300px;
+  }
+  
+  /* 移动端输入框优化 */
+  .form-textarea {
+    padding: 0.75rem; /* 减少移动端内边距 */
+    font-size: 16px; /* 防止iOS缩放 */
+  }
+  
+  .split-textarea {
+    padding: 0.75rem;
+    font-size: 16px;
   }
   
   .upload-actions, .editor-actions, .split-actions {
