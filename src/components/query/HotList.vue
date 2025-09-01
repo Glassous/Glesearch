@@ -225,7 +225,7 @@ export default {
 
 /* 顶部区域 */
 .fixed-header {
-  padding-top: env(safe-area-inset-top, 20px);
+  padding-top: env(safe-area-inset-top);
   position: fixed;
   top: 0;
   left: 0;
