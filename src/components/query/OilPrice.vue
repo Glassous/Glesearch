@@ -148,6 +148,19 @@ const fetchOilPrices = async () => {
   }
 }
 
+// 跳转到油价计算器
+const goToCalculator = (region) => {
+  router.push({
+    name: 'OilPriceCalculator',
+    params: {
+      regionName: region.regionName
+    },
+    query: {
+      from: route.query.from || 'oil-price'
+    }
+  })
+}
+
 // 返回主页
 const goBack = () => {
   const from = route.query.from
@@ -217,11 +230,16 @@ onMounted(() => {
     <!-- 油价数据展示 -->
     <div v-if="!loading && !error" class="oil-price-section">
       <h3>全国油价信息</h3>
+      <div class="tip-message">
+        <span class="tip-icon">💡</span>
+        点击省份卡片进入油价计算器
+      </div>
       <div class="region-grid">
         <div 
           v-for="region in sortedOilPriceData" 
           :key="region.id"
-          class="region-card"
+          class="region-card clickable"
+          @click="goToCalculator(region)"
         >
           <div class="region-header">
             <h4 class="region-name">{{ region.regionName }}</h4>
@@ -376,6 +394,27 @@ onMounted(() => {
   font-weight: 600;
 }
 
+/* 提示信息 */
+.tip-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.tip-icon {
+  font-size: 1rem;
+}
+
 .region-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -397,6 +436,30 @@ onMounted(() => {
   border-color: var(--text-accent);
   transform: translateY(-4px);
   box-shadow: 0 12px 40px var(--shadow-medium);
+}
+
+.region-card.clickable {
+  cursor: pointer;
+  position: relative;
+}
+
+.region-card.clickable::after {
+  content: '点击计算';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--text-accent);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.region-card.clickable:hover::after {
+  opacity: 1;
 }
 
 .region-header {

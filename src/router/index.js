@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import CategoryPage from '../views/CategoryPage.vue'
 import ExchangeRate from '../components/tools/ExchangeRate.vue'
 import OilPrice from '../components/query/OilPrice.vue'
+import OilPriceCalculator from '../components/query/OilPriceCalculator.vue'
 import MovieBox from '../components/query/MovieBox.vue'
 import CountdownDay from '../components/query/CountdownDay.vue'
 import RecipeInfo from '../components/query/RecipeInfo.vue'
@@ -92,6 +93,11 @@ const routes = [
     path: '/oil-price',
     name: 'OilPrice',
     component: OilPrice
+  },
+  {
+    path: '/oil-price-calculator/:regionName',
+    name: 'OilPriceCalculator',
+    component: OilPriceCalculator
   },
   {
     path: '/movie-box',
