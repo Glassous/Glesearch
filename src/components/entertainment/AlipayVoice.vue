@@ -72,14 +72,43 @@ const fetchAlipayVoice = async () => {
     
     // 确保金额参数是字符串格式
     const amountParam = String(formData.value.amount || '')
-    const response = await fetch(`/api/alipay/?number=${encodeURIComponent(amountParam)}&type=json`)
+    
+    // 判断是否为本地开发环境
+    const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    
+    // 根据环境选择API地址
+    const apiUrl = isDevelopment 
+      ? `/api/alipay/?number=${encodeURIComponent(amountParam)}&type=json`
+      : `https://api.pearktrue.cn/api/alipay/?number=${encodeURIComponent(amountParam)}&type=json`
+    
+    console.log('请求URL:', apiUrl) // 调试日志
+    
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    console.log('响应状态:', response.status, response.statusText) // 调试日志
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      throw new Error(`HTTP请求失败: ${response.status} ${response.statusText}`)
+    }
+    
+    // 检查响应内容类型
+    const contentType = response.headers.get('content-type')
+    console.log('响应Content-Type:', contentType) // 调试日志
+    
+    if (!contentType || !contentType.includes('application/json')) {
+      // 如果不是JSON响应，获取文本内容用于调试
+      const textResponse = await response.text()
+      console.error('非JSON响应内容:', textResponse)
+      throw new Error('API返回的不是JSON格式数据，可能是服务器错误')
     }
     
     const result = await response.json()
-    
     console.log('API返回数据:', result) // 调试日志
     
     if (result && result.code === 200) {
@@ -101,7 +130,20 @@ const fetchAlipayVoice = async () => {
       throw new Error(result.msg || result.message || 'API返回数据异常')
     }
   } catch (err) {
-    error.value = '生成语音失败，请检查网络连接或稍后重试'
+    // 增强错误处理
+    let errorMessage = '生成语音失败，请检查网络连接或稍后重试'
+    
+    if (err.message.includes('JSON.parse')) {
+      errorMessage = 'API返回数据格式错误，可能是服务器问题'
+    } else if (err.message.includes('Failed to fetch') || err.message.includes('网络')) {
+      errorMessage = '网络连接失败，请检查网络或稍后重试'
+    } else if (err.message.includes('HTTP请求失败')) {
+      errorMessage = `服务器错误：${err.message}`
+    } else if (err.message.includes('不是JSON格式')) {
+      errorMessage = 'API服务异常，返回了错误的数据格式'
+    }
+    
+    error.value = errorMessage
     lastUpdateTime.value = 'Error'
     console.error('支付宝收款语音API请求失败:', err)
     console.error('错误详情:', err.message)
