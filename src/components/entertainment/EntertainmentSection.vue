@@ -115,7 +115,7 @@ export default {
           icon: '🧠',
           title: '脑筋急转弯',
           description: '趣味智力问答',
-          action: () => this.showComingSoon('脑筋急转弯')
+          action: () => this.$router.push({ path: '/brain-teaser', query: { from: 'home' } })
         },
         {
           id: 'food-suggestion',
@@ -123,7 +123,39 @@ export default {
           icon: '🍽️',
           title: '今天吃什么',
           description: '随机美食推荐',
-          action: () => this.showComingSoon('今天吃什么')
+          action: () => this.$router.push({ path: '/today-food', query: { from: 'home' } })
+        },
+        {
+          id: 'hidden-poem',
+          class: 'hidden-poem',
+          icon: '📜',
+          title: '藏头藏尾诗词生成',
+          description: '创作藏头藏尾诗',
+          action: () => this.$router.push({ path: '/hidden-poem', query: { from: 'home' } })
+        },
+        {
+          id: 'certificate-generator',
+          class: 'certificate-generator',
+          icon: '🏆',
+          title: '在线证书生成器',
+          description: '制作专属荣誉证书',
+          action: () => this.$router.push({ path: '/certificate-generator', query: { from: 'home' } })
+        },
+        {
+          id: 'award-generator',
+          class: 'award-generator',
+          icon: '🎖️',
+          title: '在线奖状生成器',
+          description: '制作精美学生奖状',
+          action: () => this.$router.push({ path: '/award-generator', query: { from: 'home' } })
+        },
+        {
+          id: 'homophone-name-generator',
+          class: 'homophone-name-generator',
+          icon: '😄',
+          title: '姓氏谐音梅网名生成器',
+          description: '趣味谐音梅网名',
+          action: () => this.$router.push({ path: '/homophone-name-generator', query: { from: 'home' } })
         },
         {
           id: 'joke-generator',

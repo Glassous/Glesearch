@@ -54,6 +54,13 @@ import TomatoNovel from '../components/entertainment/TomatoNovel.vue'
 import NovelChapter from '../components/entertainment/NovelChapter.vue'
 import NovelReader from '../components/entertainment/NovelReader.vue'
 import AlipayVoice from '../components/entertainment/AlipayVoice.vue'
+import BrainTeaser from '../components/entertainment/BrainTeaser.vue'
+import TodayFood from '../components/entertainment/TodayFood.vue'
+import HiddenPoem from '../components/entertainment/HiddenPoem.vue'
+import CertificateGenerator from '../components/entertainment/CertificateGenerator.vue'
+import AwardGenerator from '../components/entertainment/AwardGenerator.vue'
+import HomophoneNameGenerator from '../components/entertainment/HomophoneNameGenerator.vue'
+import USAIdentity from '../components/entertainment/USAIdentity.vue'
 
 const routes = [
   {
@@ -340,6 +347,51 @@ const routes = [
     path: '/alipay-voice',
     name: 'AlipayVoice',
     component: AlipayVoice
+  },
+  {
+    path: '/brain-teaser',
+    name: 'BrainTeaser',
+    component: BrainTeaser
+  },
+  {
+    path: '/today-food',
+    name: 'TodayFood',
+    component: TodayFood
+  },
+  {
+    path: '/hidden-poem',
+    name: 'HiddenPoem',
+    component: HiddenPoem
+  },
+  {
+    path: '/certificate-generator',
+    name: 'CertificateGenerator',
+    component: CertificateGenerator
+  },
+  {
+    path: '/award-generator',
+    name: 'AwardGenerator',
+    component: AwardGenerator
+  },
+  {
+    path: '/homophone-name-generator',
+    name: 'HomophoneNameGenerator',
+    component: HomophoneNameGenerator
+  },
+  {
+    path: '/usa-identity',
+    name: 'USAIdentity',
+    component: USAIdentity
+  },
+  {
+    path: '/today-food',
+    name: 'TodayFood',
+    component: TodayFood
+  },
+  {
+    path: '/hidden-poem',
+    name: 'HiddenPoem',
+    component: HiddenPoem
   }
 ]
 

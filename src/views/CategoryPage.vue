@@ -468,7 +468,7 @@ export default {
           icon: '🧠',
           title: '脑筋急转弯',
           description: '趣味智力问答',
-          action: () => this.showComingSoon('脑筋急转弯')
+          action: () => this.$router.push({ path: '/brain-teaser', query: { from: 'entertainment' } })
         },
         {
           id: 'food-suggestion',
@@ -476,7 +476,7 @@ export default {
           icon: '🍽️',
           title: '今天吃什么',
           description: '随机美食推荐',
-          action: () => this.showComingSoon('今天吃什么')
+          action: () => this.$router.push({ path: '/today-food', query: { from: 'entertainment' } })
         },
         {
           id: 'alipay-voice',
@@ -492,31 +492,31 @@ export default {
           icon: '📜',
           title: '藏头藏尾诗词生成',
           description: '创作藏头藏尾诗',
-          action: () => this.showComingSoon('藏头藏尾诗词生成')
+          action: () => this.$router.push({ path: '/hidden-poem', query: { from: 'entertainment' } })
         },
         {
           id: 'certificate-generator',
           class: 'certificate-generator',
           icon: '🏆',
           title: '在线证书生成器',
-          description: '制作各类证书',
-          action: () => this.showComingSoon('在线证书生成器')
+          description: '制作专属荣誉证书',
+          action: () => this.$router.push({ path: '/certificate-generator', query: { from: 'entertainment' } })
         },
         {
           id: 'homophone-name',
           class: 'homophone-name',
           icon: '😄',
           title: '姓氏谐音梗网名生成器',
-          description: '趣味谐音网名',
-          action: () => this.showComingSoon('姓氏谐音梗网名生成器')
+          description: '趣味谐音梗网名',
+          action: () => this.$router.push({ path: '/homophone-name-generator', query: { from: 'entertainment' } })
         },
         {
           id: 'diploma-generator',
           class: 'diploma-generator',
-          icon: '🎓',
+          icon: '🎖️',
           title: '在线奖状生成器',
-          description: '制作精美奖状',
-          action: () => this.showComingSoon('在线奖状生成器')
+          description: '制作精美学生奖状',
+          action: () => this.$router.push({ path: '/award-generator', query: { from: 'entertainment' } })
         },
         {
           id: 'us-identity',
@@ -524,7 +524,7 @@ export default {
           icon: '🇺🇸',
           title: '随机美国人身份证',
           description: '生成虚拟身份信息',
-          action: () => this.showComingSoon('随机美国人身份证')
+          action: () => this.$router.push({ path: '/usa-identity', query: { from: 'entertainment' } })
         }
       ]
     },

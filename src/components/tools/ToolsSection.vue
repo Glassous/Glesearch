@@ -251,7 +251,7 @@ export default {
           icon: '🆔',
           title: '随机美国身份',
           description: '生成虚拟身份信息',
-          action: () => this.showComingSoon('随机美国人身份证')
+          action: () => this.$router.push({ path: '/usa-identity', query: { from: 'home' } })
         }
       ]
     }
