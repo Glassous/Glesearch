@@ -120,6 +120,16 @@ export default {
   },
   mounted() {
     this.fetchHotData()
+    // 确保页面加载时滚动到顶部
+    this.$nextTick(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      })
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    })
   },
   methods: {
     goBack() {

@@ -43,6 +43,13 @@ body {
   min-height: 100vh;
   width: 100%;
   height: 100vh;
+  /* 强制滚动到顶部 */
+  scroll-behavior: smooth;
+}
+
+/* 确保滚动行为一致 */
+html {
+  scroll-behavior: smooth;
 }
 
 h1 {

@@ -397,7 +397,41 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // 如果目标路由是主页
+    if (to.path === '/') {
+      // 如果有保存的滚动位置（从其他页面返回），使用保存的位置
+      if (savedPosition) {
+        return savedPosition
+      }
+      // 如果是刷新或直接访问主页，滚动到顶部
+      return {
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      }
+    }
+    
+    // 非主页的处理
+    // 如果存在保存的滚动位置(浏览器前进后退)
+    if (savedPosition) {
+      return savedPosition
+    }
+    // 如果路由有hash锚点
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth'
+      }
+    }
+    // 默认滚动到页面顶部
+    return {
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    }
+  }
 })
 
 export default router
