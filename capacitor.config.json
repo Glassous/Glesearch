@@ -7,11 +7,17 @@
       "style": "LIGHT",
       "backgroundColor": "#00000000",
       "overlaysWebView": true
+    },
+    "Keyboard": {
+      "resize": "body",
+      "style": "dark",
+      "resizeOnFullScreen": true
     }
   },
   "android": {
     "allowMixedContent": true,
     "captureInput": true,
-    "webContentsDebuggingEnabled": true
+    "webContentsDebuggingEnabled": true,
+    "useLegacyBridge": false
   }
 }
