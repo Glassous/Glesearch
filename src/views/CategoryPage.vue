@@ -346,6 +346,38 @@ export default {
           action: () => this.$router.push({ path: '/json-reader', query: { from: 'tools' } })
         },
         {
+          id: 'yaml-reader',
+          class: 'yaml-reader',
+          icon: '📄',
+          title: 'YAML阅读器',
+          description: 'YAML配置文件预览和格式化',
+          action: () => this.$router.push({ path: '/yaml-reader', query: { from: 'tools' } })
+        },
+        {
+          id: 'xml-reader',
+          class: 'xml-reader',
+          icon: '🏷️',
+          title: 'XML阅读器',
+          description: 'XML文档格式化和结构化显示',
+          action: () => this.$router.push({ path: '/xml-reader', query: { from: 'tools' } })
+        },
+        {
+          id: 'txt-reader',
+          class: 'txt-reader',
+          icon: '📄',
+          title: 'TXT阅读器',
+          description: '纯文本文件查看器',
+          action: () => this.$router.push({ path: '/txt-reader', query: { from: 'tools' } })
+        },
+        {
+          id: 'html-css-reader',
+          class: 'html-css-reader',
+          icon: '🎨',
+          title: 'HTML+CSS渲染器',
+          description: 'HTML和CSS实时预览渲染',
+          action: () => this.$router.push({ path: '/html-css-reader', query: { from: 'tools' } })
+        },
+        {
           id: 'ai-prompt-generator',
           class: 'ai-prompt-generator',
           icon: '🧠',

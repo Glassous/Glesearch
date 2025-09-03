@@ -47,6 +47,10 @@ import TextConverter from '../components/tools/TextConverter.vue'
 import QRGenerator from '../components/tools/QRGenerator.vue'
 import MarkdownReader from '../components/tools/MarkdownReader.vue'
 import JSONReader from '../components/tools/JSONReader.vue'
+import YAMLReader from '../components/tools/YAMLReader.vue'
+import XMLReader from '../components/tools/XMLReader.vue'
+import TXTReader from '../components/tools/TXTReader.vue'
+import HTMLCSSReader from '../components/tools/HTMLCSSReader.vue'
 import AIPromptGenerator from '../components/tools/AIPromptGenerator.vue'
 import GlassousSearch from '../views/GlassousSearch.vue'
 import KFCThursday from '../components/entertainment/KFCThursday.vue'
@@ -314,6 +318,26 @@ const routes = [
     path: '/json-reader',
     name: 'JSONReader',
     component: JSONReader
+  },
+  {
+    path: '/yaml-reader',
+    name: 'YAMLReader',
+    component: YAMLReader
+  },
+  {
+    path: '/xml-reader',
+    name: 'XMLReader',
+    component: XMLReader
+  },
+  {
+    path: '/txt-reader',
+    name: 'TXTReader',
+    component: TXTReader
+  },
+  {
+    path: '/html-css-reader',
+    name: 'HTMLCSSReader',
+    component: HTMLCSSReader
   },
   {
     path: '/ai-prompt-generator',
