@@ -46,6 +46,7 @@ import OCRTextRecognition from '../components/tools/OCRTextRecognition.vue'
 import TextConverter from '../components/tools/TextConverter.vue'
 import QRGenerator from '../components/tools/QRGenerator.vue'
 import MarkdownReader from '../components/tools/MarkdownReader.vue'
+import JSONReader from '../components/tools/JSONReader.vue'
 import AIPromptGenerator from '../components/tools/AIPromptGenerator.vue'
 import GlassousSearch from '../views/GlassousSearch.vue'
 import KFCThursday from '../components/entertainment/KFCThursday.vue'
@@ -308,6 +309,11 @@ const routes = [
     path: '/markdown-reader',
     name: 'MarkdownReader',
     component: MarkdownReader
+  },
+  {
+    path: '/json-reader',
+    name: 'JSONReader',
+    component: JSONReader
   },
   {
     path: '/ai-prompt-generator',

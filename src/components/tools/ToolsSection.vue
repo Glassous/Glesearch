@@ -150,6 +150,14 @@ export default {
           action: () => this.$router.push({ path: '/markdown-reader', query: { from: 'tools' } })
         },
         {
+          id: 'json-reader',
+          class: 'json-reader',
+          icon: '📋',
+          title: 'JSON阅读器',
+          description: 'JSON文档预览',
+          action: () => this.$router.push({ path: '/json-reader', query: { from: 'tools' } })
+        },
+        {
           id: 'ai-prompt-generator',
           class: 'ai-prompt-generator',
           icon: '🧠',
